@@ -33,6 +33,9 @@ public class ParametersList {
 
     public ParametersList addParameter(Parameter parameter) {
         parameters.add(parameter);
+        if(!containsFile && parameter.isFile()) {
+            containsFile = true;
+        }
         return this;
     }
 }

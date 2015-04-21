@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class FileUtilsTestCollection {
+public class FileUtilsTestCollection implements TestCollection {
 
     private Collection<Test> testCollection;
 
@@ -46,7 +46,7 @@ public class FileUtilsTestCollection {
 
         @Override
         public void execute() {
-            File testArchivePath = new File("/home/alessandro/test_" + new SimpleDateFormat("MM-dd-yyyy_hh:mm:ss_SSS").format(new Date()) + ".zip");
+            File testArchivePath = new File("/home/alessandro/test_" + new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss_SSS").format(new Date()) + ".zip");
 
             try {
                 if (filesToZip.size() == 1) {
@@ -56,7 +56,7 @@ public class FileUtilsTestCollection {
                 }
                 else {
                     FileUtils.zipFiles(filesToZip, testArchivePath);
-                    System.out.println(getTestType() + ": files " + formatFiles(filesToZip) + " successfully zipped into archive \"" + testArchivePath + "\"");
+                    System.out.println(getTestType() + ": files " + formatFilesList(filesToZip) + " successfully zipped into archive \"" + testArchivePath + "\"");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -64,7 +64,7 @@ public class FileUtilsTestCollection {
             System.out.print("\n");
         }
 
-        private String formatFiles(List<File> files) {
+        private String formatFilesList(List<File> files) {
             StringBuilder builder = new StringBuilder("");
 
             for(int i=0; i<files.size(); i++) {

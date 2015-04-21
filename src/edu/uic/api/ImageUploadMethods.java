@@ -1,14 +1,11 @@
 package edu.uic.api;
 
-import edu.uic.exceptions.AuthorizationHeaderException;
-import edu.uic.exceptions.InvalidHttpMethodException;
-import edu.uic.exceptions.UnsuccessfulHttpRequest;
+import edu.uic.exceptions.BadHttpRequestException;
+import edu.uic.exceptions.UnsuccessfulHttpRequestException;
 import edu.uic.exceptions.UnsupportedImageFileTypeException;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.List;
 
 public interface ImageUploadMethods {
@@ -18,18 +15,22 @@ public interface ImageUploadMethods {
      * @param image
      * @return gId of the uploaded image
      * @throws UnsupportedImageFileTypeException
-     * @throws UnsuccessfulHttpRequest
+     * @throws IOException
+     * @throws UnsuccessfulHttpRequestException
+     * @throws BadHttpRequestException
      */
-    int uploadImage(File image) throws UnsupportedImageFileTypeException, IOException, UnsuccessfulHttpRequest,
-            InvalidHttpMethodException, URISyntaxException, AuthorizationHeaderException;
+    int uploadImage(File image) throws UnsupportedImageFileTypeException, IOException, UnsuccessfulHttpRequestException,
+            BadHttpRequestException;
 
     /**
      * Upload a collection of images to the Ibeis server
      * @param images
-     * @return list of gId's of the uploaded images
+     * @return list of gIds of the uploaded images
      * @throws UnsupportedImageFileTypeException
-     * @throws UnsuccessfulHttpRequest
+     * @throws IOException
+     * @throws UnsuccessfulHttpRequestException
+     * @throws BadHttpRequestException
      */
-    List<Integer> uploadImages(Collection<File> images) throws UnsupportedImageFileTypeException, IOException,
-            UnsuccessfulHttpRequest, InvalidHttpMethodException, URISyntaxException, AuthorizationHeaderException;
+    List<Integer> uploadImages(List<File> images) throws UnsupportedImageFileTypeException, IOException,
+            UnsuccessfulHttpRequestException, BadHttpRequestException;
 }

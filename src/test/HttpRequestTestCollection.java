@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class HttpRequestTestCollection {
+public class HttpRequestTestCollection implements TestCollection {
 
     private Collection<HttpTest> testCollection;
 
