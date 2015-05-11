@@ -1,6 +1,6 @@
 package edu.uic.ibeis_java_api.http;
 
-import edu.uic.ibeis_java_api.model.ImageZipArchive;
+import edu.uic.ibeis_java_api.api.ImageZipArchive;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -18,7 +18,7 @@ public class Parameter {
     }
 
     public Parameter(String name, int value) {
-        this(name, Integer.toString(value));
+        this(name, String.valueOf(value));
     }
 
     public Parameter(String name, List<Integer>values) {
@@ -53,6 +53,10 @@ public class Parameter {
 
     public boolean isFile() {
         return isFile;
+    }
+
+    public void setIsFile(boolean isFile) {
+        this.isFile = isFile;
     }
 
     public String encodeInUrl() {

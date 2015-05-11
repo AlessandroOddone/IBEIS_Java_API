@@ -93,7 +93,8 @@ public class Request {
                         for(Parameter p : params) {
                             nameValuePairParams.add(p.toNameValuePair());
                         }
-                        request.setEntity(new UrlEncodedFormEntity(nameValuePairParams));
+                        System.out.println(new UrlEncodedFormEntity(nameValuePairParams, "utf-8").toString());
+                        request.setEntity(new UrlEncodedFormEntity(nameValuePairParams, "utf-8"));
                     }
                 }
                 request.setURI(url.toURI());
@@ -104,10 +105,43 @@ public class Request {
             case PUT: {
                 HttpPut request = new HttpPut();
 
+                // add parameters to POST request message
+                List<Parameter> params = parametersList.getParameters();
+                if(params.size() > 0) {
+                    List<NameValuePair> nameValuePairParams = new ArrayList<>();
+                    for(Parameter p : params) {
+                        nameValuePairParams.add(p.toNameValuePair());
+                    }
+                    request.setEntity(new UrlEncodedFormEntity(nameValuePairParams, "utf-8"));
+                }
+                request.setURI(url.toURI());
+                request.setHeader("Authorization", Auth.getAuthorizationHeader(url));
+                response = client.execute(request);
+                break;
             }
             case DELETE: {
                 HttpDelete request = new HttpDelete();
 
+                // add parameters to url
+                List<Parameter> params = parametersList.getParameters();
+                StringBuilder urlParams = new StringBuilder("");
+                if (params.size() > 0) {
+                    for (int i=0; i< params.size(); i++) {
+                        if (i == 0) {
+                            urlParams.append("?");
+                        }
+                        else {
+                            urlParams.append("&");
+                        }
+                        urlParams.append(params.get(i).encodeInUrl());
+                    }
+                }
+
+                URL urlWithParams = new URL(url.toString() + urlParams.toString());
+                request.setURI(urlWithParams.toURI());
+                request.setHeader("Authorization", Auth.getAuthorizationHeader(urlWithParams));
+                response = client.execute(request);
+                break;
             }
             default:
                 throw new InvalidHttpMethodException();

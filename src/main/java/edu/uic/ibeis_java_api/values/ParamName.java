@@ -1,13 +1,13 @@
 package edu.uic.ibeis_java_api.values;
 
-public enum CallPath {
-
-    IMAGE("/image/"),
-    ANIMAL_DETECTION("/core/detect_random_forest/");
+public enum ParamName {
+    IMAGE_ZIP_ARCHIVE("image_zip_archive"),
+    SPECIES("species"),
+    GID_LIST("gid_list");
 
     private String value;
 
-    CallPath(String value) {
+    ParamName(String value) {
         this.value = value;
     }
 

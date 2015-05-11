@@ -1,10 +1,10 @@
 package edu.uic.ibeis_java_api.test;
 
 import edu.uic.ibeis_java_api.http.*;
-import edu.uic.ibeis_java_api.model.ImageZipArchive;
+import edu.uic.ibeis_java_api.api.ImageZipArchive;
+import edu.uic.ibeis_java_api.values.Species;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,9 +15,19 @@ public class HttpRequestTestCollection implements TestCollection {
     public HttpRequestTestCollection() {
         System.out.println("***HTTP REQUEST TEST COLLECTION***\n" );
         testCollection = new ArrayList<>();
-        testCollection.add(new HttpGetTest("/image/"));
-        testCollection.add(new HttpGetTest("/image/unixtime/").addParam("gid_list", Arrays.asList(1, 2, 3, 35, 4, 5, 6, 1020)));
-        //testCollection.add(new HttpPostTest("/image/").addParam("image_zip_archive", new ImageZipArchive(getClass().getClassLoader().getResource("images_archive_test.zip").getFile())));
+        //testCollection.add(new HttpGetTest("/image/"));
+        //testCollection.add(new HttpGetTest("/image/unixtime/").addParam("gid_list", Arrays.asList(1, 2, 3, 35, 4, 5, 6, 1020)));
+
+        /*
+        Parameter imgZipArchive = new Parameter("image_zip_archive", getClass().getClassLoader().getResource("images_archive_test.zip").getFile());
+        imgZipArchive.setIsFile(true);
+        testCollection.add(new HttpPostTest("/image/").addParam(imgZipArchive));
+        */
+
+        testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "119, 120").addParam("species", Species.GIRAFFE.getValue()));
+        testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "119, 120").addParam("species", Species.ZEBRA_GREVY.getValue()));
+        testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "199990").addParam("species", Species.ZEBRA_PLAIN.getValue()));
+        //testCollection.add(new HttpPutTest("/core/query_all/").addParam("qaid_list", "1,2,3"));
     }
 
     public void runTests() {
@@ -30,7 +40,7 @@ public class HttpRequestTestCollection implements TestCollection {
 
     private static void printTest(HttpTest test) {
         System.out.println("TEST: " + test.getTestType());
-        System.out.println("Call path: " + test.getCallPath());
+        System.out.println("Request path: " + test.getCallPath());
         System.out.println("Params: " + formatParams(test.getParams()));
     }
 
@@ -146,8 +156,8 @@ public class HttpRequestTestCollection implements TestCollection {
             return this;
         }
 
-        public HttpPostTest addParam(String name, ImageZipArchive imgZip) {
-            params.add(new Parameter(name, imgZip));
+        public HttpPostTest addParam(Parameter param) {
+            params.add(param);
             return this;
         }
 
@@ -168,5 +178,63 @@ public class HttpRequestTestCollection implements TestCollection {
         }
     }
 
+    private class HttpPutTest implements HttpTest {
+
+        private String callPath;
+        private List<Parameter> params;
+
+        public HttpPutTest(String callPath) {
+            this.callPath = callPath;
+            params = new ArrayList<>();
+        }
+
+        public String getCallPath() {
+            return callPath;
+        }
+
+        public List<Parameter> getParams() {
+            return params;
+        }
+
+        public String getTestType() {
+            return this.getClass().getSimpleName();
+        }
+
+        public HttpPutTest addParam(String name, String value) {
+            params.add(new Parameter(name, value));
+            return this;
+        }
+
+        public HttpPutTest addParam(String name, int value) {
+            params.add(new Parameter(name, value));
+            return this;
+        }
+
+        public HttpPutTest addParam(String name, List<Integer> values) {
+            params.add(new Parameter(name, values));
+            return this;
+        }
+
+        public HttpPutTest addParam(String name, ImageZipArchive imgZip) {
+            params.add(new Parameter(name, imgZip));
+            return this;
+        }
+
+        @Override
+        public void execute() {
+            printTest(this);
+
+            try {
+                if (params.size() > 0) {
+                    printResponse(new Request(RequestMethod.PUT, callPath, new ParametersList(params)).execute());
+                }
+                else {
+                    printResponse(new Request(RequestMethod.PUT, callPath).execute());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 

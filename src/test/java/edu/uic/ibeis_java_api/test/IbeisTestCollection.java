@@ -1,6 +1,7 @@
 package edu.uic.ibeis_java_api.test;
 
 import edu.uic.ibeis_java_api.api.Ibeis;
+import edu.uic.ibeis_java_api.api.IbeisImage;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -54,13 +55,13 @@ public class IbeisTestCollection implements TestCollection {
             try {
                 if (imagesToUpload.size() == 1) {
                     File imageFile = imagesToUpload.get(0);
-                    int gId = ibeis.uploadImage(imageFile);
-                    System.out.println(getTestType() + ": image file \"" + imageFile.getPath() + "\" successfully uploaded (gId = " + gId + ")");
+                    IbeisImage ibeisImage = ibeis.uploadImage(imageFile);
+                    System.out.println(getTestType() + ": image file \"" + imageFile.getPath() + "\" successfully uploaded (imageId = " + ibeisImage.getId() + ")");
                 }
                 else {
-                    List<Integer> gIds = ibeis.uploadImages(imagesToUpload);
+                    List<IbeisImage> ibeisImageList = ibeis.uploadImages(imagesToUpload);
                     System.out.println(getTestType() + ": image files " + formatFilesList(imagesToUpload) +
-                            " successfully uploaded (gIds = [" + formatIntegersList(gIds) + "])");
+                            " successfully uploaded (imageIds = [" + printIbeisImageIds(ibeisImageList) + "])");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -81,15 +82,15 @@ public class IbeisTestCollection implements TestCollection {
             return builder.toString();
         }
 
-        private String formatIntegersList(List<Integer> integerList) {
+        private String printIbeisImageIds(List<IbeisImage> ibeisImageList) {
             StringBuilder builder = new StringBuilder("");
 
-            for(int i=0; i<integerList.size(); i++) {
-                if(i < integerList.size()-1) {
-                    builder.append(integerList.get(i) + ", ");
+            for(int i=0; i<ibeisImageList.size(); i++) {
+                if(i < ibeisImageList.size()-1) {
+                    builder.append(ibeisImageList.get(i).getId() + ", ");
                 }
                 else {
-                    builder.append(integerList.get(i));
+                    builder.append(ibeisImageList.get(i).getId());
                 }
             }
             return builder.toString();
