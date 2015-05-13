@@ -1,8 +1,8 @@
 package edu.uic.ibeis_java_api.http;
 
 import edu.uic.ibeis_java_api.api.ImageZipArchive;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import android.org.apache.http.NameValuePair;
+import android.org.apache.http.message.BasicNameValuePair;
 
 import java.util.List;
 

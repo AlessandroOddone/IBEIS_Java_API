@@ -1,10 +1,10 @@
 package edu.uic.ibeis_java_api.http;
 
 import edu.uic.ibeis_java_api.exceptions.AuthorizationHeaderException;
+import android.org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -28,7 +28,7 @@ public class Auth {
         Mac mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
         mac.init(keyHmac);
         byte[] keyBytes = mac.doFinal(messageToSendBytes);
-        return DatatypeConverter.printBase64Binary(keyBytes);
+        return new String(Base64.encodeBase64(keyBytes));
     }
 
     /**

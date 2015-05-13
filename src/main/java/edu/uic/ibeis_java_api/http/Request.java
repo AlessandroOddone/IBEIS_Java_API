@@ -1,20 +1,20 @@
 package edu.uic.ibeis_java_api.http;
 
+import android.org.apache.http.HttpEntity;
+import android.org.apache.http.HttpResponse;
+import android.org.apache.http.NameValuePair;
+import android.org.apache.http.client.HttpClient;
+import android.org.apache.http.client.entity.UrlEncodedFormEntity;
+import android.org.apache.http.client.methods.HttpDelete;
+import android.org.apache.http.client.methods.HttpGet;
+import android.org.apache.http.client.methods.HttpPost;
+import android.org.apache.http.client.methods.HttpPut;
+import android.org.apache.http.entity.mime.MultipartEntityBuilder;
+import android.org.apache.http.entity.mime.content.FileBody;
+import android.org.apache.http.impl.client.DefaultHttpClient;
+import android.org.apache.http.util.EntityUtils;
 import edu.uic.ibeis_java_api.exceptions.AuthorizationHeaderException;
 import edu.uic.ibeis_java_api.exceptions.InvalidHttpMethodException;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class Request {
     }
 
     public Response execute() throws AuthorizationHeaderException, URISyntaxException, IOException, InvalidHttpMethodException {
-        HttpClient client = HttpClientBuilder.create().build();
+        HttpClient client = new DefaultHttpClient();
         HttpResponse response;
 
         switch (httpRequestMethod) {
@@ -141,12 +141,20 @@ public class Request {
                 request.setURI(urlWithParams.toURI());
                 request.setHeader("Authorization", Auth.getAuthorizationHeader(urlWithParams));
                 response = client.execute(request);
+                request.releaseConnection();
                 break;
             }
             default:
                 throw new InvalidHttpMethodException();
         }
-        HttpEntity entity = response.getEntity();
-        return new Response(EntityUtils.toString(entity));
+        HttpEntity responseEntity = response.getEntity();
+        if (responseEntity != null) {
+            return new Response(EntityUtils.toString(responseEntity));
+        }
+        else {// no response (treat as an unsuccessful response)
+            Response noResponse = new Response();
+            noResponse.setSuccess(false);
+            return noResponse;
+        }
     }
 }

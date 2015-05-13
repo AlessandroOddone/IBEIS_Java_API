@@ -12,5 +12,5 @@ public interface DetectionMethods {
 
     public List<IbeisAnnotation> runAnimalDetection(IbeisImage ibeisImage, Species species) throws IOException, UnsuccessfulHttpRequestException;
 
-    public List<IbeisAnnotation> runAnimalDetection(List<IbeisImage> ibeisImage, Species species) throws IOException, UnsuccessfulHttpRequestException;
+    public List<List<IbeisAnnotation>> runAnimalDetection(List<IbeisImage> ibeisImage, Species species) throws IOException, UnsuccessfulHttpRequestException;
 }

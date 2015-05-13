@@ -8,9 +8,11 @@ public class Response {
     private boolean success;
     private JsonElement content;
 
+    public Response() {}
+
     public Response(String jsonResponse) {
         // debug: print response
-        System.out.println("Response Message: " + jsonResponse);
+        System.out.println("Http Response:\n" + jsonResponse);
 
         JsonObject response = new JsonParser().parse(jsonResponse).getAsJsonObject();
         content = response.get("response");
@@ -22,7 +24,15 @@ public class Response {
         return success;
     }
 
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
     public JsonElement getContent() {
         return content;
+    }
+
+    public void setContent(JsonElement content) {
+        this.content = content;
     }
 }

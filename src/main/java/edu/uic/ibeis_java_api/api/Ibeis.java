@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -85,7 +84,13 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
      */
     private File generateZipFilePath(File unzippedFile) {
         String unzippedFilePath = unzippedFile.getPath();
+
+        System.out.println("UNZIPPED FILE PATH: " + unzippedFilePath);
+
         String pathToFile = unzippedFilePath.substring(0, unzippedFilePath.lastIndexOf("/")+1);
+
+        System.out.println("PATH TO FILE: " + pathToFile);
+
         return new File(pathToFile + new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss_SSS").format(new Date()) + ".zip");
     }
 
@@ -128,12 +133,7 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
     }
 
     private void deleteZipFile(File zipFilePath) throws IOException {
-        try {
-            Files.deleteIfExists(zipFilePath.toPath());
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new IOException("error deleting file \"" + zipFilePath + "\"");
-        }
+        zipFilePath.delete();
     }
 
 
@@ -145,17 +145,19 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
 
     @Override
     public List<IbeisAnnotation> runAnimalDetection(IbeisImage ibeisImage, Species species) throws IOException, UnsuccessfulHttpRequestException {
-        return runAnimalDetection(Arrays.asList(ibeisImage), species);
+        return runAnimalDetection(Arrays.asList(ibeisImage), species).get(0);
     }
 
     @Override
-    public List<IbeisAnnotation> runAnimalDetection(List<IbeisImage> ibeisImageList, Species species) throws IOException, UnsuccessfulHttpRequestException {
+    public List<List<IbeisAnnotation>> runAnimalDetection(List<IbeisImage> ibeisImageList, Species species) throws IOException, UnsuccessfulHttpRequestException {
         List<Integer> imageIds = new ArrayList<>();
         for(IbeisImage image : ibeisImageList) {
             imageIds.add(image.getId());
         }
 
-        List<IbeisAnnotation> ibeisAnnotationList = new ArrayList<>();
+        System.out.println("imageIds: " + imageIds);
+
+        List<List<IbeisAnnotation>> ibeisAnnotationList = new ArrayList<>();
         Response response;
         try {
             response = new Request(RequestMethod.PUT, CallPath.ANIMAL_DETECTION.getValue(), new ParametersList()
@@ -174,13 +176,18 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
         }
 
         if(!response.isSuccess()) {
+            System.out.println("Unsuccessful Request");
             throw new UnsuccessfulHttpRequestException();
         }
 
-        for(JsonElement jsonElement : response.getContent().getAsJsonArray()) {
-            ibeisAnnotationList.add(new IbeisAnnotation(jsonElement.getAsInt()));
+        for(JsonElement elementAnnotationsJsonElement : response.getContent().getAsJsonArray()) {
+            List<IbeisAnnotation> elementAnnotations = new ArrayList<>();
+            for (JsonElement annotationJsonElement : elementAnnotationsJsonElement.getAsJsonArray()) {
+                elementAnnotations.add(new IbeisAnnotation(annotationJsonElement.getAsInt()));
+            }
+            ibeisAnnotationList.add(elementAnnotations);
         }
-
+        System.out.println("ibeisAnnotationList: " + ibeisAnnotationList);
         return ibeisAnnotationList;
     }
 }

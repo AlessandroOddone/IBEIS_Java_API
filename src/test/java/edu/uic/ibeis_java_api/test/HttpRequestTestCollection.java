@@ -1,7 +1,7 @@
 package edu.uic.ibeis_java_api.test;
 
-import edu.uic.ibeis_java_api.http.*;
 import edu.uic.ibeis_java_api.api.ImageZipArchive;
+import edu.uic.ibeis_java_api.http.*;
 import edu.uic.ibeis_java_api.values.Species;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class HttpRequestTestCollection implements TestCollection {
     public HttpRequestTestCollection() {
         System.out.println("***HTTP REQUEST TEST COLLECTION***\n" );
         testCollection = new ArrayList<>();
-        //testCollection.add(new HttpGetTest("/image/"));
+        testCollection.add(new HttpGetTest("/image/"));
         //testCollection.add(new HttpGetTest("/image/unixtime/").addParam("gid_list", Arrays.asList(1, 2, 3, 35, 4, 5, 6, 1020)));
 
         /*
@@ -24,9 +24,9 @@ public class HttpRequestTestCollection implements TestCollection {
         testCollection.add(new HttpPostTest("/image/").addParam(imgZipArchive));
         */
 
+        testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "119").addParam("species", Species.GIRAFFE.getValue()));
         testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "119, 120").addParam("species", Species.GIRAFFE.getValue()));
-        testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "119, 120").addParam("species", Species.ZEBRA_GREVY.getValue()));
-        testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "199990").addParam("species", Species.ZEBRA_PLAIN.getValue()));
+        //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "199990").addParam("species", Species.ZEBRA_PLAIN.getValue()));
         //testCollection.add(new HttpPutTest("/core/query_all/").addParam("qaid_list", "1,2,3"));
     }
 
