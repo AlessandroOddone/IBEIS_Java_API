@@ -2,9 +2,10 @@ package edu.uic.ibeis_java_api.test;
 
 import edu.uic.ibeis_java_api.api.ImageZipArchive;
 import edu.uic.ibeis_java_api.http.*;
-import edu.uic.ibeis_java_api.values.Species;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,19 +16,69 @@ public class HttpRequestTestCollection implements TestCollection {
     public HttpRequestTestCollection() {
         System.out.println("***HTTP REQUEST TEST COLLECTION***\n" );
         testCollection = new ArrayList<>();
-        testCollection.add(new HttpGetTest("/image/"));
-        //testCollection.add(new HttpGetTest("/image/unixtime/").addParam("gid_list", Arrays.asList(1, 2, 3, 35, 4, 5, 6, 1020)));
+
+        /**
+         * GET CALLS
+         */
+        testCollection.add(new HttpGetTest("/annot/bboxes/").addParam("aid_list", Arrays.asList(159, 160, 161, 155, 156, 157)));
+        testCollection.add(new HttpGetTest("/annot/contact_aids/").addParam("aid_list", Arrays.asList(159,160,161,155,156,157)));
+        testCollection.add(new HttpGetTest("/annot/name_rowids/").addParam("aid_list", Arrays.asList(159,160,161,155,156,157)));
 
         /*
-        Parameter imgZipArchive = new Parameter("image_zip_archive", getClass().getClassLoader().getResource("images_archive_test.zip").getFile());
+        testCollection.add(new HttpGetTest("/image/aids/").addParam("gid_list", Arrays.asList(148,147)));
+        testCollection.add(new HttpGetTest("/image/aids_of_species/")
+                .addParam("gid_list", Arrays.asList(148,147))
+                .addParam("species", Species.GIRAFFE.getValue()));
+        testCollection.add(new HttpGetTest("/image/gnames/").addParam("gid_list", Arrays.asList(148,147)));
+        testCollection.add(new HttpGetTest("/image/paths/").addParam("gid_list", Arrays.asList(148,147)));
+        testCollection.add(new HttpGetTest("/image/gps/").addParam("gid_list", Arrays.asList(148,147)));
+        testCollection.add(new HttpGetTest("/image/notes/").addParam("gid_list", Arrays.asList(148,147)));
+        testCollection.add(new HttpGetTest("/image/sizes/").addParam("gid_list", Arrays.asList(148,147)));
+        testCollection.add(new HttpGetTest("/image/unixtime/").addParam("gid_list", Arrays.asList(148,147)));
+        */
+
+        testCollection.add(new HttpGetTest("/name/aids/").addParam("nid_list", Arrays.asList(-159,-160,-161,-155,-156,-157)));
+        testCollection.add(new HttpGetTest("/name/sex_text/").addParam("name_rowid_list", Arrays.asList(-159,-160,-161,-155,-156,-157)));
+        testCollection.add(new HttpGetTest("/name/texts/").addParam("name_rowid_list", Arrays.asList(-159,-160,-161,-155,-156,-157)));
+
+        /**
+         * SETTERS (PUT CALLS)
+         */
+        /*
+        testCollection.add(new HttpPutTest("/image/gps/").addParam("gid_list", "148,147")
+                .addParam("lat_list", Arrays.asList(41.931535, 41.931535)).addParam("lon_list", Arrays.asList(-87.711991,-87.711991)));
+        testCollection.add(new HttpPutTest("/image/notes/").addParam("gid_list", "148,147").addParam("notes_list","test_note,test_note"));
+        testCollection.add(new HttpPutTest("/image/unixtime/").addParam("gid_list", "148,147").addParam("unixtime_list", Arrays.asList(1431642451,1431642451)));
+        testCollection.add(new HttpPutTest("/name/sex_text/").addParam("name_rowid_list", "-159,-160,-161,-155,-156,-157")
+                .addParam("name_sex_text_list","test_sex,test_sex,test_sex,test_sex,test_sex,test_sex"));
+        testCollection.add(new HttpPutTest("/name/texts/").addParam("name_rowid_list", "-159,-160,-161,-155,-156,-157")
+                .addParam("name_text_list","test_name,test_name,test_name,test_name,test_name,test_name"));
+        */
+
+        /**
+         * DELETE CALLS
+         */
+        //testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", Arrays.asList(119,120)));
+
+        /**
+         * QUERY
+         */
+        //testCollection.add(new HttpPutTest("/core/query_chips/").addParam("qaid_list", 159).addParam("daid_list", Arrays.asList(159, 160, 161, 155, 156, 157)));
+
+        /**
+         * IMAGE UPLOAD
+         */
+        /*
+        Parameter imgZipArchive = new Parameter("image_zip_archive", getClass().getClassLoader().getResource("images_archive_test_same_giraffe.zip").getFile());
         imgZipArchive.setIsFile(true);
         testCollection.add(new HttpPostTest("/image/").addParam(imgZipArchive));
         */
 
-        testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "119").addParam("species", Species.GIRAFFE.getValue()));
-        testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "119, 120").addParam("species", Species.GIRAFFE.getValue()));
-        //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "199990").addParam("species", Species.ZEBRA_PLAIN.getValue()));
-        //testCollection.add(new HttpPutTest("/core/query_all/").addParam("qaid_list", "1,2,3"));
+        /**
+         * DETECT RANDOM FOREST
+         */
+        //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "148").addParam("species", Species.GIRAFFE.getValue()));
+        //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "148,147").addParam("species", Species.GIRAFFE.getValue()));
     }
 
     public void runTests() {
@@ -87,12 +138,12 @@ public class HttpRequestTestCollection implements TestCollection {
             return this;
         }
 
-        public HttpGetTest addParam(String name, int value) {
+        public HttpGetTest addParam(String name, Number value) {
             params.add(new Parameter(name, value));
             return this;
         }
 
-        public HttpGetTest addParam(String name, List<Integer> values) {
+        public HttpGetTest addParam(String name, List<? extends Number> values) {
             params.add(new Parameter(name, values));
             return this;
         }
@@ -104,6 +155,7 @@ public class HttpRequestTestCollection implements TestCollection {
 
         @Override
         public void execute() {
+            long startTime = System.nanoTime();
             printTest(this);
 
             try {
@@ -116,6 +168,8 @@ public class HttpRequestTestCollection implements TestCollection {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            long endTime = System.nanoTime();
+            System.out.println("ELAPSED TIME: " + new DecimalFormat("#.###").format((double) (endTime - startTime)/1000000000) + " s");
         }
     }
 
@@ -146,12 +200,12 @@ public class HttpRequestTestCollection implements TestCollection {
             return this;
         }
 
-        public HttpPostTest addParam(String name, int value) {
+        public HttpPostTest addParam(String name, Number value) {
             params.add(new Parameter(name, value));
             return this;
         }
 
-        public HttpPostTest addParam(String name, List<Integer> values) {
+        public HttpPostTest addParam(String name, List<? extends Number> values) {
             params.add(new Parameter(name, values));
             return this;
         }
@@ -163,6 +217,7 @@ public class HttpRequestTestCollection implements TestCollection {
 
         @Override
         public void execute() {
+            long startTime = System.nanoTime();
             printTest(this);
 
             try {
@@ -175,6 +230,8 @@ public class HttpRequestTestCollection implements TestCollection {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            long endTime = System.nanoTime();
+            System.out.println("ELAPSED TIME: " + new DecimalFormat("#.###").format((double) (endTime - startTime)/1000000000) + " s");
         }
     }
 
@@ -205,12 +262,12 @@ public class HttpRequestTestCollection implements TestCollection {
             return this;
         }
 
-        public HttpPutTest addParam(String name, int value) {
+        public HttpPutTest addParam(String name, Number value) {
             params.add(new Parameter(name, value));
             return this;
         }
 
-        public HttpPutTest addParam(String name, List<Integer> values) {
+        public HttpPutTest addParam(String name, List<? extends Number> values) {
             params.add(new Parameter(name, values));
             return this;
         }
@@ -222,6 +279,7 @@ public class HttpRequestTestCollection implements TestCollection {
 
         @Override
         public void execute() {
+            long startTime = System.nanoTime();
             printTest(this);
 
             try {
@@ -234,7 +292,72 @@ public class HttpRequestTestCollection implements TestCollection {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            long endTime = System.nanoTime();
+            System.out.println("ELAPSED TIME: " + new DecimalFormat("#.###").format((double) (endTime - startTime)/1000000000) + " s");
         }
     }
+
+    private class HttpDeleteTest implements HttpTest {
+
+        private String callPath;
+        private List<Parameter> params;
+
+        public HttpDeleteTest(String callPath) {
+            this.callPath = callPath;
+            params = new ArrayList<>();
+        }
+
+        public String getCallPath() {
+            return callPath;
+        }
+
+        public List<Parameter> getParams() {
+            return params;
+        }
+
+        public String getTestType() {
+            return this.getClass().getSimpleName();
+        }
+
+        public HttpDeleteTest addParam(String name, String value) {
+            params.add(new Parameter(name, value));
+            return this;
+        }
+
+        public HttpDeleteTest addParam(String name, Number value) {
+            params.add(new Parameter(name, value));
+            return this;
+        }
+
+        public HttpDeleteTest addParam(String name, List<? extends Number> values) {
+            params.add(new Parameter(name, values));
+            return this;
+        }
+
+        public HttpDeleteTest addParam(String name, ImageZipArchive imgZip) {
+            params.add(new Parameter(name, imgZip));
+            return this;
+        }
+
+        @Override
+        public void execute() {
+            long startTime = System.nanoTime();
+            printTest(this);
+
+            try {
+                if (params.size() > 0) {
+                    printResponse(new Request(RequestMethod.DELETE, callPath, new ParametersList(params)).execute());
+                }
+                else {
+                    printResponse(new Request(RequestMethod.DELETE, callPath).execute());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            long endTime = System.nanoTime();
+            System.out.println("ELAPSED TIME: " + new DecimalFormat("#.###").format((double) (endTime - startTime)/1000000000) + " s");
+        }
+    }
+
 }
 
