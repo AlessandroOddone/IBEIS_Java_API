@@ -35,6 +35,9 @@ public class Request {
         this.httpRequestMethod = httpRequestMethod;
         this.url = new URL(API_URL + callPath);
         this.parametersList = parametersList;
+
+        //debug: print request
+        System.out.println(this.toString());
     }
 
     public Request(RequestMethod httpRequestMethod, String callPath) throws MalformedURLException{
@@ -156,5 +159,17 @@ public class Request {
             noResponse.setSuccess(false);
             return noResponse;
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder formattedRequest = new StringBuilder("");
+
+        formattedRequest.append("Http Request:\n");
+        formattedRequest.append("- request type: " + this.httpRequestMethod.toString() + "\n");
+        formattedRequest.append("- url: " + this.url + "\n");
+        formattedRequest.append("- parameters: " + this.parametersList.toString());
+
+        return formattedRequest.toString();
     }
 }

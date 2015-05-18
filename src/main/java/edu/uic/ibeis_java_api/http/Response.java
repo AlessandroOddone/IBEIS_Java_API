@@ -12,7 +12,7 @@ public class Response {
 
     public Response(String jsonResponse) {
         // debug: print response
-        System.out.println("Http Response:\n" + jsonResponse);
+        System.out.println("Http Response: " + jsonResponse);
 
         JsonObject response = new JsonParser().parse(jsonResponse).getAsJsonObject();
         content = response.get("response");

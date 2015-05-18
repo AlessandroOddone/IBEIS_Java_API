@@ -84,13 +84,7 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
      */
     private File generateZipFilePath(File unzippedFile) {
         String unzippedFilePath = unzippedFile.getPath();
-
-        System.out.println("UNZIPPED FILE PATH: " + unzippedFilePath);
-
         String pathToFile = unzippedFilePath.substring(0, unzippedFilePath.lastIndexOf("/")+1);
-
-        System.out.println("PATH TO FILE: " + pathToFile);
-
         return new File(pathToFile + new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss_SSS").format(new Date()) + ".zip");
     }
 
@@ -144,12 +138,12 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
      */
 
     @Override
-    public List<IbeisAnnotation> runAnimalDetection(IbeisImage ibeisImage, Species species) throws IOException, UnsuccessfulHttpRequestException {
+    public List<IbeisAnnotation> runAnimalDetection(IbeisImage ibeisImage, Species species) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         return runAnimalDetection(Arrays.asList(ibeisImage), species).get(0);
     }
 
     @Override
-    public List<List<IbeisAnnotation>> runAnimalDetection(List<IbeisImage> ibeisImageList, Species species) throws IOException, UnsuccessfulHttpRequestException {
+    public List<List<IbeisAnnotation>> runAnimalDetection(List<IbeisImage> ibeisImageList, Species species) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         List<Integer> imageIds = new ArrayList<>();
         for(IbeisImage image : ibeisImageList) {
             imageIds.add(image.getId());
@@ -164,20 +158,20 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
                     .addParameter(new Parameter(ParamName.SPECIES.getValue(), species.getValue()))
                     .addParameter(new Parameter(ParamName.GID_LIST.getValue(), imageIds))).execute();
 
-        } catch (AuthorizationHeaderException e) {
-            new BadHttpRequestException("error in authorization header").printStackTrace();
-            return ibeisAnnotationList;
-        } catch (URISyntaxException | MalformedURLException e) {
-            new BadHttpRequestException("invalid url").printStackTrace();
-            return ibeisAnnotationList;
-        } catch (InvalidHttpMethodException e) {
-            new BadHttpRequestException("invalid http method").printStackTrace();
-            return ibeisAnnotationList;
-        }
+            if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
 
-        if(!response.isSuccess()) {
-            System.out.println("Unsuccessful Request");
-            throw new UnsuccessfulHttpRequestException();
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
         }
 
         for(JsonElement elementAnnotationsJsonElement : response.getContent().getAsJsonArray()) {
@@ -187,7 +181,6 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
             }
             ibeisAnnotationList.add(elementAnnotations);
         }
-        System.out.println("ibeisAnnotationList: " + ibeisAnnotationList);
         return ibeisAnnotationList;
     }
 }

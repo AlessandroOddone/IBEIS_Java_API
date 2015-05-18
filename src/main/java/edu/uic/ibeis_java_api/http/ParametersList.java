@@ -39,15 +39,15 @@ public class ParametersList {
         return this;
     }
 
-    public static String printParamsList(ParametersList paramsList) {
+    @Override
+    public String toString() {
         StringBuilder formattedParams = new StringBuilder("");
-        for(int i=0; i<paramsList.getParameters().size(); i++) {
-            formattedParams.append(paramsList.getParameters().get(i).getName() + "=" + paramsList.getParameters().get(i).getValue());
-            if (i != paramsList.getParameters().size()-1) {
+        for(int i=0; i<parameters.size(); i++) {
+            formattedParams.append(parameters.get(i).getName() + "=" + parameters.get(i).getValue());
+            if (i != parameters.size()-1) {
                 formattedParams.append("; ");
             }
         }
         return formattedParams.toString();
     }
-
 }

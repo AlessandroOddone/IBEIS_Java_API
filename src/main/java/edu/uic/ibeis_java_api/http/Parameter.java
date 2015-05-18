@@ -17,11 +17,11 @@ public class Parameter {
         isFile = false;
     }
 
-    public Parameter(String name, int value) {
+    public Parameter(String name, Number value) {
         this(name, String.valueOf(value));
     }
 
-    public Parameter(String name, List<Integer>values) {
+    public Parameter(String name, List<? extends Number>values) {
         this.name = name;
 
         StringBuilder valString = new StringBuilder();
