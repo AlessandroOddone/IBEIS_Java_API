@@ -49,7 +49,8 @@ public class Request {
 
     public Response execute() throws AuthorizationHeaderException, URISyntaxException, IOException, InvalidHttpMethodException {
         final HttpParams httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
+        HttpConnectionParams.setConnectionTimeout(httpParams, 5 * 1000);
+        HttpConnectionParams.setSoTimeout(httpParams, 120 * 1000);
         HttpClient client = new DefaultHttpClient(httpParams);
         HttpResponse response;
 

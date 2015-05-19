@@ -1,7 +1,7 @@
 package edu.uic.ibeis_java_api.api;
 
 /**
- * An ellipsoidal bounding box defined within an image
+ * A bounding box defined within an image
  */
 public class BoundingBox {
 

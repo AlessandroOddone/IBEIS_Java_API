@@ -2,6 +2,7 @@ package edu.uic.ibeis_java_api.api;
 
 import com.google.gson.JsonElement;
 import edu.uic.ibeis_java_api.api_interfaces.DetectionMethods;
+import edu.uic.ibeis_java_api.api_interfaces.ImageDeleteMethods;
 import edu.uic.ibeis_java_api.api_interfaces.ImageUploadMethods;
 import edu.uic.ibeis_java_api.exceptions.*;
 import edu.uic.ibeis_java_api.http.*;
@@ -21,15 +22,7 @@ import java.util.*;
 /**
  * Controller class to interact with Ibeis
  */
-public class Ibeis implements ImageUploadMethods, DetectionMethods {
-
-    /**
-     *
-     * Implementation of ImageDeleteMethods interface
-     *
-     */
-
-
+public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionMethods {
 
     /**
      *
@@ -70,6 +63,11 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
 
         // upload and delete zip file
         Response response = uploadAndDeleteImageZipArchive(zipFilePath);
+
+        // check if the request has been successful
+        if(response == null || !response.isSuccess()) {
+            throw new UnsuccessfulHttpRequestException();
+        }
 
         // return list of gIds of the uploaded images
         List<IbeisImage> ibeisImageList = new ArrayList<>();
@@ -121,10 +119,19 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
      */
     private Response uploadAndDeleteImageZipArchive(File zipFilePath) throws BadHttpRequestException, UnsuccessfulHttpRequestException, IOException {
         // http POST request to upload the zip file
-        Response response;
         try {
-            response = new Request(RequestMethod.POST, CallPath.IMAGE.getValue(), new ParametersList().addParameter
+            Response response = new Request(RequestMethod.POST, CallPath.IMAGE.getValue(), new ParametersList().addParameter
                     (new Parameter(ParamName.IMAGE_ZIP_ARCHIVE.getValue(), new ImageZipArchive(zipFilePath)))).execute();
+
+            // delete zip file
+            deleteZipFile(zipFilePath);
+
+            // check if the request has been successful
+            if(response == null || !response.isSuccess()) {
+                throw new UnsuccessfulHttpRequestException();
+            }
+            return response;
+
         } catch (AuthorizationHeaderException e) {
             deleteZipFile(zipFilePath); // delete zip file
             e.printStackTrace();
@@ -138,19 +145,50 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
             e.printStackTrace();
             throw new BadHttpRequestException("invalid http method");
         }
-
-        // delete zip file
-        deleteZipFile(zipFilePath);
-
-        // check if the request has been successful
-        if(!response.isSuccess()) {
-            throw new UnsuccessfulHttpRequestException();
-        }
-        return response;
     }
 
     private void deleteZipFile(File zipFilePath) throws IOException {
         zipFilePath.delete();
+    }
+
+
+    /**
+     *
+     * Implementation of ImageUploadMethods interface
+     *
+     */
+
+    @Override
+    public void deleteImage(IbeisImage image) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        deleteImages(Arrays.asList(image));
+    }
+
+    @Override
+    public void deleteImages(List<IbeisImage> imageList) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        List<Integer> imageIds = new ArrayList<>();
+        for(IbeisImage image : imageList) {
+            imageIds.add(image.getId());
+        }
+
+        try {
+            Response response = new Request(RequestMethod.DELETE, CallPath.IMAGE.getValue(), new ParametersList().addParameter
+                    (new Parameter(ParamName.GID_LIST.getValue(), imageIds))).execute();
+
+            // check if the request has been successful
+            if(response == null || !response.isSuccess()) {
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
     }
 
 
@@ -182,12 +220,10 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
             imageIds.add(image.getId());
         }
 
-        System.out.println("imageIds: " + imageIds);
-
-        List<List<IbeisAnnotation>> ibeisAnnotationList = new ArrayList<>();
-        Response response;
         try {
-            response = new Request(RequestMethod.PUT, CallPath.ANIMAL_DETECTION.getValue(), new ParametersList()
+            List<List<IbeisAnnotation>> ibeisAnnotationList = new ArrayList<>();
+
+            Response response = new Request(RequestMethod.PUT, CallPath.ANIMAL_DETECTION.getValue(), new ParametersList()
                     .addParameter(new Parameter(ParamName.SPECIES.getValue(), species.getValue()))
                     .addParameter(new Parameter(ParamName.GID_LIST.getValue(), imageIds))).execute();
 
@@ -195,6 +231,15 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
                 System.out.println("Unsuccessful Request");
                 throw new UnsuccessfulHttpRequestException();
             }
+
+            for(JsonElement elementAnnotationsJson : response.getContent().getAsJsonArray()) {
+                List<IbeisAnnotation> elementAnnotations = new ArrayList<>();
+                for (JsonElement annotationJson : elementAnnotationsJson.getAsJsonArray()) {
+                    elementAnnotations.add(new IbeisAnnotation(annotationJson.getAsInt()));
+                }
+                ibeisAnnotationList.add(elementAnnotations);
+            }
+            return ibeisAnnotationList;
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
@@ -206,14 +251,5 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
             e.printStackTrace();
             throw new BadHttpRequestException("invalid http method");
         }
-
-        for(JsonElement elementAnnotationsJson : response.getContent().getAsJsonArray()) {
-            List<IbeisAnnotation> elementAnnotations = new ArrayList<>();
-            for (JsonElement annotationJson : elementAnnotationsJson.getAsJsonArray()) {
-                elementAnnotations.add(new IbeisAnnotation(annotationJson.getAsInt()));
-            }
-            ibeisAnnotationList.add(elementAnnotations);
-        }
-        return ibeisAnnotationList;
     }
 }

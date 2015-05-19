@@ -148,4 +148,70 @@ public class IbeisIndividual {
         }
         return annotations;
     }
+
+    /**
+     * Set the name of the individual (Http PUT)
+     * @param name
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public void setName(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        this.name = name;
+
+        //push to server
+        try {
+            Response response = new Request(RequestMethod.PUT, CallPath.INDIVIDUAL_NAME.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
+                            .addParameter(new Parameter(ParamName.NAME_TEXT_LIST.getValue(), name))).execute();
+
+            if (response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    /**
+     * Set the sex of the individual (Http PUT)
+     * @param sex
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public void setSex(Sex sex) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        this.sex = sex;
+
+        //push to server
+        try {
+            Response response = new Request(RequestMethod.PUT, CallPath.INDIVIDUAL_SEX.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
+                            .addParameter(new Parameter(ParamName.NAME_SEX_TEST_LIST.getValue(), sex.getValue()))).execute();
+
+            if (response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
 }

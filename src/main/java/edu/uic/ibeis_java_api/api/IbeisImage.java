@@ -25,6 +25,7 @@ public class IbeisImage {
 
     private int id;
 
+    private String base64EncodedImage;
     private GeoCoordinates location;
     private GregorianCalendar datetime;
     private ImageSize size;
@@ -37,6 +38,40 @@ public class IbeisImage {
 
     public int getId() {
         return id;
+    }
+
+
+    /**
+     * Get the raw image Base64 encoded
+     * @return Base64 encoded image
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public String getBase64EncodedImage() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        if (base64EncodedImage == null) {
+            try {
+                Response response = new Request(RequestMethod.GET, CallPath.IMAGE.getValue() + id + "/").execute();
+
+                if (response == null || !response.isSuccess()) {
+                    System.out.println("Unsuccessful Request");
+                    throw new UnsuccessfulHttpRequestException();
+                }
+
+                base64EncodedImage = response.getContent().getAsString();
+
+            } catch (AuthorizationHeaderException e) {
+                e.printStackTrace();
+                throw new BadHttpRequestException("error in authorization header");
+            } catch (URISyntaxException | MalformedURLException e) {
+                e.printStackTrace();
+                throw new BadHttpRequestException("invalid url");
+            } catch (InvalidHttpMethodException e) {
+                e.printStackTrace();
+                throw new BadHttpRequestException("invalid http method");
+            }
+        }
+        return base64EncodedImage;
     }
 
     /**
@@ -70,7 +105,6 @@ public class IbeisImage {
                 e.printStackTrace();
                 throw new BadHttpRequestException("invalid http method");
             }
-
         }
         return location;
     }
@@ -242,6 +276,106 @@ public class IbeisImage {
                 annotationsOfSpecies.add(new IbeisAnnotation(annotationIdJson.getAsInt()));
             }
             return annotationsOfSpecies;
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    /**
+     * Set the location of the image (Http PUT)
+     * @param location
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public void setLocation(GeoCoordinates location) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        this.location = location;
+
+        //push to server
+        try {
+            Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_GPS.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
+                            .addParameter(new Parameter(ParamName.LAT_LIST.getValue(), location.getLatitude()))
+                            .addParameter(new Parameter(ParamName.LAT_LIST.getValue(), location.getLongitude()))).execute();
+
+            if (response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    /**
+     * Set the datetime of the image (Http PUT)
+     * @param datetime
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public void setDatetime(GregorianCalendar datetime) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        this.datetime = datetime;
+
+        //push to server
+        try {
+            Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_UNIXTIME.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
+                            .addParameter(new Parameter(ParamName.UNIXTIME_LIST.getValue(), datetime.getTimeInMillis()  / 1000))).execute();
+
+            if (response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    /**
+     * Set a note associated to the image (Http PUT)
+     * @param note
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public void setNote(Note note) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        this.note = note;
+
+        //push to server
+        try {
+            Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_NOTE.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
+                            .addParameter(new Parameter(ParamName.NOTES_LIST.getValue(), note.getText()))).execute();
+
+            if (response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
