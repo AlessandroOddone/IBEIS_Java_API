@@ -5,7 +5,6 @@ import edu.uic.ibeis_java_api.http.*;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,32 +13,41 @@ public class HttpRequestTestCollection implements TestCollection {
     private Collection<HttpTest> testCollection;
 
     public HttpRequestTestCollection() {
-        System.out.println("***HTTP REQUEST TEST COLLECTION***\n" );
+        System.out.println("***HTTP REQUEST TEST COLLECTION***\n");
         testCollection = new ArrayList<>();
 
         /**
-         * GET CALLS
+         * IMAGE UPLOAD
          */
-        testCollection.add(new HttpGetTest("/annot/bboxes/").addParam("aid_list", Arrays.asList(159, 160, 161, 155, 156, 157)));
-        testCollection.add(new HttpGetTest("/annot/contact_aids/").addParam("aid_list", Arrays.asList(159,160,161,155,156,157)));
-        testCollection.add(new HttpGetTest("/annot/name_rowids/").addParam("aid_list", Arrays.asList(159,160,161,155,156,157)));
-
         /*
-        testCollection.add(new HttpGetTest("/image/aids/").addParam("gid_list", Arrays.asList(148,147)));
+        Parameter imgZipArchive = new Parameter("image_zip_archive", getClass().getClassLoader().getResource("images_archive_test_same_giraffe.zip").getFile());
+        imgZipArchive.setIsFile(true);
+        testCollection.add(new HttpPostTest("/image/").addParam(imgZipArchive));
+        */
+
+        /**
+         * GETTERS (GET CALLS)
+         */
+        testCollection.add(new HttpGetTest("/image/"));
+        testCollection.add(new HttpGetTest("/image/1/"));
+        /*
+        testCollection.add(new HttpGetTest("/image/aids/").addParam("gid_list", Arrays.asList(148, 147)));
         testCollection.add(new HttpGetTest("/image/aids_of_species/")
                 .addParam("gid_list", Arrays.asList(148,147))
                 .addParam("species", Species.GIRAFFE.getValue()));
-        testCollection.add(new HttpGetTest("/image/gnames/").addParam("gid_list", Arrays.asList(148,147)));
-        testCollection.add(new HttpGetTest("/image/paths/").addParam("gid_list", Arrays.asList(148,147)));
         testCollection.add(new HttpGetTest("/image/gps/").addParam("gid_list", Arrays.asList(148,147)));
         testCollection.add(new HttpGetTest("/image/notes/").addParam("gid_list", Arrays.asList(148,147)));
         testCollection.add(new HttpGetTest("/image/sizes/").addParam("gid_list", Arrays.asList(148,147)));
         testCollection.add(new HttpGetTest("/image/unixtime/").addParam("gid_list", Arrays.asList(148,147)));
-        */
+
+        testCollection.add(new HttpGetTest("/annot/bboxes/").addParam("aid_list", Arrays.asList(159, 160, 161, 155, 156, 157)));
+        testCollection.add(new HttpGetTest("/annot/contact_aids/").addParam("aid_list", Arrays.asList(159,160,161,155,156,157)));
+        testCollection.add(new HttpGetTest("/annot/name_rowids/").addParam("aid_list", Arrays.asList(159,160,161,155,156,157)));
 
         testCollection.add(new HttpGetTest("/name/aids/").addParam("nid_list", Arrays.asList(-159,-160,-161,-155,-156,-157)));
         testCollection.add(new HttpGetTest("/name/sex_text/").addParam("name_rowid_list", Arrays.asList(-159,-160,-161,-155,-156,-157)));
         testCollection.add(new HttpGetTest("/name/texts/").addParam("name_rowid_list", Arrays.asList(-159,-160,-161,-155,-156,-157)));
+        */
 
         /**
          * SETTERS (PUT CALLS)
@@ -58,27 +66,19 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * DELETE CALLS
          */
-        //testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", Arrays.asList(119,120)));
-
-        /**
-         * QUERY
-         */
-        //testCollection.add(new HttpPutTest("/core/query_chips/").addParam("qaid_list", 159).addParam("daid_list", Arrays.asList(159, 160, 161, 155, 156, 157)));
-
-        /**
-         * IMAGE UPLOAD
-         */
-        /*
-        Parameter imgZipArchive = new Parameter("image_zip_archive", getClass().getClassLoader().getResource("images_archive_test_same_giraffe.zip").getFile());
-        imgZipArchive.setIsFile(true);
-        testCollection.add(new HttpPostTest("/image/").addParam(imgZipArchive));
-        */
+        //testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", Arrays.asList(150)));
 
         /**
          * DETECT RANDOM FOREST
          */
         //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "148").addParam("species", Species.GIRAFFE.getValue()));
         //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "148,147").addParam("species", Species.GIRAFFE.getValue()));
+
+        /**
+         * QUERY
+         */
+        //testCollection.add(new HttpPutTest("/core/query_chips/").addParam("qaid_list", 159).addParam("daid_list", Arrays.asList(159, 160, 161, 155, 156, 157)));
+
     }
 
     public void runTests() {
@@ -358,6 +358,5 @@ public class HttpRequestTestCollection implements TestCollection {
             System.out.println("ELAPSED TIME: " + new DecimalFormat("#.###").format((double) (endTime - startTime)/1000000000) + " s");
         }
     }
-
 }
 
