@@ -12,6 +12,9 @@ import android.org.apache.http.client.methods.HttpPut;
 import android.org.apache.http.entity.mime.MultipartEntityBuilder;
 import android.org.apache.http.entity.mime.content.FileBody;
 import android.org.apache.http.impl.client.DefaultHttpClient;
+import android.org.apache.http.params.BasicHttpParams;
+import android.org.apache.http.params.HttpConnectionParams;
+import android.org.apache.http.params.HttpParams;
 import android.org.apache.http.util.EntityUtils;
 import edu.uic.ibeis_java_api.exceptions.AuthorizationHeaderException;
 import edu.uic.ibeis_java_api.exceptions.InvalidHttpMethodException;
@@ -45,7 +48,9 @@ public class Request {
     }
 
     public Response execute() throws AuthorizationHeaderException, URISyntaxException, IOException, InvalidHttpMethodException {
-        HttpClient client = new DefaultHttpClient();
+        final HttpParams httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
+        HttpClient client = new DefaultHttpClient(httpParams);
         HttpResponse response;
 
         switch (httpRequestMethod) {

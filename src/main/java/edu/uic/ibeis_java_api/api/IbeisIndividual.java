@@ -1,5 +1,6 @@
 package edu.uic.ibeis_java_api.api;
 
+import com.google.gson.JsonElement;
 import edu.uic.ibeis_java_api.exceptions.AuthorizationHeaderException;
 import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.InvalidHttpMethodException;
@@ -12,8 +13,12 @@ import edu.uic.ibeis_java_api.values.Sex;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An individual on Ibeis server
+ */
 public class IbeisIndividual {
 
     private int id;
@@ -39,9 +44,8 @@ public class IbeisIndividual {
      */
     public String getName() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         if (name == null) {
-            Response response;
             try {
-                response = new Request(RequestMethod.GET, CallPath.INDIVIDUAL_NAME.getValue(),
+                Response response = new Request(RequestMethod.GET, CallPath.INDIVIDUAL_NAME.getValue(),
                         new ParametersList().addParameter(new Parameter(ParamName.NAME_ROWID_LIST.getValue(), id))).execute();
 
                 if (response == null || !response.isSuccess()) {
@@ -74,9 +78,8 @@ public class IbeisIndividual {
      */
     public Sex getSex() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         if (sex == null) {
-            Response response;
             try {
-                response = new Request(RequestMethod.GET, CallPath.INDIVIDUAL_SEX.getValue(),
+                Response response = new Request(RequestMethod.GET, CallPath.INDIVIDUAL_SEX.getValue(),
                         new ParametersList().addParameter(new Parameter(ParamName.NAME_ROWID_LIST.getValue(), id))).execute();
 
                 if (response == null || !response.isSuccess()) {
@@ -118,9 +121,8 @@ public class IbeisIndividual {
      */
     public List<IbeisAnnotation> getAnnotations() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         if (annotations == null) {
-            Response response;
             try {
-                response = new Request(RequestMethod.GET, CallPath.INDIVIDUAL_ANNOTATIONS.getValue(),
+                Response response = new Request(RequestMethod.GET, CallPath.INDIVIDUAL_ANNOTATIONS.getValue(),
                         new ParametersList().addParameter(new Parameter(ParamName.NID_LIST.getValue(), id))).execute();
 
                 if (response == null || !response.isSuccess()) {
@@ -128,7 +130,10 @@ public class IbeisIndividual {
                     throw new UnsuccessfulHttpRequestException();
                 }
 
-                name = response.getContent().getAsJsonArray().get(0).getAsString();
+                annotations = new ArrayList<>();
+                for (JsonElement annotationIdJson : response.getContent().getAsJsonArray().get(0).getAsJsonArray()) {
+                    annotations.add(new IbeisAnnotation(annotationIdJson.getAsInt()));
+                }
 
             } catch (AuthorizationHeaderException e) {
                 e.printStackTrace();

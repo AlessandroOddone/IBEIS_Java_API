@@ -37,22 +37,28 @@ public class IbeisAnnotation {
 
     /**
      * Get the bounding box corresponding to the annotation (Http GET)
-     * @return bounding box
+     * @return Bounding box
      * @throws IOException
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
     public BoundingBox getBoundingBox() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         if (boundingBox == null) {
-            Response response;
             try {
-                response = new Request(RequestMethod.GET, CallPath.ANNOTATION_BOUNDING_BOX.getValue(),
+                Response response = new Request(RequestMethod.GET, CallPath.ANNOTATION_BOUNDING_BOX.getValue(),
                         new ParametersList().addParameter(new Parameter(ParamName.AID_LIST.getValue(), id))).execute();
 
                 if (response == null || !response.isSuccess()) {
                     System.out.println("Unsuccessful Request");
                     throw new UnsuccessfulHttpRequestException();
                 }
+
+                JsonArray boundingBoxParamsJson = response.getContent().getAsJsonArray().get(0).getAsJsonArray();
+                boundingBox = new BoundingBox();
+                boundingBox.setX(boundingBoxParamsJson.get(0).getAsInt());
+                boundingBox.setY(boundingBoxParamsJson.get(1).getAsInt());
+                boundingBox.setW(boundingBoxParamsJson.get(2).getAsInt());
+                boundingBox.setH(boundingBoxParamsJson.get(3).getAsInt());
 
             } catch (AuthorizationHeaderException e) {
                 e.printStackTrace();
@@ -64,13 +70,6 @@ public class IbeisAnnotation {
                 e.printStackTrace();
                 throw new BadHttpRequestException("invalid http method");
             }
-
-            JsonArray boundingBoxParams = response.getContent().getAsJsonArray().get(0).getAsJsonArray();
-            boundingBox = new BoundingBox();
-            boundingBox.setX(boundingBoxParams.get(0).getAsInt());
-            boundingBox.setY(boundingBoxParams.get(1).getAsInt());
-            boundingBox.setW(boundingBoxParams.get(2).getAsInt());
-            boundingBox.setH(boundingBoxParams.get(3).getAsInt());
         }
         return boundingBox;
     }
@@ -84,9 +83,8 @@ public class IbeisAnnotation {
      */
     public IbeisIndividual getIndividual() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         if (individual == null) {
-            Response response;
             try {
-                response = new Request(RequestMethod.GET, CallPath.ANNOTATION_INDIVIDUAL.getValue(),
+                Response response = new Request(RequestMethod.GET, CallPath.ANNOTATION_INDIVIDUAL.getValue(),
                         new ParametersList().addParameter(new Parameter(ParamName.AID_LIST.getValue(), id))).execute();
 
                 if (response == null || !response.isSuccess()) {
@@ -112,21 +110,25 @@ public class IbeisAnnotation {
 
     /**
      * Get the annotations that have been found in the same image (Http Get)
-     * @return list of IbeisAnnotation elements
+     * @return List of IbeisAnnotation elements
      * @throws IOException
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
     public List<IbeisAnnotation> getNeighborAnnotations() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         if (neighborAnnotations == null) {
-            Response response;
             try {
-                response = new Request(RequestMethod.GET, CallPath.ANNOTATION_NEIGHBORS.getValue(),
+                Response response = new Request(RequestMethod.GET, CallPath.ANNOTATION_NEIGHBORS.getValue(),
                         new ParametersList().addParameter(new Parameter(ParamName.AID_LIST.getValue(), id))).execute();
 
                 if (response == null || !response.isSuccess()) {
                     System.out.println("Unsuccessful Request");
                     throw new UnsuccessfulHttpRequestException();
+                }
+
+                neighborAnnotations = new ArrayList<>();
+                for (JsonElement annotationIdJson : response.getContent().getAsJsonArray().get(0).getAsJsonArray()) {
+                    neighborAnnotations.add(new IbeisAnnotation(annotationIdJson.getAsInt()));
                 }
 
             } catch (AuthorizationHeaderException e) {
@@ -138,10 +140,6 @@ public class IbeisAnnotation {
             } catch (InvalidHttpMethodException e) {
                 e.printStackTrace();
                 throw new BadHttpRequestException("invalid http method");
-            }
-            neighborAnnotations = new ArrayList<>();
-            for (JsonElement annotationId : response.getContent().getAsJsonArray().get(0).getAsJsonArray()) {
-                neighborAnnotations.add(new IbeisAnnotation(annotationId.getAsInt()));
             }
         }
         return neighborAnnotations;

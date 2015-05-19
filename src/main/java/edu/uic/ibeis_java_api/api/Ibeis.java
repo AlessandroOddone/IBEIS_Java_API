@@ -18,7 +18,18 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * Controller class to interact with Ibeis
+ */
 public class Ibeis implements ImageUploadMethods, DetectionMethods {
+
+    /**
+     *
+     * Implementation of ImageDeleteMethods interface
+     *
+     */
+
+
 
     /**
      *
@@ -27,12 +38,22 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
      */
 
     @Override
-    public IbeisImage uploadImage(File image) throws UnsupportedImageFileTypeException, IOException, UnsuccessfulHttpRequestException {
+    public IbeisImage uploadImage(File image) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         return uploadImages(Arrays.asList(image)).get(0);
     }
 
     @Override
-    public List<IbeisImage> uploadImages(List<File> images) throws UnsupportedImageFileTypeException, IOException, UnsuccessfulHttpRequestException {
+    public List<IbeisImage> uploadImages(List<File> images) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        return uploadImages(images, new File(generatePathToZipFile(images.get(0)))); // same folder of first image in the list
+    }
+
+    @Override
+    public IbeisImage uploadImage(File image, File pathToTemporaryZipFile) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        return uploadImages(Arrays.asList(image), pathToTemporaryZipFile).get(0);
+    }
+
+    @Override
+    public List<IbeisImage> uploadImages(List<File> images, File pathToTemporaryZipFile) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         // check if extension of each image file in the collection is supported by Ibeis database
         for(File image : images) {
             checkExtensionIsSupported(image);
@@ -41,19 +62,14 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
         // compress the image files into a zip file and get its path
         File zipFilePath;
         try {
-            zipFilePath = FileUtils.zipFiles(images, generateZipFilePath(images.get(0))); // same folder of first image in the list
+            zipFilePath = FileUtils.zipFiles(images, new File(pathToTemporaryZipFile.getPath() + generateZipFileName()));
         } catch (IOException e) {
             e.printStackTrace();
             throw new IOException("error zipping file");
         }
 
         // upload and delete zip file
-        Response response = null;
-        try {
-            response = uploadAndDeleteImageZipArchive(zipFilePath);
-        } catch (BadHttpRequestException e) {
-            e.printStackTrace();
-        }
+        Response response = uploadAndDeleteImageZipArchive(zipFilePath);
 
         // return list of gIds of the uploaded images
         List<IbeisImage> ibeisImageList = new ArrayList<>();
@@ -77,15 +93,22 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
     }
 
     /**
-     * Generate the filepath of the temporary zip file to be used to upload images to Ibeis server
-     * (the zip file is created in the same folder of the image passed as parameter)
-     * @param unzippedFile
-     * @return Zip archive filepath
+     * Generate the filepath to the temporary archive to be used to upload images to Ibeis server (name of the archive excluded from the path).
+     * The path to the zip file is the same folder which contains the image passed as parameter.
+     * @param unzippedFilePath
+     * @return Path to the zip file
      */
-    private File generateZipFilePath(File unzippedFile) {
-        String unzippedFilePath = unzippedFile.getPath();
-        String pathToFile = unzippedFilePath.substring(0, unzippedFilePath.lastIndexOf("/")+1);
-        return new File(pathToFile + new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss_SSS").format(new Date()) + ".zip");
+    private String generatePathToZipFile(File unzippedFilePath) {
+        String unzippedFilePathString = unzippedFilePath.getPath();
+        return unzippedFilePathString.substring(0, unzippedFilePathString.lastIndexOf("/")+1);
+    }
+
+    /**
+     * Generate a unique name to be used as the name of a temporary zip archive
+     * @return Unique string
+     */
+    private String generateZipFileName() {
+        return new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss_SSS").format(new Date()) + ".zip";
     }
 
     /**
@@ -137,6 +160,16 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
      *
      */
 
+    /**
+     * Run Random Forest Animal Detection algorithm and returns a list of all the annotations corresponding to the specified
+     * species that are found in the IbeisImage passed as parameter.
+     * @param ibeisImage image on Ibeis server
+     * @param species species to detect
+     * @return
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
     @Override
     public List<IbeisAnnotation> runAnimalDetection(IbeisImage ibeisImage, Species species) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         return runAnimalDetection(Arrays.asList(ibeisImage), species).get(0);
@@ -174,10 +207,10 @@ public class Ibeis implements ImageUploadMethods, DetectionMethods {
             throw new BadHttpRequestException("invalid http method");
         }
 
-        for(JsonElement elementAnnotationsJsonElement : response.getContent().getAsJsonArray()) {
+        for(JsonElement elementAnnotationsJson : response.getContent().getAsJsonArray()) {
             List<IbeisAnnotation> elementAnnotations = new ArrayList<>();
-            for (JsonElement annotationJsonElement : elementAnnotationsJsonElement.getAsJsonArray()) {
-                elementAnnotations.add(new IbeisAnnotation(annotationJsonElement.getAsInt()));
+            for (JsonElement annotationJson : elementAnnotationsJson.getAsJsonArray()) {
+                elementAnnotations.add(new IbeisAnnotation(annotationJson.getAsInt()));
             }
             ibeisAnnotationList.add(elementAnnotations);
         }
