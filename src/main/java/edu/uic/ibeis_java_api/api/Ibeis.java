@@ -25,12 +25,6 @@ import java.util.*;
  */
 public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionMethods, QueryDatabaseMethods {
 
-    /**
-     *
-     * Implementation of ImageUploadMethods interface
-     *
-     */
-
     @Override
     public IbeisImage uploadImage(File image) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         return uploadImages(Arrays.asList(image)).get(0);
@@ -153,12 +147,6 @@ public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionM
     }
 
 
-    /**
-     *
-     * Implementation of ImageUploadMethods interface
-     *
-     */
-
     @Override
     public void deleteImage(IbeisImage image) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         deleteImages(Arrays.asList(image));
@@ -191,13 +179,6 @@ public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionM
             throw new BadHttpRequestException("invalid http method");
         }
     }
-
-
-    /**
-     *
-     * Implementation of DetectionMethods interface
-     *
-     */
 
     @Override
     public List<IbeisAnnotation> runAnimalDetection(IbeisImage ibeisImage, Species species) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
@@ -244,13 +225,6 @@ public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionM
             throw new BadHttpRequestException("invalid http method");
         }
     }
-
-
-    /**
-     *
-     * Implementation of QueryDatabaseMethods interface
-     *
-     */
 
     @Override
     public List<IbeisImage> getAllImages() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
