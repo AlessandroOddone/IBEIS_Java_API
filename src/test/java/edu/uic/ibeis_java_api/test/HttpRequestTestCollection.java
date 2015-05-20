@@ -2,9 +2,11 @@ package edu.uic.ibeis_java_api.test;
 
 import edu.uic.ibeis_java_api.api.ImageZipArchive;
 import edu.uic.ibeis_java_api.http.*;
+import edu.uic.ibeis_java_api.values.Species;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,16 +31,17 @@ public class HttpRequestTestCollection implements TestCollection {
          * GETTERS (GET CALLS)
          */
         testCollection.add(new HttpGetTest("/image/"));
-        testCollection.add(new HttpGetTest("/image/1/"));
-        /*
-        testCollection.add(new HttpGetTest("/image/aids/").addParam("gid_list", Arrays.asList(148, 147)));
+        testCollection.add(new HttpGetTest("/image/158/"));
+        testCollection.add(new HttpGetTest("/name/"));
+        testCollection.add(new HttpGetTest("/annot/"));
+        testCollection.add(new HttpGetTest("/image/aids/").addParam("gid_list", Arrays.asList(1,148, 147)));
         testCollection.add(new HttpGetTest("/image/aids_of_species/")
-                .addParam("gid_list", Arrays.asList(148,147))
+                .addParam("gid_list", Arrays.asList(1,148, 147))
                 .addParam("species", Species.GIRAFFE.getValue()));
-        testCollection.add(new HttpGetTest("/image/gps/").addParam("gid_list", Arrays.asList(148,147)));
-        testCollection.add(new HttpGetTest("/image/notes/").addParam("gid_list", Arrays.asList(148,147)));
-        testCollection.add(new HttpGetTest("/image/sizes/").addParam("gid_list", Arrays.asList(148,147)));
-        testCollection.add(new HttpGetTest("/image/unixtime/").addParam("gid_list", Arrays.asList(148,147)));
+        testCollection.add(new HttpGetTest("/image/gps/").addParam("gid_list", Arrays.asList(1,148, 147)));
+        testCollection.add(new HttpGetTest("/image/notes/").addParam("gid_list", Arrays.asList(1,148, 147)));
+        testCollection.add(new HttpGetTest("/image/sizes/").addParam("gid_list", Arrays.asList(1,148, 147)));
+        testCollection.add(new HttpGetTest("/image/unixtime/").addParam("gid_list", Arrays.asList(1,148, 147)));
 
         testCollection.add(new HttpGetTest("/annot/bboxes/").addParam("aid_list", Arrays.asList(159, 160, 161, 155, 156, 157)));
         testCollection.add(new HttpGetTest("/annot/contact_aids/").addParam("aid_list", Arrays.asList(159,160,161,155,156,157)));
@@ -47,12 +50,10 @@ public class HttpRequestTestCollection implements TestCollection {
         testCollection.add(new HttpGetTest("/name/aids/").addParam("nid_list", Arrays.asList(-159,-160,-161,-155,-156,-157)));
         testCollection.add(new HttpGetTest("/name/sex_text/").addParam("name_rowid_list", Arrays.asList(-159,-160,-161,-155,-156,-157)));
         testCollection.add(new HttpGetTest("/name/texts/").addParam("name_rowid_list", Arrays.asList(-159,-160,-161,-155,-156,-157)));
-        */
 
         /**
          * SETTERS (PUT CALLS)
          */
-        /*
         testCollection.add(new HttpPutTest("/image/gps/").addParam("gid_list", "148,147")
                 .addParam("lat_list", Arrays.asList(41.931535, 41.931535)).addParam("lon_list", Arrays.asList(-87.711991,-87.711991)));
         testCollection.add(new HttpPutTest("/image/notes/").addParam("gid_list", "148,147").addParam("notes_list","test_note,test_note"));
@@ -61,7 +62,6 @@ public class HttpRequestTestCollection implements TestCollection {
                 .addParam("name_sex_text_list","test_sex,test_sex,test_sex,test_sex,test_sex,test_sex"));
         testCollection.add(new HttpPutTest("/name/texts/").addParam("name_rowid_list", "-159,-160,-161,-155,-156,-157")
                 .addParam("name_text_list","test_name,test_name,test_name,test_name,test_name,test_name"));
-        */
 
         /**
          * DELETE CALLS
@@ -72,7 +72,7 @@ public class HttpRequestTestCollection implements TestCollection {
          * DETECT RANDOM FOREST
          */
         //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "148").addParam("species", Species.GIRAFFE.getValue()));
-        //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "148,147").addParam("species", Species.GIRAFFE.getValue()));
+        testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "148,147").addParam("species", Species.GIRAFFE.getValue()));
 
         /**
          * QUERY

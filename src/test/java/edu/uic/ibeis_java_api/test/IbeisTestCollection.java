@@ -3,13 +3,13 @@ package edu.uic.ibeis_java_api.test;
 import edu.uic.ibeis_java_api.api.Ibeis;
 import edu.uic.ibeis_java_api.api.IbeisAnnotation;
 import edu.uic.ibeis_java_api.api.IbeisImage;
+import edu.uic.ibeis_java_api.api.IbeisIndividual;
 import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
 import edu.uic.ibeis_java_api.values.Species;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,28 +25,13 @@ public class IbeisTestCollection implements TestCollection {
         testCollection = new ArrayList<>();
         ibeis = new Ibeis();
 
-
-        UploadImagesTest uploadTest = new UploadImagesTest(Arrays.asList(new File(getClass().getClassLoader().getResource("giraffe_api_upload_test_1.jpeg").getFile()),
-                new File(getClass().getClassLoader().getResource("giraffe_api_upload_test_2.jpeg").getFile())));
-        uploadTest.execute();
-        System.out.println("\n");
-
+        /**
+         * GET ALL IMAGES
+         */
         /*
-        DeleteImagesTest deleteTest = new DeleteImagesTest(uploadTest.getUploadedImages().get(0));
-        deleteTest.execute();
-        */
-
         try {
-            IbeisImage testImage = uploadTest.getUploadedImages().get(0);
-            System.out.println("Image raw data: " + testImage.getBase64EncodedImage());
-            System.out.println("Image location: " + testImage.getLocation());
-            System.out.println("Image datetime: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(testImage.getDatetime().getTime()));
-            System.out.println("Image size: " + testImage.getSize());
-            System.out.println("Image note: " + testImage.getNote());
-            System.out.println("Image annotations: " + printIbeisAnnotationListElement(testImage.getAnnotations()));
-            System.out.println("Image annotations by species (GIRAFFE): " + printIbeisAnnotationListElement
-                    (testImage.getAnnotationsOfSpecies(Species.GIRAFFE)));
-            System.out.println("\n");
+            List<IbeisImage> ibeisImages = ibeis.getAllImages();
+            printIbeisImageList(ibeisImages);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (BadHttpRequestException e) {
@@ -54,13 +39,94 @@ public class IbeisTestCollection implements TestCollection {
         } catch (UnsuccessfulHttpRequestException e) {
             e.printStackTrace();
         }
+        */
 
+        /**
+         * GET ALL INDIVIDUALS
+         */
+        /*
+        try {
+            List<IbeisIndividual> ibeisIndividuals = ibeis.getAllIndividuals();
+            printIbeisIndividualList(ibeisIndividuals);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BadHttpRequestException e) {
+            e.printStackTrace();
+        } catch (UnsuccessfulHttpRequestException e) {
+            e.printStackTrace();
+        }
+        */
+
+        /**
+         * UPLOAD IMAGE
+         */
+
+        UploadImagesTest uploadTest = new UploadImagesTest(Arrays.asList(new File(getClass().getClassLoader().getResource("zebra_api_upload_test.jpeg").getFile()),
+                new File(getClass().getClassLoader().getResource("giraffe_api_upload_test_2.jpeg").getFile())));
+        uploadTest.execute();
+        System.out.println("\n");
+
+        /**
+         * DELETE IMAGE
+         */
+        DeleteImagesTest deleteTest = new DeleteImagesTest(uploadTest.getUploadedImages().get(0));
+        deleteTest.execute();
+
+        /**
+         * VALID IMAGE
+         */
+        try {
+            System.out.println("isValidImage: " + uploadTest.getUploadedImages().get(0).isValidImage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * DOWNLOAD IMAGE FILE
+         */
+        /*
+        try {
+            IbeisImage testImage = uploadTest.getUploadedImages().get(0);
+            RawImage rawImage = testImage.getRawImage();
+            System.out.println("file type: " + rawImage.getFileType());
+            try (OutputStream stream = new FileOutputStream("src/test/resources/download_test.jpeg")) {
+                stream.write(rawImage.getBytes());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        */
+
+
+        /**
+         * IMAGE GETTERS
+         */
+        try {
+            IbeisImage testImage = uploadTest.getUploadedImages().get(0);
+            //System.out.println("Image location: " + testImage.getLocation());
+            //System.out.println("Image datetime: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(testImage.getDatetime().getTime()));
+            //System.out.println("Image size: " + testImage.getSize());
+            //System.out.println("Image note: " + testImage.getNote());
+            System.out.println("Image annotations: " + printIbeisAnnotationListElement(testImage.getAnnotations()));
+            System.out.println("Image annotations by species (GIRAFFE): " + printIbeisAnnotationListElement
+                    (testImage.getAnnotationsOfSpecies(Species.GIRAFFE)));
+            System.out.println("\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * ANIMAL DETECTION
+         */
         /*
         AnimalDetectionTest animalDetectionTest = new AnimalDetectionTest(uploadTest.getUploadedImages(), Species.GIRAFFE);
         animalDetectionTest.execute();
         System.out.println("\n");
         */
 
+        /**
+         * ANNOTATION GETTERS
+         */
         /*
         for (IbeisAnnotation annot : animalDetectionTest.getIbeisAnnotationList().get(0)) {
             try {
@@ -68,17 +134,16 @@ public class IbeisTestCollection implements TestCollection {
                 System.out.println("Bounding Box: " + annot.getBoundingBox());
                 System.out.println("Neighbor Annotations: " + printIbeisAnnotationListElement(annot.getNeighborAnnotations()));
                 System.out.println("\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (BadHttpRequestException e) {
-                e.printStackTrace();
-            } catch (UnsuccessfulHttpRequestException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             System.out.println("\n");
         }
         */
 
+        /**
+         * INDIVIDUAL GETTERS
+         */
         /*
         try {
             IbeisIndividual testIndividual = animalDetectionTest.getIbeisAnnotationList().get(0).get(0).getIndividual();
@@ -86,15 +151,10 @@ public class IbeisTestCollection implements TestCollection {
             System.out.println("Individual sex: " + testIndividual.getSex().getValue());
             System.out.println("Individual annotations: " + printIbeisAnnotationListElement(testIndividual.getAnnotations()));
             System.out.println("\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (BadHttpRequestException e) {
-            e.printStackTrace();
-        } catch (UnsuccessfulHttpRequestException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         */
-
     }
 
     public void runTests() {
@@ -268,6 +328,19 @@ public class IbeisTestCollection implements TestCollection {
         return builder.toString();
     }
 
+    public String printIbeisIndividualList(List<IbeisIndividual> ibeisIndividualList) {
+        StringBuilder builder = new StringBuilder("");
+
+        for(int i=0; i<ibeisIndividualList.size(); i++) {
+            if(i < ibeisIndividualList.size()-1) {
+                builder.append(ibeisIndividualList.get(i).getId() + ", ");
+            }
+            else {
+                builder.append(ibeisIndividualList.get(i).getId());
+            }
+        }
+        return builder.toString();
+    }
 
     public String printIbeisAnnotationListElement(List<IbeisAnnotation> ibeisAnnotationElement) {
         StringBuilder builder = new StringBuilder("[");
@@ -299,5 +372,4 @@ public class IbeisTestCollection implements TestCollection {
         builder.append("]");
         return builder.toString();
     }
-
 }

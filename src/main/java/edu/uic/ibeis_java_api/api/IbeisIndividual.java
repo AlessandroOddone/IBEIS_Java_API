@@ -214,4 +214,40 @@ public class IbeisIndividual {
             throw new BadHttpRequestException("invalid http method");
         }
     }
+
+    /**
+     * Returns true if the individual is on Ibeis server, false otherwise (Http GET)
+     * @return
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public boolean isValidIndividual() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException
+    {
+        try {
+            Response response = new Request(RequestMethod.GET, CallPath.INDIVIDUALS.getValue()).execute();
+
+            // check if the request has been successful
+            if(response == null || !response.isSuccess()) {
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            for (JsonElement individualIdJson : response.getContent().getAsJsonArray()) {
+                if(this.id == individualIdJson.getAsInt()) {
+                    return true;
+                }
+            }
+            return false;
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
 }

@@ -3,6 +3,7 @@ package edu.uic.ibeis_java_api.values;
 public enum CallPath {
 
     ANIMAL_DETECTION("/core/detect_random_forest/"),
+    ANNOTATIONS("/annot/"),
     ANNOTATION_BOUNDING_BOX("/annot/bboxes/"),
     ANNOTATION_INDIVIDUAL("/annot/name_rowids/"),
     ANNOTATION_NEIGHBORS("/annot/contact_aids/"),
@@ -13,6 +14,7 @@ public enum CallPath {
     IMAGE_NOTE("/image/notes/"),
     IMAGE_SIZE("/image/sizes/"),
     IMAGE_UNIXTIME("/image/unixtime/"),
+    INDIVIDUALS("/name/"),
     INDIVIDUAL_ANNOTATIONS("/name/aids/"),
     INDIVIDUAL_NAME("/name/texts/"),
     INDIVIDUAL_SEX("/name/sex_text/");
