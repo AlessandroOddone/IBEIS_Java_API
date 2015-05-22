@@ -4,6 +4,7 @@ public enum ParamName {
     IMAGE_ZIP_ARCHIVE("image_zip_archive"),
     SPECIES("species"),
     AID_LIST("aid_list"),
+    EID_LIST("eid_list"),
     GID_LIST("gid_list"),
     NID_LIST("nid_list"),
     NAME_ROWID_LIST("name_rowid_list"),

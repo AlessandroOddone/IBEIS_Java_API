@@ -102,7 +102,6 @@ public class Request {
                         for(Parameter p : params) {
                             nameValuePairParams.add(p.toNameValuePair());
                         }
-                        System.out.println(new UrlEncodedFormEntity(nameValuePairParams, "utf-8").toString());
                         request.setEntity(new UrlEncodedFormEntity(nameValuePairParams, "utf-8"));
                     }
                 }

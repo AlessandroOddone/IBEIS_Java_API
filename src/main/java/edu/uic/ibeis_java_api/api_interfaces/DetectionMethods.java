@@ -19,7 +19,8 @@ public interface DetectionMethods {
      * @throws IOException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<IbeisAnnotation> runAnimalDetection(IbeisImage ibeisImage, Species species) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+    public List<IbeisAnnotation> runAnimalDetection(IbeisImage ibeisImage, Species species)
+            throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
      * Detect animals of the specified species in multiple images
@@ -29,5 +30,6 @@ public interface DetectionMethods {
      * @throws IOException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<List<IbeisAnnotation>> runAnimalDetection(List<IbeisImage> ibeisImageList, Species species) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+    public List<List<IbeisAnnotation>> runAnimalDetection(List<IbeisImage> ibeisImageList, Species species)
+            throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 }

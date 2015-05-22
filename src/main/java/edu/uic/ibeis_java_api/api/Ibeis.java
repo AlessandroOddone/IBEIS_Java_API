@@ -1,10 +1,8 @@
 package edu.uic.ibeis_java_api.api;
 
 import com.google.gson.JsonElement;
-import edu.uic.ibeis_java_api.api_interfaces.DetectionMethods;
-import edu.uic.ibeis_java_api.api_interfaces.ImageDeleteMethods;
-import edu.uic.ibeis_java_api.api_interfaces.ImageUploadMethods;
-import edu.uic.ibeis_java_api.api_interfaces.QueryDatabaseMethods;
+import edu.uic.ibeis_java_api.api.image.ImageZipArchive;
+import edu.uic.ibeis_java_api.api_interfaces.*;
 import edu.uic.ibeis_java_api.exceptions.*;
 import edu.uic.ibeis_java_api.http.*;
 import edu.uic.ibeis_java_api.utils.FileUtils;
@@ -23,10 +21,10 @@ import java.util.*;
 /**
  * Controller class to interact with Ibeis
  */
-public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionMethods, QueryDatabaseMethods {
+public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, DetectionMethods, DatabaseQueryMethods, IbeisQueryMethods {
 
     @Override
-    public IbeisImage uploadImage(File image) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public IbeisImage uploadImage(File image) throws UnsupportedImageFileTypeException, IOException,BadHttpRequestException, UnsuccessfulHttpRequestException {
         return uploadImages(Arrays.asList(image)).get(0);
     }
 
@@ -67,7 +65,7 @@ public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionM
         // return list of gIds of the uploaded images
         List<IbeisImage> ibeisImageList = new ArrayList<>();
         for(JsonElement jsonElement : response.getContent().getAsJsonArray()) {
-            ibeisImageList.add(new IbeisImage(jsonElement.getAsInt()));
+            ibeisImageList.add(new IbeisImage(jsonElement.getAsLong()));
         }
         return ibeisImageList;
     }
@@ -146,6 +144,40 @@ public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionM
         zipFilePath.delete();
     }
 
+    @Override
+    public IbeisIndividual addNewIndividual(String name) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
+        try {
+            checkIndividualNameNotExisting(name);
+
+            Response response = new Request(RequestMethod.POST, CallPath.INDIVIDUALS.getValue(), new ParametersList()
+                    .addParameter(new Parameter(ParamName.NAME_TEXT_LIST.getValue(), name))).execute();
+
+            // check if the request has been successful
+            if(response == null || !response.isSuccess()) {
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            return new IbeisIndividual(response.getContent().getAsJsonArray().get(0).getAsLong());
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    private void checkIndividualNameNotExisting(String name) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
+        for (IbeisIndividual ibeisIndividual : getAllIndividuals()) {
+            if (name.equals(ibeisIndividual.getName())) {
+                throw new IndividualNameAlreadyExistsException();
+            }
+        }
+    }
 
     @Override
     public void deleteImage(IbeisImage image) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
@@ -154,7 +186,7 @@ public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionM
 
     @Override
     public void deleteImages(List<IbeisImage> imageList) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
-        List<Integer> imageIds = new ArrayList<>();
+        List<Number> imageIds = new ArrayList<>();
         for(IbeisImage image : imageList) {
             imageIds.add(image.getId());
         }
@@ -187,7 +219,7 @@ public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionM
 
     @Override
     public List<List<IbeisAnnotation>> runAnimalDetection(List<IbeisImage> ibeisImageList, Species species) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
-        List<Integer> imageIds = new ArrayList<>();
+        List<Number> imageIds = new ArrayList<>();
         for(IbeisImage image : ibeisImageList) {
             imageIds.add(image.getId());
         }
@@ -208,7 +240,7 @@ public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionM
                 List<IbeisAnnotation> elementAnnotations = new ArrayList<>();
 
                 for (JsonElement annotationJson : elementAnnotationsJson.getAsJsonArray()) {
-                    elementAnnotations.add(new IbeisAnnotation(annotationJson.getAsInt()));
+                    elementAnnotations.add(new IbeisAnnotation(annotationJson.getAsLong()));
                 }
                 ibeisAnnotationList.add(elementAnnotations);
             }
@@ -231,14 +263,14 @@ public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionM
         try {
             Response response = new Request(RequestMethod.GET, CallPath.IMAGE.getValue()).execute();
 
-            // check if the request has been successful
             if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
                 throw new UnsuccessfulHttpRequestException();
             }
 
             List<IbeisImage> ibeisImages = new ArrayList<>();
             for (JsonElement imageIdJson : response.getContent().getAsJsonArray()) {
-                ibeisImages.add(new IbeisImage(imageIdJson.getAsInt()));
+                ibeisImages.add(new IbeisImage(imageIdJson.getAsLong()));
             }
             return ibeisImages;
 
@@ -259,14 +291,14 @@ public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionM
         try {
             Response response = new Request(RequestMethod.GET, CallPath.INDIVIDUALS.getValue()).execute();
 
-            // check if the request has been successful
             if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
                 throw new UnsuccessfulHttpRequestException();
             }
 
             List<IbeisIndividual> ibeisIndividuals = new ArrayList<>();
             for (JsonElement nameIdJson : response.getContent().getAsJsonArray()) {
-                ibeisIndividuals.add(new IbeisIndividual(nameIdJson.getAsInt()));
+                ibeisIndividuals.add(new IbeisIndividual(nameIdJson.getAsLong()));
             }
             return ibeisIndividuals;
 
@@ -287,16 +319,44 @@ public class Ibeis implements ImageUploadMethods, ImageDeleteMethods, DetectionM
         try {
             Response response = new Request(RequestMethod.GET, CallPath.ANNOTATIONS.getValue()).execute();
 
-            // check if the request has been successful
             if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
                 throw new UnsuccessfulHttpRequestException();
             }
 
             List<IbeisAnnotation> ibeisAnnotations = new ArrayList<>();
             for (JsonElement annotationIdJson : response.getContent().getAsJsonArray()) {
-                ibeisAnnotations.add(new IbeisAnnotation(annotationIdJson.getAsInt()));
+                ibeisAnnotations.add(new IbeisAnnotation(annotationIdJson.getAsLong()));
             }
             return ibeisAnnotations;
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    @Override
+    public List<IbeisEncounter> getAllEncounters() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.GET, CallPath.ENCOUNTERS.getValue()).execute();
+
+            if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            List<IbeisEncounter> ibeisEncounters = new ArrayList<>();
+            for (JsonElement encounterIdJson : response.getContent().getAsJsonArray()) {
+                ibeisEncounters.add(new IbeisEncounter(encounterIdJson.getAsLong()));
+            }
+            return ibeisEncounters;
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();

@@ -7,6 +7,7 @@ public enum CallPath {
     ANNOTATION_BOUNDING_BOX("/annot/bboxes/"),
     ANNOTATION_INDIVIDUAL("/annot/name_rowids/"),
     ANNOTATION_NEIGHBORS("/annot/contact_aids/"),
+    ENCOUNTERS("/encounter/"),
     IMAGE("/image/"),
     IMAGE_ANNOTATIONS("/image/aids/"),
     IMAGE_ANNOTATIONS_OF_SPECIES("/image/aids_of_species/"),

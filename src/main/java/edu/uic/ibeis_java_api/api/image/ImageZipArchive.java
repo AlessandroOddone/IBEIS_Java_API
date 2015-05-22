@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.api;
+package edu.uic.ibeis_java_api.api.image;
 
 import java.io.File;
 
@@ -9,11 +9,11 @@ public class ImageZipArchive {
 
     private String localPath;
 
-    protected ImageZipArchive(String localPath) {
+    public ImageZipArchive(String localPath) {
         this.localPath = localPath;
     }
 
-    protected ImageZipArchive(File localPath) {
+    public ImageZipArchive(File localPath) {
         this.localPath = localPath.toString();
     }
 

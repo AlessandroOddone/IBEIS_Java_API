@@ -1,6 +1,7 @@
 package edu.uic.ibeis_java_api.api_interfaces;
 
 import edu.uic.ibeis_java_api.api.IbeisAnnotation;
+import edu.uic.ibeis_java_api.api.IbeisEncounter;
 import edu.uic.ibeis_java_api.api.IbeisImage;
 import edu.uic.ibeis_java_api.api.IbeisIndividual;
 import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
@@ -9,7 +10,7 @@ import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
 import java.io.IOException;
 import java.util.List;
 
-public interface QueryDatabaseMethods {
+public interface DatabaseQueryMethods {
 
     /**
      * Get all the images in Ibeis database
@@ -37,5 +38,14 @@ public interface QueryDatabaseMethods {
      * @throws UnsuccessfulHttpRequestException
      */
     public List<IbeisAnnotation> getAllAnnotations() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+
+    /**
+     * Get all the encounters in Ibeis database
+     * @return List of IbeisEncounter elements
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public List<IbeisEncounter> getAllEncounters() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
 }

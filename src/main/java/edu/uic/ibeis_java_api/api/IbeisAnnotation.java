@@ -2,6 +2,7 @@ package edu.uic.ibeis_java_api.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import edu.uic.ibeis_java_api.api.annotation.BoundingBox;
 import edu.uic.ibeis_java_api.exceptions.AuthorizationHeaderException;
 import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.InvalidHttpMethodException;
@@ -21,13 +22,13 @@ import java.util.List;
  */
 public class IbeisAnnotation {
 
-    private int id;
+    private long id;
 
-    protected IbeisAnnotation(int id) {
+    protected IbeisAnnotation(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -85,7 +86,7 @@ public class IbeisAnnotation {
                 throw new UnsuccessfulHttpRequestException();
             }
 
-            return new IbeisIndividual(response.getContent().getAsJsonArray().get(0).getAsInt());
+            return new IbeisIndividual(response.getContent().getAsJsonArray().get(0).getAsLong());
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
@@ -118,9 +119,39 @@ public class IbeisAnnotation {
 
             List<IbeisAnnotation> neighborAnnotations = new ArrayList<>();
             for (JsonElement annotationIdJson : response.getContent().getAsJsonArray().get(0).getAsJsonArray()) {
-                neighborAnnotations.add(new IbeisAnnotation(annotationIdJson.getAsInt()));
+                neighborAnnotations.add(new IbeisAnnotation(annotationIdJson.getAsLong()));
             }
             return neighborAnnotations;
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    /**
+     * Set the individual associated to the annotation (Http PUT)
+     * @param individual
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public void setIndividual(IbeisIndividual individual) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.PUT, CallPath.ANNOTATION_INDIVIDUAL.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.AID_LIST.getValue(), id))
+                            .addParameter(new Parameter(ParamName.NAME_ROWID_LIST.getValue(), individual.getId()))).execute();
+
+            if (response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
@@ -146,13 +177,13 @@ public class IbeisAnnotation {
         try {
             Response response = new Request(RequestMethod.GET, CallPath.ANNOTATIONS.getValue()).execute();
 
-            // check if the request has been successful
             if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
                 throw new UnsuccessfulHttpRequestException();
             }
 
             for (JsonElement annotationIdJson : response.getContent().getAsJsonArray()) {
-                if(this.id == annotationIdJson.getAsInt()) {
+                if(this.id == annotationIdJson.getAsLong()) {
                     return true;
                 }
             }

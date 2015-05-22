@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.api;
+package edu.uic.ibeis_java_api.api.metadata;
 
 /**
  * A note contains a Json string to hold additional information about an image

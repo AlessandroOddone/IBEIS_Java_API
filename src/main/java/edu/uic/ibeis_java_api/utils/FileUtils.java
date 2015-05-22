@@ -12,6 +12,10 @@ public class FileUtils {
         return fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
     }
 
+    public static String getFileExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+    }
+
     public static File zipFile(File fileToZip, File zipFilePath) throws IOException{
         byte[] buffer = new byte[2048];
 

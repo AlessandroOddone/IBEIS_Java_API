@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.api;
+package edu.uic.ibeis_java_api.api.image;
 
 /**
  * The size of an image as its width and length

@@ -11,7 +11,6 @@ import edu.uic.ibeis_java_api.values.Species;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -60,26 +59,44 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * UPLOAD IMAGE
          */
-
+        /*
         UploadImagesTest uploadTest = new UploadImagesTest(Arrays.asList(new File(getClass().getClassLoader().getResource("zebra_api_upload_test.jpeg").getFile()),
                 new File(getClass().getClassLoader().getResource("giraffe_api_upload_test_2.jpeg").getFile())));
         uploadTest.execute();
         System.out.println("\n");
+        */
+
+        /**
+         * ADD NEW INDIVIDUAL
+         */
+        /*
+        try {
+            IbeisIndividual testIndividual = ibeis.addNewIndividual("paolo");
+            System.out.println("id: " + testIndividual.getId());
+            System.out.println("name: " + testIndividual.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        */
 
         /**
          * DELETE IMAGE
          */
+        /*
         DeleteImagesTest deleteTest = new DeleteImagesTest(uploadTest.getUploadedImages().get(0));
         deleteTest.execute();
+        */
 
         /**
          * VALID IMAGE
          */
+        /*
         try {
             System.out.println("isValidImage: " + uploadTest.getUploadedImages().get(0).isValidImage());
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
 
         /**
          * DOWNLOAD IMAGE FILE
@@ -101,6 +118,7 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * IMAGE GETTERS
          */
+        /*
         try {
             IbeisImage testImage = uploadTest.getUploadedImages().get(0);
             //System.out.println("Image location: " + testImage.getLocation());
@@ -114,6 +132,7 @@ public class IbeisTestCollection implements TestCollection {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
 
         /**
          * ANIMAL DETECTION

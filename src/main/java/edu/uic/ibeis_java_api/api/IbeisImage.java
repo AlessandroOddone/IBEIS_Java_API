@@ -3,6 +3,10 @@ package edu.uic.ibeis_java_api.api;
 import android.org.apache.commons.codec.binary.Base64;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import edu.uic.ibeis_java_api.api.metadata.GeoCoordinates;
+import edu.uic.ibeis_java_api.api.image.ImageSize;
+import edu.uic.ibeis_java_api.api.metadata.Notes;
+import edu.uic.ibeis_java_api.api.image.RawImage;
 import edu.uic.ibeis_java_api.exceptions.*;
 import edu.uic.ibeis_java_api.http.*;
 import edu.uic.ibeis_java_api.values.CallPath;
@@ -22,13 +26,13 @@ import java.util.List;
  */
 public class IbeisImage {
 
-    private int id;
+    private long id;
 
-    protected IbeisImage(int id) {
+    protected IbeisImage(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -226,7 +230,7 @@ public class IbeisImage {
 
             List<IbeisAnnotation> annotations = new ArrayList<>();
             for (JsonElement annotationIdJson : response.getContent().getAsJsonArray().get(0).getAsJsonArray()) {
-                annotations.add(new IbeisAnnotation(annotationIdJson.getAsInt()));
+                annotations.add(new IbeisAnnotation(annotationIdJson.getAsLong()));
             }
             return annotations;
 
@@ -263,7 +267,7 @@ public class IbeisImage {
 
             List<IbeisAnnotation> annotationsOfSpecies = new ArrayList<>();
             for (JsonElement annotationIdJson : response.getContent().getAsJsonArray().get(0).getAsJsonArray()) {
-                annotationsOfSpecies.add(new IbeisAnnotation(annotationIdJson.getAsInt()));
+                annotationsOfSpecies.add(new IbeisAnnotation(annotationIdJson.getAsLong()));
             }
             return annotationsOfSpecies;
 
@@ -382,13 +386,13 @@ public class IbeisImage {
         try {
             Response response = new Request(RequestMethod.GET, CallPath.IMAGE.getValue()).execute();
 
-            // check if the request has been successful
             if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
                 throw new UnsuccessfulHttpRequestException();
             }
 
             for (JsonElement imageIdJson : response.getContent().getAsJsonArray()) {
-                if(this.id == imageIdJson.getAsInt()) {
+                if(this.id == imageIdJson.getAsLong()) {
                     return true;
                 }
             }

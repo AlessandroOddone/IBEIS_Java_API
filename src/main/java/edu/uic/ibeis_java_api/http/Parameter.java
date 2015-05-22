@@ -1,6 +1,6 @@
 package edu.uic.ibeis_java_api.http;
 
-import edu.uic.ibeis_java_api.api.ImageZipArchive;
+import edu.uic.ibeis_java_api.api.image.ImageZipArchive;
 import android.org.apache.http.NameValuePair;
 import android.org.apache.http.message.BasicNameValuePair;
 
@@ -21,7 +21,7 @@ public class Parameter {
         this(name, String.valueOf(value));
     }
 
-    public Parameter(String name, List<? extends Number>values) {
+    public Parameter(String name, List<?>values) {
         this.name = name;
 
         StringBuilder valString = new StringBuilder();
