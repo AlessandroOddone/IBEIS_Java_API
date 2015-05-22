@@ -17,6 +17,7 @@ public enum CallPath {
     IMAGE_UNIXTIME("/image/unixtime/"),
     INDIVIDUALS("/name/"),
     INDIVIDUAL_ANNOTATIONS("/name/aids/"),
+    INDIVIDUAL_IMAGES("/name/gids/"),
     INDIVIDUAL_NAME("/name/texts/"),
     INDIVIDUAL_SEX("/name/sex_text/");
 

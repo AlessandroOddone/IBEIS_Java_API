@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.api.metadata;
+package edu.uic.ibeis_java_api.api.data;
 
 /**
  * Geographic Coordinates: (latitude, longitude) pairs

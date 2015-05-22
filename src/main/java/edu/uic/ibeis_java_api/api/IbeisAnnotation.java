@@ -2,7 +2,7 @@ package edu.uic.ibeis_java_api.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import edu.uic.ibeis_java_api.api.annotation.BoundingBox;
+import edu.uic.ibeis_java_api.api.data.annotation.BoundingBox;
 import edu.uic.ibeis_java_api.exceptions.AuthorizationHeaderException;
 import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.InvalidHttpMethodException;

@@ -1,0 +1,37 @@
+package edu.uic.ibeis_java_api.api.data.encounter;
+
+import edu.uic.ibeis_java_api.api.data.Notes;
+
+public class EncounterNotes extends Notes {
+
+    private String location;
+    private String description;
+
+    public EncounterNotes() {
+    }
+
+    public EncounterNotes(String location, String description) {
+        this.location = location;
+        this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public static EncounterNotes fromJsonString(String jsonString) {
+        return gson.fromJson(jsonString, EncounterNotes.class);
+    }
+}

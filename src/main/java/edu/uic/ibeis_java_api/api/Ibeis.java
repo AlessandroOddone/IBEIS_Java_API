@@ -1,7 +1,7 @@
 package edu.uic.ibeis_java_api.api;
 
 import com.google.gson.JsonElement;
-import edu.uic.ibeis_java_api.api.image.ImageZipArchive;
+import edu.uic.ibeis_java_api.api.data.image.ImageZipArchive;
 import edu.uic.ibeis_java_api.api_interfaces.*;
 import edu.uic.ibeis_java_api.exceptions.*;
 import edu.uic.ibeis_java_api.http.*;
@@ -145,7 +145,7 @@ public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, Dete
     }
 
     @Override
-    public IbeisIndividual addNewIndividual(String name) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
+    public IbeisIndividual addIndividual(String name) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
         try {
             checkIndividualNameNotExisting(name);
 

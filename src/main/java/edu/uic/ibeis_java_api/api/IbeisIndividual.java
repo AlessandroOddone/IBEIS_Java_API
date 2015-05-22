@@ -103,13 +103,48 @@ public class IbeisIndividual {
     }
 
     /**
+     * Get all the images in which the individual appears
+     * @return List of IbeisImage elements
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public List<IbeisImage> getImages() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.GET, CallPath.INDIVIDUAL_IMAGES.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.NID_LIST.getValue(), id))).execute();
+
+            if (response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            List<IbeisImage> images = new ArrayList<>();
+            for (JsonElement imageIdJson : response.getContent().getAsJsonArray().get(0).getAsJsonArray()) {
+                images.add(new IbeisImage(imageIdJson.getAsLong()));
+            }
+            return images;
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    /**
      * Get all the annotations in which the individual appears
      * @return List of IbeisAnnotation elements
      * @throws IOException
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-public List<IbeisAnnotation> getAnnotations() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<IbeisAnnotation> getAnnotations() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             Response response = new Request(RequestMethod.GET, CallPath.INDIVIDUAL_ANNOTATIONS.getValue(),
                     new ParametersList().addParameter(new Parameter(ParamName.NID_LIST.getValue(), id))).execute();

@@ -3,10 +3,10 @@ package edu.uic.ibeis_java_api.api;
 import android.org.apache.commons.codec.binary.Base64;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import edu.uic.ibeis_java_api.api.metadata.GeoCoordinates;
-import edu.uic.ibeis_java_api.api.image.ImageSize;
-import edu.uic.ibeis_java_api.api.metadata.Notes;
-import edu.uic.ibeis_java_api.api.image.RawImage;
+import edu.uic.ibeis_java_api.api.data.GeoCoordinates;
+import edu.uic.ibeis_java_api.api.data.image.ImageNotes;
+import edu.uic.ibeis_java_api.api.data.image.ImageSize;
+import edu.uic.ibeis_java_api.api.data.image.RawImage;
 import edu.uic.ibeis_java_api.exceptions.*;
 import edu.uic.ibeis_java_api.http.*;
 import edu.uic.ibeis_java_api.values.CallPath;
@@ -182,12 +182,12 @@ public class IbeisImage {
 
     /**
      * Get notes associated to the image. Notes are additional information about the image.
-     * @return Notes object
+     * @return ImageNotes object
      * @throws IOException
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public Notes getNote() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public ImageNotes getImageNotes() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             Response response = new Request(RequestMethod.GET, CallPath.IMAGE_NOTE.getValue(),
                     new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))).execute();
@@ -197,7 +197,7 @@ public class IbeisImage {
                 throw new UnsuccessfulHttpRequestException();
             }
 
-            return new Notes(response.getContent().getAsJsonArray().get(0).getAsString());
+            return ImageNotes.fromJsonString(response.getContent().toString());
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
@@ -345,17 +345,17 @@ public class IbeisImage {
     }
 
     /**
-     * Set a notes object associated to the image (Http PUT)
-     * @param notes
+     * Set an ImageNotes object associated to the image (Http PUT)
+     * @param imageNotes
      * @throws IOException
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public void setNote(Notes notes) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public void setImageNotes(ImageNotes imageNotes) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_NOTE.getValue(),
                     new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
-                            .addParameter(new Parameter(ParamName.NOTES_LIST.getValue(), notes.getJsonString()))).execute();
+                            .addParameter(new Parameter(ParamName.NOTES_LIST.getValue(), imageNotes.toJsonString()))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");

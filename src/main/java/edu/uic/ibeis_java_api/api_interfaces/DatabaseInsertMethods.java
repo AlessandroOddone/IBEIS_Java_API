@@ -67,6 +67,6 @@ public interface DatabaseInsertMethods {
      * @param name name of the individual to add
      * @return IbeisIndividual object corresponding to the newly created individual
      */
-    IbeisIndividual addNewIndividual(String name) throws UnsupportedImageFileTypeException,
+    IbeisIndividual addIndividual(String name) throws UnsupportedImageFileTypeException,
             IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException;
 }
