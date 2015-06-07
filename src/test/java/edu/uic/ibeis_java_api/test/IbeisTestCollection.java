@@ -296,7 +296,7 @@ public class IbeisTestCollection implements TestCollection {
                 System.out.println("location: " + ibeisImage.getGpsPosition());
                 System.out.println("datetime: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ibeisImage.getDatetime().getTime()));
                 System.out.println("size: " + ibeisImage.getSize());
-                System.out.println("notes: " + ibeisImage.getImageNotes());
+                System.out.println("notes: " + ibeisImage.getNotes());
                 System.out.println("annotations: " + printIbeisAnnotationListElement(ibeisImage.getAnnotations()));
                 System.out.println("annotations by species (GIRAFFE): " + printIbeisAnnotationListElement
                         (ibeisImage.getAnnotationsOfSpecies(Species.GIRAFFE)));

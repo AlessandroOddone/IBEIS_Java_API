@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class Auth {
 
-    private static  final String TOKEN_NAME = "IBEIS";
+    private static final String TOKEN_NAME = "IBEIS";
     private static final String TOKEN_SECRET = "CB73808F-A6F6-094B-5FCD-385EBAFF8FC0";
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 

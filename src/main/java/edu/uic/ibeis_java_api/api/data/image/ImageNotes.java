@@ -7,6 +7,7 @@ public class ImageNotes extends Notes {
     private String author;
     private String location;
     private String description;
+    private String other;
 
     public ImageNotes() {
     }
@@ -39,6 +40,14 @@ public class ImageNotes extends Notes {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getOther() {
+        return other;
+    }
+
+    public void setOther(String other) {
+        this.other = other;
     }
 
     public static ImageNotes fromJsonString(String jsonString) {

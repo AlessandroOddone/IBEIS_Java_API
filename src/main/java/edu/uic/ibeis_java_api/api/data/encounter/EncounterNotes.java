@@ -6,6 +6,7 @@ public class EncounterNotes extends Notes {
 
     private String location;
     private String description;
+    private String other;
 
     public EncounterNotes() {
     }
@@ -29,6 +30,14 @@ public class EncounterNotes extends Notes {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getOther() {
+        return other;
+    }
+
+    public void setOther(String other) {
+        this.other = other;
     }
 
     public static EncounterNotes fromJsonString(String jsonString) {

@@ -187,9 +187,9 @@ public class IbeisImage {
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public ImageNotes getImageNotes() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public ImageNotes getNotes() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.IMAGE_NOTE.getValue(),
+            Response response = new Request(RequestMethod.GET, CallPath.IMAGE_NOTES.getValue(),
                     new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess() || response.getContent().getAsJsonArray().get(0).isJsonNull()) {
@@ -351,9 +351,9 @@ public class IbeisImage {
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public void setImageNotes(ImageNotes imageNotes) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public void setNotes(ImageNotes imageNotes) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_NOTE.getValue(),
+            Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_NOTES.getValue(),
                     new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
                             .addParameter(new Parameter(ParamName.NOTES_LIST.getValue(), imageNotes.toJsonString()))).execute();
 

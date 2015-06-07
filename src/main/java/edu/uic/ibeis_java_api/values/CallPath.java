@@ -8,18 +8,24 @@ public enum CallPath {
     ANNOTATION_INDIVIDUAL("/annot/name_rowids/"),
     ANNOTATION_NEIGHBORS("/annot/contact_aids/"),
     ENCOUNTERS("/encounter/"),
+    ENCOUNTER_NAME("/encounter/text/"),
+    ENCOUNTER_IMAGES("/encounter/gids/"),
+    ENCOUNTER_INDIVIDUALS("/encounter/nids/"),
+    ENCOUNTER_NOTE("/encounter/note/"),
+    ENCOUNTER_NOTES("/encounter/notes/"),
     IMAGE("/image/"),
     IMAGE_ANNOTATIONS("/image/aids/"),
     IMAGE_ANNOTATIONS_OF_SPECIES("/image/aids_of_species/"),
     IMAGE_GPS("/image/gps/"),
-    IMAGE_NOTE("/image/notes/"),
+    IMAGE_NOTES("/image/notes/"),
     IMAGE_SIZE("/image/sizes/"),
     IMAGE_UNIXTIME("/image/unixtime/"),
     INDIVIDUALS("/name/"),
     INDIVIDUAL_ANNOTATIONS("/name/aids/"),
     INDIVIDUAL_IMAGES("/name/gids/"),
     INDIVIDUAL_NAME("/name/texts/"),
-    INDIVIDUAL_SEX("/name/sex_text/");
+    INDIVIDUAL_NOTES("/name/notes/"),
+    INDIVIDUAL_SEX("/name/sex/");
 
     private String value;
 

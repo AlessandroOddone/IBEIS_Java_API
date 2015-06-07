@@ -5,6 +5,7 @@ public enum ParamName {
     SPECIES("species"),
     AID_LIST("aid_list"),
     EID_LIST("eid_list"),
+    ENCOUNTER_ROWID_LIST("encounter_rowid_list"),
     GID_LIST("gid_list"),
     NID_LIST("nid_list"),
     NAME_ROWID_LIST("name_rowid_list"),
@@ -12,8 +13,10 @@ public enum ParamName {
     LON_LIST("lon_list"),
     NOTES_LIST("notes_list"),
     UNIXTIME_LIST("unixtime_list"),
-    NAME_SEX_TEST_LIST("name_sex_text_list"),
-    NAME_TEXT_LIST("name_text_list");
+    NAME_SEX_LIST("name_sex_list"),
+    NAME_TEXT_LIST("name_text_list"),
+    ENCOUNTER_NOTES_LIST("encounter_note_list"),
+    ENCOUNTER_TEXT_LIST("encounter_text_list");
 
     private String value;
 

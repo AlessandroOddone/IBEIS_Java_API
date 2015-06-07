@@ -1,15 +1,15 @@
 package edu.uic.ibeis_java_api.values;
 
 public enum Sex {
-    MALE("M"), FEMALE("F"), UNKNOWN("UNKNOWN");
+    MALE(1), FEMALE(0), UNKNOWN(-1);
 
-    private String value;
+    private int value;
 
-    Sex(String value) {
+    Sex(int value) {
         this.value = value;
     }
 
-    public String getValue() {
+    public int getValue() {
         return  value;
     }
 }

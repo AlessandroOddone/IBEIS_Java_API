@@ -8,8 +8,7 @@ import java.util.zip.ZipOutputStream;
 public class FileUtils {
 
     public static String getFileExtension(File file) {
-        String fileName = file.getName();
-        return fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+        return getFileExtension(file.getName());
     }
 
     public static String getFileExtension(String fileName) {

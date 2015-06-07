@@ -1,6 +1,7 @@
 package edu.uic.ibeis_java_api.api;
 
 import com.google.gson.JsonElement;
+import edu.uic.ibeis_java_api.api.data.individual.IndividualNotes;
 import edu.uic.ibeis_java_api.exceptions.AuthorizationHeaderException;
 import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.InvalidHttpMethodException;
@@ -101,6 +102,38 @@ public class IbeisIndividual {
             throw new BadHttpRequestException("invalid http method");
         }
     }
+
+    /**
+     * Get notes associated to the individual. Notes are additional information about the individual.
+     * @return IndividualNotes object
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public IndividualNotes getIndividualNotes() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.GET, CallPath.INDIVIDUAL_NOTES.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.NAME_ROWID_LIST.getValue(), id))).execute();
+
+            if (response == null || !response.isSuccess() || response.getContent().getAsJsonArray().get(0).isJsonNull()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            return IndividualNotes.fromJsonString(response.getContent().toString());
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
 
     /**
      * Get all the images in which the individual appears
@@ -213,7 +246,37 @@ public class IbeisIndividual {
         try {
             Response response = new Request(RequestMethod.PUT, CallPath.INDIVIDUAL_SEX.getValue(),
                     new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
-                            .addParameter(new Parameter(ParamName.NAME_SEX_TEST_LIST.getValue(), sex.getValue()))).execute();
+                            .addParameter(new Parameter(ParamName.NAME_SEX_LIST.getValue(), sex.getValue()))).execute();
+
+            if (response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    /**
+     * Set an IndividualNotes object associated to the individual (Http PUT)
+     * @param individualNotes
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public void setIndividualNotes(IndividualNotes individualNotes) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.PUT, CallPath.INDIVIDUAL_NOTES.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.NAME_ROWID_LIST.getValue(), id))
+                            .addParameter(new Parameter(ParamName.NOTES_LIST.getValue(), individualNotes.toJsonString()))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
