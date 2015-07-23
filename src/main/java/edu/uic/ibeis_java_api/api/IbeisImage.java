@@ -197,7 +197,7 @@ public class IbeisImage {
                 throw new UnsuccessfulHttpRequestException();
             }
 
-            return ImageNotes.fromJsonString(response.getContent().toString());
+            return ImageNotes.fromJsonString(response.getContent().getAsJsonArray().get(0).getAsString());
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
@@ -295,7 +295,7 @@ public class IbeisImage {
             Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_GPS.getValue(),
                     new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
                             .addParameter(new Parameter(ParamName.LAT_LIST.getValue(), location.getLatitude()))
-                            .addParameter(new Parameter(ParamName.LAT_LIST.getValue(), location.getLongitude()))).execute();
+                            .addParameter(new Parameter(ParamName.LON_LIST.getValue(), location.getLongitude()))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");

@@ -5,6 +5,7 @@ import edu.uic.ibeis_java_api.http.*;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,9 +20,9 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * IMAGE UPLOAD (IMAGE FILE)
          */
-        Parameter imageFile = new Parameter("image", getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile());
-        imageFile.setIsFile(true);
-        testCollection.add(new HttpPostTest("/image/").addParam(imageFile));
+        //Parameter imageFile = new Parameter("image", getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile());
+        //imageFile.setIsFile(true);
+        //testCollection.add(new HttpPostTest("/image/").addParam(imageFile));
 
         /**
          * IMAGE UPLOAD (ZIP ARCHIVE)
@@ -50,7 +51,6 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * GETTERS (GET CALLS)
          */
-        //testCollection.add(new HttpGetTest("/image/enctext/").addParam("gid_list", Arrays.asList(151, 152)));
         /*
         testCollection.add(new HttpGetTest("/image/"));
         testCollection.add(new HttpGetTest("/image/151/"));
@@ -62,11 +62,14 @@ public class HttpRequestTestCollection implements TestCollection {
         testCollection.add(new HttpGetTest("/image/aids_of_species/")
                 .addParam("gid_list", Arrays.asList(151,152))
                 .addParam("species", Species.GIRAFFE.getValue()));
-        testCollection.add(new HttpGetTest("/image/gps/").addParam("gid_list", Arrays.asList(151,152)));
+        testCollection.add(new HttpGetTest("/image/gps/").addParam("gid_list", Arrays.asList(151, 152)));
         testCollection.add(new HttpGetTest("/image/notes/").addParam("gid_list", Arrays.asList(151,152)));
         testCollection.add(new HttpGetTest("/image/sizes/").addParam("gid_list", Arrays.asList(151,152)));
         testCollection.add(new HttpGetTest("/image/unixtime/").addParam("gid_list", Arrays.asList(151,152)));
+        */
+        testCollection.add(new HttpGetTest("/image/enctext/").addParam("gid_list", Arrays.asList(151, 152)));
 
+        /*
         testCollection.add(new HttpGetTest("/annot/bboxes/").addParam("aid_list", Arrays.asList(166, 167, 168, 169, 170, 171)));
         testCollection.add(new HttpGetTest("/annot/contact_aids/").addParam("aid_list", Arrays.asList(166,167,168,169,170,171)));
         testCollection.add(new HttpGetTest("/annot/name_rowids/").addParam("aid_list", Arrays.asList(166,167,168,169,170,171)));
@@ -77,12 +80,11 @@ public class HttpRequestTestCollection implements TestCollection {
         testCollection.add(new HttpGetTest("/name/texts/").addParam("name_rowid_list", Arrays.asList(-166,-167,-168,-169,-170,-171)));
         testCollection.add(new HttpGetTest("/name/notes/").addParam("name_rowid_list", Arrays.asList(-166, -167, -168, -169, -170, -171)));
 
-        testCollection.add(new HttpGetTest("/encounter/gids/").addParam("eid_list", Arrays.asList(34,35)));
+        */
+        testCollection.add(new HttpGetTest("/encounter/gids/").addParam("eid_list", Arrays.asList(34, 35)));
         testCollection.add(new HttpGetTest("/encounter/nids/").addParam("eid_list", Arrays.asList(34,35)));
         testCollection.add(new HttpGetTest("/encounter/note/").addParam("eid_list", Arrays.asList(34,35)));
         testCollection.add(new HttpGetTest("/encounter/text/").addParam("eid_list", Arrays.asList(34,35)));
-        */
-
 
         /**
          * SETTERS (PUT CALLS)
@@ -90,7 +92,7 @@ public class HttpRequestTestCollection implements TestCollection {
         /*
         testCollection.add(new HttpPutTest("/image/gps/").addParam("gid_list", "151,152")
                 .addParam("lat_list", Arrays.asList(41.931535, 41.931535)).addParam("lon_list", Arrays.asList(-87.711991, -87.711991)));
-        testCollection.add(new HttpPutTest("/image/notes/").addParam("gid_list", "151").addParam("notes_list", "test_note"));
+        testCollection.add(new HttpPutTest("/image/notes/").addParam("gid_list", "152").addParam("notes_list", "test_note"));
         testCollection.add(new HttpPutTest("/image/unixtime/").addParam("gid_list", "151,152").addParam("unixtime_list", Arrays.asList(1431642451, 1431642451)));
         testCollection.add(new HttpPutTest("/name/sex/").addParam("name_rowid_list", "-166,-167,-168,-169,-170,-171")
                 .addParam("name_sex_list", Sex.MALE.getValue() + "," + Sex.FEMALE.getValue() + "," + Sex.UNKNOWN.getValue()
@@ -98,14 +100,14 @@ public class HttpRequestTestCollection implements TestCollection {
         testCollection.add(new HttpPutTest("/name/texts/").addParam("name_rowid_list", "-166")
                 .addParam("name_text_list","test_name"));
         testCollection.add(new HttpPutTest("/name/notes/").addParam("name_rowid_list", "-166")
-                .addParam("notes_list","test_note"));
+                .addParam("notes_list", "test_note"));
         testCollection.add(new HttpPutTest("/encounter/text/").addParam("eid_list", "34")
-                .addParam("encounter_text_list","encounter_name_test"));
+                .addParam("encounter_text_list", "encounter_name_test"));
         testCollection.add(new HttpPutTest("/encounter/notes/").addParam("encounter_rowid_list", "34")
-                .addParam("encounter_note_list","encounter_note_test"));
+                .addParam("encounter_note_list", "encounter_note_test"));
         */
-        //testCollection.add(new HttpPutTest("/image/enctext/").addParam("gid_list", "151")
-        //        .addParam("enctext_list","encounter_test"));
+        testCollection.add(new HttpPutTest("/image/enctext/").addParam("gid_list", "151")
+                .addParam("enctext_list", "encounter_test"));
 
         /**
          * DELETE CALLS

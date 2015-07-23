@@ -72,14 +72,14 @@ public class IbeisEncounter {
     public EncounterNotes getNotes() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             Response response = new Request(RequestMethod.GET, CallPath.ENCOUNTER_NOTES.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.EID_LIST.getValue(), id))).execute();
+                    new ParametersList().addParameter(new Parameter(ParamName.ENCOUNTER_ROWID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess() || response.getContent().getAsJsonArray().get(0).isJsonNull()) {
                 System.out.println("Unsuccessful Request");
                 throw new UnsuccessfulHttpRequestException();
             }
 
-            return EncounterNotes.fromJsonString(response.getContent().toString());
+            return EncounterNotes.fromJsonString(response.getContent().getAsJsonArray().get(0).getAsString());
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();

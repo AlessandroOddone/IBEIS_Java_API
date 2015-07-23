@@ -1,9 +1,14 @@
 package edu.uic.ibeis_java_api.test;
 
 import edu.uic.ibeis_java_api.api.*;
+import edu.uic.ibeis_java_api.api.data.GeoCoordinates;
+import edu.uic.ibeis_java_api.api.data.encounter.EncounterNotes;
+import edu.uic.ibeis_java_api.api.data.image.ImageNotes;
 import edu.uic.ibeis_java_api.api.data.image.RawImage;
+import edu.uic.ibeis_java_api.api.data.individual.IndividualNotes;
 import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
+import edu.uic.ibeis_java_api.values.Sex;
 import edu.uic.ibeis_java_api.values.Species;
 
 import java.io.File;
@@ -13,6 +18,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class IbeisTestCollection implements TestCollection {
@@ -46,7 +52,7 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * UPLOAD IMAGE TEST
          */
-        testCollection.add(new UploadImageTest(new File(getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile())));
+        //testCollection.add(new UploadImageTest(new File(getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile())));
 
         /**
          * UPLOAD IMAGE ZIP ARCHIVE TEST
@@ -75,19 +81,25 @@ public class IbeisTestCollection implements TestCollection {
         //testCollection.add(new AnimalDetectionTest(imageList.get(imageList.size()-1), Species.GIRAFFE));
 
         /**
-         * IMAGE GETTERS
+         * IMAGE GETTERS AND SETTERS
          */
-        //testCollection.add(new ImageGettersTest(imageList.get(imageList.size()-1)));
+        testCollection.add(new ImageGettersAndSettersTest(imageList.get(imageList.size()-1)));
 
         /**
-         * ANNOTATION GETTERS
+         * ANNOTATION GETTERS AND SETTERS
          */
-        //testCollection.add(new AnnotationGettersTest(annotationList.get(annotationList.size()-1)));
+        testCollection.add(new AnnotationGettersAndSettersTest(annotationList.get(annotationList.size()-1)));
 
         /**
-         * INDIVIDUAL GETTERS
+         * INDIVIDUAL GETTERS AND SETTERS
          */
-        //testCollection.add(new IndividualGettersTest(individualList.get(individualList.size()-1)));
+        testCollection.add(new IndividualGettersAndSettersTest(individualList.get(individualList.size()-1)));
+
+        /**
+         * ENCOUNTER GETTERS AND SETTERS
+         */
+        testCollection.add(new EncounterGettersAndSettersTest(encounterList.get(encounterList.size()-1)));
+
     }
 
     public void runTests() {
@@ -313,11 +325,11 @@ public class IbeisTestCollection implements TestCollection {
         }
     }
 
-    private class ImageGettersTest implements Test {
+    private class ImageGettersAndSettersTest implements Test {
 
         private IbeisImage ibeisImage;
 
-        public ImageGettersTest(IbeisImage ibeisImage) {
+        public ImageGettersAndSettersTest(IbeisImage ibeisImage) {
             this.ibeisImage = ibeisImage;
         }
 
@@ -330,6 +342,10 @@ public class IbeisTestCollection implements TestCollection {
         public void execute() {
             printTest(this);
             try {
+                ibeisImage.setGpsPosition(new GeoCoordinates(10, 10));
+                ibeisImage.setDatetime(new GregorianCalendar());
+                ibeisImage.setNotes(new ImageNotes());
+
                 System.out.println("location: " + ibeisImage.getGpsPosition());
                 System.out.println("datetime: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ibeisImage.getDatetime().getTime()));
                 System.out.println("size: " + ibeisImage.getSize());
@@ -344,11 +360,11 @@ public class IbeisTestCollection implements TestCollection {
         }
     }
 
-    private class AnnotationGettersTest implements Test {
+    private class AnnotationGettersAndSettersTest implements Test {
 
         private IbeisAnnotation ibeisAnnotation;
 
-        public AnnotationGettersTest(IbeisAnnotation ibeisAnnotation) {
+        public AnnotationGettersAndSettersTest(IbeisAnnotation ibeisAnnotation) {
             this.ibeisAnnotation = ibeisAnnotation;
         }
 
@@ -361,6 +377,8 @@ public class IbeisTestCollection implements TestCollection {
         public void execute() {
             printTest(this);
             try {
+                ibeisAnnotation.setIndividual(individualList.get(0));
+
                 System.out.println("individual id: " + ibeisAnnotation.getIndividual().getId());
                 System.out.println("bounding box: " + ibeisAnnotation.getBoundingBox());
                 System.out.println("neighbor annotations: " + printIbeisAnnotationListElement(ibeisAnnotation.getNeighborAnnotations()));
@@ -371,11 +389,11 @@ public class IbeisTestCollection implements TestCollection {
         }
     }
 
-    private class IndividualGettersTest implements Test {
+    private class IndividualGettersAndSettersTest implements Test {
 
         private IbeisIndividual ibeisIndividual;
 
-        public IndividualGettersTest(IbeisIndividual ibeisIndividual) {
+        public IndividualGettersAndSettersTest(IbeisIndividual ibeisIndividual) {
             this.ibeisIndividual = ibeisIndividual;
         }
 
@@ -388,11 +406,46 @@ public class IbeisTestCollection implements TestCollection {
         public void execute() {
             printTest(this);
             try {
+                ibeisIndividual.setName("Gianni");
+                ibeisIndividual.setSex(Sex.MALE);
+                ibeisIndividual.setIndividualNotes(new IndividualNotes());
+
                 System.out.println("name: " + ibeisIndividual.getName());
                 System.out.println("sex: " + ibeisIndividual.getSex().getValue());
+                System.out.println("notes: " + ibeisIndividual.getNotes());
                 System.out.println("images: " + printIbeisImageList(ibeisIndividual.getImages()));
                 System.out.println("annotations: " + printIbeisAnnotationListElement(ibeisIndividual.getAnnotations()));
                 System.out.println("is valid: " + ibeisIndividual.isValidIndividual());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class EncounterGettersAndSettersTest implements Test {
+
+        private IbeisEncounter ibeisEncounter;
+
+        public EncounterGettersAndSettersTest(IbeisEncounter ibeisEncounter) {
+            this.ibeisEncounter = ibeisEncounter;
+        }
+
+        @Override
+        public String getTestType() {
+            return this.getClass().getSimpleName();
+        }
+
+        @Override
+        public void execute() {
+            printTest(this);
+            try {
+                //ibeisEncounter.setName("test_encounter");
+                ibeisEncounter.setNotes(new EncounterNotes());
+
+                System.out.println("name: " + ibeisEncounter.getName());
+                System.out.println("notes: " + ibeisEncounter.getNotes());
+                System.out.println("images: " + printIbeisImageList(ibeisEncounter.getImages()));
+                System.out.println("annotations: " + printIbeisIndividualList(ibeisEncounter.getIndividuals()));
             } catch (Exception e) {
                 e.printStackTrace();
             }

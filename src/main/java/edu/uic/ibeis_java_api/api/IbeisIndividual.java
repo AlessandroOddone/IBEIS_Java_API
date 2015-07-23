@@ -110,7 +110,7 @@ public class IbeisIndividual {
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public IndividualNotes getIndividualNotes() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public IndividualNotes getNotes() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             Response response = new Request(RequestMethod.GET, CallPath.INDIVIDUAL_NOTES.getValue(),
                     new ParametersList().addParameter(new Parameter(ParamName.NAME_ROWID_LIST.getValue(), id))).execute();
@@ -120,7 +120,7 @@ public class IbeisIndividual {
                 throw new UnsuccessfulHttpRequestException();
             }
 
-            return IndividualNotes.fromJsonString(response.getContent().toString());
+            return IndividualNotes.fromJsonString(response.getContent().getAsJsonArray().get(0).getAsString());
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
@@ -215,7 +215,7 @@ public class IbeisIndividual {
     public void setName(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             Response response = new Request(RequestMethod.PUT, CallPath.INDIVIDUAL_NAME.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
+                    new ParametersList().addParameter(new Parameter(ParamName.NAME_ROWID_LIST.getValue(), id))
                             .addParameter(new Parameter(ParamName.NAME_TEXT_LIST.getValue(), name))).execute();
 
             if (response == null || !response.isSuccess()) {
@@ -245,7 +245,7 @@ public class IbeisIndividual {
     public void setSex(Sex sex) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             Response response = new Request(RequestMethod.PUT, CallPath.INDIVIDUAL_SEX.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
+                    new ParametersList().addParameter(new Parameter(ParamName.NAME_ROWID_LIST.getValue(), id))
                             .addParameter(new Parameter(ParamName.NAME_SEX_LIST.getValue(), sex.getValue()))).execute();
 
             if (response == null || !response.isSuccess()) {
