@@ -17,6 +17,7 @@ public enum CallPath {
     IMAGE_ZIP("/image/zip/"),
     IMAGE_ANNOTATIONS("/image/aids/"),
     IMAGE_ANNOTATIONS_OF_SPECIES("/image/aids_of_species/"),
+    IMAGE_EIDS("/image/eids/"),
     IMAGE_GPS("/image/gps/"),
     IMAGE_NOTES("/image/notes/"),
     IMAGE_SIZE("/image/sizes/"),

@@ -212,7 +212,7 @@ public class IbeisImage {
     }
 
     /**
-     * Get all the annotations on Ibeis server that are associated to the image
+     * Get all the annotations in Ibeis database that are associated to the image
      * @return List of all the annotations associated to the image
      * @throws IOException
      * @throws BadHttpRequestException
@@ -247,7 +247,7 @@ public class IbeisImage {
     }
 
     /**
-     * Get all the annotations on Ibeis server, corresponding to a certain species, that are associated to the image
+     * Get all the annotations in Ibeis database, corresponding to a certain species, that are associated to the image
      * @param species
      * @return List of all the annotations, corresponding to the species passed as parameter, associated to the image
      * @throws IOException
@@ -270,6 +270,41 @@ public class IbeisImage {
                 annotationsOfSpecies.add(new IbeisAnnotation(annotationIdJson.getAsLong()));
             }
             return annotationsOfSpecies;
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    /**
+     * Get all the encounters the image is included in
+     * @return List of all the encounters associated to the image
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public List<IbeisEncounter> getEncounters() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.GET, CallPath.IMAGE_EIDS.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))).execute();
+
+            if (response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            List<IbeisEncounter> encounters = new ArrayList<>();
+            for (JsonElement encounterIdJson : response.getContent().getAsJsonArray().get(0).getAsJsonArray()) {
+                encounters.add(new IbeisEncounter(encounterIdJson.getAsLong()));
+            }
+            return encounters;
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
@@ -374,8 +409,31 @@ public class IbeisImage {
         }
     }
 
+    public void addToEncounter(IbeisEncounter encounter) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_EIDS.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
+                            .addParameter(new Parameter(ParamName.EID_LIST.getValue(), encounter.getId()))).execute();
+
+            if (response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
     /**
-     * Returns true if the image is on Ibeis server, false otherwise (Http GET)
+     * Returns true if the image is in Ibeis database, false otherwise (Http GET)
      * @return
      * @throws IOException
      * @throws BadHttpRequestException

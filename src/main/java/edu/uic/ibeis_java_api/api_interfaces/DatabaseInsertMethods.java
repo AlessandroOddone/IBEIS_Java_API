@@ -1,5 +1,6 @@
 package edu.uic.ibeis_java_api.api_interfaces;
 
+import edu.uic.ibeis_java_api.api.IbeisEncounter;
 import edu.uic.ibeis_java_api.api.IbeisImage;
 import edu.uic.ibeis_java_api.api.IbeisIndividual;
 import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
@@ -14,7 +15,7 @@ import java.util.List;
 public interface DatabaseInsertMethods {
 
     /**
-     * Upload an image to the Ibeis server (Http POST).
+     * Upload an image to Ibeis database (Http POST).
      * @param image
      * @return id of the uploaded image
      * @throws UnsupportedImageFileTypeException
@@ -25,7 +26,7 @@ public interface DatabaseInsertMethods {
             UnsuccessfulHttpRequestException;
 
     /**
-     * Upload a list of images to the Ibeis server (Http POST).
+     * Upload a list of images to Ibeis database (Http POST).
      * Better performances than looping over a big list and calling UploadImage.
      * This method locally creates and destroys a zip archive in the same folder where the first image in the list is located (write permissions on the folder are needed).
      * @param images
@@ -38,7 +39,7 @@ public interface DatabaseInsertMethods {
             BadHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
-     * Upload a collection of images to the Ibeis server (Http POST).
+     * Upload a collection of images to Ibeis database (Http POST).
      * Better performances than looping over a big list and calling UploadImage.
      * This method locally creates and destroys a zip archive in the folder given in input (write permissions on the folder are needed).
      * @param images
@@ -52,10 +53,16 @@ public interface DatabaseInsertMethods {
             UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
-     * Add a new individual to Ibeis server (Http POST)
+     * Add a new individual to Ibeis database (Http POST)
      * @param name name of the individual to add
      * @return IbeisIndividual object corresponding to the newly created individual
      */
-    IbeisIndividual addIndividual(String name) throws UnsupportedImageFileTypeException,
-            IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException;
+    IbeisIndividual addIndividual(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException;
+
+    /**
+     * Add a new encounter to Ibeis database (Http POST)
+     * @param name name of the encounter to add
+     * @return IbeisEncounter object corresponding to the newly created encounter
+     */
+    IbeisEncounter addEncounter(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException;
 }

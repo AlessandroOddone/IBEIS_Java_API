@@ -71,6 +71,11 @@ public class IbeisTestCollection implements TestCollection {
         //testCollection.add(new AddIndividualTest(new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss_SSS").format(new Date())));
 
         /**
+         * ADD ENCOUNTER TEST
+         */
+        //testCollection.add(new AddEncounterTest("incontro2"));
+
+        /**
          * DOWNLOAD IMAGE FILE TEST
          */
         //testCollection.add(new DownloadImageFileTest(imageList.get(imageList.size() - 1)));
@@ -83,22 +88,22 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * IMAGE GETTERS AND SETTERS
          */
-        testCollection.add(new ImageGettersAndSettersTest(imageList.get(imageList.size()-1)));
+        //testCollection.add(new ImageGettersAndSettersTest(imageList.get(imageList.size()-1)));
 
         /**
          * ANNOTATION GETTERS AND SETTERS
          */
-        testCollection.add(new AnnotationGettersAndSettersTest(annotationList.get(annotationList.size()-1)));
+        //testCollection.add(new AnnotationGettersAndSettersTest(annotationList.get(annotationList.size()-1)));
 
         /**
          * INDIVIDUAL GETTERS AND SETTERS
          */
-        testCollection.add(new IndividualGettersAndSettersTest(individualList.get(individualList.size()-1)));
+        //testCollection.add(new IndividualGettersAndSettersTest(individualList.get(individualList.size()-1)));
 
         /**
          * ENCOUNTER GETTERS AND SETTERS
          */
-        testCollection.add(new EncounterGettersAndSettersTest(encounterList.get(encounterList.size()-1)));
+        //testCollection.add(new EncounterGettersAndSettersTest(encounterList.get(encounterList.size()-1)));
 
     }
 
@@ -295,6 +300,31 @@ public class IbeisTestCollection implements TestCollection {
         }
     }
 
+    private class AddEncounterTest implements Test {
+
+        private String encounterName;
+
+        public AddEncounterTest(String encounterName) {
+            this.encounterName = encounterName;
+        }
+
+        @Override
+        public String getTestType() {
+            return this.getClass().getSimpleName();
+        }
+
+        @Override
+        public void execute() {
+            printTest(this);
+            try {
+                IbeisEncounter testEncounter = ibeis.addEncounter(encounterName);
+                System.out.println("encounter successfully added: " + testEncounter.getName() + " (id=" + testEncounter.getId() + ")");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private class DownloadImageFileTest implements Test {
 
         private static final String DOWNLOADED_IMAGE_PATH = "src/test/resources/download_test.jpeg";
@@ -345,6 +375,7 @@ public class IbeisTestCollection implements TestCollection {
                 ibeisImage.setGpsPosition(new GeoCoordinates(10, 10));
                 ibeisImage.setDatetime(new GregorianCalendar());
                 ibeisImage.setNotes(new ImageNotes());
+                ibeisImage.addToEncounter(encounterList.get(encounterList.size() - 1));
 
                 System.out.println("location: " + ibeisImage.getGpsPosition());
                 System.out.println("datetime: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ibeisImage.getDatetime().getTime()));
@@ -353,6 +384,7 @@ public class IbeisTestCollection implements TestCollection {
                 System.out.println("annotations: " + printIbeisAnnotationListElement(ibeisImage.getAnnotations()));
                 System.out.println("annotations by species (GIRAFFE): " + printIbeisAnnotationListElement
                         (ibeisImage.getAnnotationsOfSpecies(Species.GIRAFFE)));
+                System.out.println("encounters: " + printIbeisEncounterList(ibeisImage.getEncounters()));
                 System.out.println("is valid: " + ibeisImage.isValidImage());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -482,6 +514,20 @@ public class IbeisTestCollection implements TestCollection {
             }
             else {
                 builder.append(ibeisImageList.get(i).getId());
+            }
+        }
+        return builder.toString();
+    }
+
+    private String printIbeisEncounterList(List<IbeisEncounter> ibeisEncounters) {
+        StringBuilder builder = new StringBuilder("");
+
+        for(int i=0; i<ibeisEncounters.size(); i++) {
+            if(i < ibeisEncounters.size()-1) {
+                builder.append(ibeisEncounters.get(i).getId() + ", ");
+            }
+            else {
+                builder.append(ibeisEncounters.get(i).getId());
             }
         }
         return builder.toString();

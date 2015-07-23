@@ -163,9 +163,9 @@ public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, Dete
     }
 
     @Override
-    public IbeisIndividual addIndividual(String name) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
+    public IbeisIndividual addIndividual(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
         try {
-            checkIndividualNameNotExisting(name);
+            checkIndividualNameNotExists(name);
 
             Response response = new Request(RequestMethod.POST, CallPath.INDIVIDUALS.getValue(), new ParametersList()
                     .addParameter(new Parameter(ParamName.NAME_TEXT_LIST.getValue(), name))).execute();
@@ -189,9 +189,44 @@ public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, Dete
         }
     }
 
-    private void checkIndividualNameNotExisting(String name) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
+    private void checkIndividualNameNotExists(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
         for (IbeisIndividual ibeisIndividual : getAllIndividuals()) {
             if (name.equals(ibeisIndividual.getName())) {
+                throw new IndividualNameAlreadyExistsException();
+            }
+        }
+    }
+
+    @Override
+    public IbeisEncounter addEncounter(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
+        try {
+            checkEncounterNameNotExists(name);
+
+            Response response = new Request(RequestMethod.POST, CallPath.ENCOUNTERS.getValue(), new ParametersList()
+                    .addParameter(new Parameter(ParamName.ENC_TEXT_LIST.getValue(), name))).execute();
+
+            // check if the request has been successful
+            if(response == null || !response.isSuccess()) {
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            return new IbeisEncounter(response.getContent().getAsJsonArray().get(0).getAsLong());
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    private void checkEncounterNameNotExists(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
+        for (IbeisEncounter ibeisEncounter : getAllEncounters()) {
+            if (name.equals(ibeisEncounter.getName())) {
                 throw new IndividualNameAlreadyExistsException();
             }
         }

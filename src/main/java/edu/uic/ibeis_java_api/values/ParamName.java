@@ -17,6 +17,7 @@ public enum ParamName {
     NAME_SEX_LIST("name_sex_list"),
     NAME_TEXT_LIST("name_text_list"),
     ENCOUNTER_NOTES_LIST("encounter_note_list"),
+    ENC_TEXT_LIST("enctext_list"),
     ENCOUNTER_TEXT_LIST("encounter_text_list");
 
     private String value;
