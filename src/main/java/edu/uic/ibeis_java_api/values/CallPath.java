@@ -14,6 +14,7 @@ public enum CallPath {
     ENCOUNTER_NOTE("/encounter/note/"),
     ENCOUNTER_NOTES("/encounter/notes/"),
     IMAGE("/image/"),
+    IMAGE_ZIP("/image/zip/"),
     IMAGE_ANNOTATIONS("/image/aids/"),
     IMAGE_ANNOTATIONS_OF_SPECIES("/image/aids_of_species/"),
     IMAGE_GPS("/image/gps/"),

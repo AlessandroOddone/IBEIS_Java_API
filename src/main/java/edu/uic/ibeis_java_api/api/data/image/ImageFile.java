@@ -3,17 +3,17 @@ package edu.uic.ibeis_java_api.api.data.image;
 import java.io.File;
 
 /**
- * A zip archive which contains one or more images, defined by its local path
+ * An image file, defined by its local path
  */
-public class ImageZipArchive {
+public class ImageFile {
 
     private String localPath;
 
-    public ImageZipArchive(String localPath) {
+    public ImageFile(String localPath) {
         this.localPath = localPath;
     }
 
-    public ImageZipArchive(File localPath) {
+    public ImageFile(File localPath) {
         this.localPath = localPath.toString();
     }
 

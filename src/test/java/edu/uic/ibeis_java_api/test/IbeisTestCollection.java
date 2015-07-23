@@ -43,12 +43,16 @@ public class IbeisTestCollection implements TestCollection {
             e.printStackTrace();
         }
 
-
         /**
          * UPLOAD IMAGE TEST
          */
-        //testCollection.add(new UploadImagesTest(Arrays.asList(new File(getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile()),
-        //                new File(getClass().getClassLoader().getResource("zebra_api_upload_test.jpeg").getFile()))));
+        testCollection.add(new UploadImageTest(new File(getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile())));
+
+        /**
+         * UPLOAD IMAGE ZIP ARCHIVE TEST
+         */
+        //testCollection.add(new UploadImageZipArchiveTest(Arrays.asList(new File(getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile()),
+                //new File(getClass().getClassLoader().getResource("zebra_api_upload_test.jpeg").getFile()))));
 
         /**
          * DELETE IMAGE TEST
@@ -94,18 +98,52 @@ public class IbeisTestCollection implements TestCollection {
         System.out.print("\n\n");
     }
 
-    private class UploadImagesTest implements Test {
+    private class UploadImageTest implements Test {
+
+        private File imageToUpload;
+        private IbeisImage uploadedImage;
+
+        public UploadImageTest(File file) {
+            imageToUpload = file;
+        }
+
+        @Override
+        public String getTestType() {
+            return this.getClass().getSimpleName();
+        }
+
+        @Override
+        public void execute() {
+            printTest(this);
+
+            try {
+                IbeisImage ibeisImage = ibeis.uploadImage(imageToUpload);
+
+                System.out.println("image file \"" + imageToUpload.getPath() + "\" successfully uploaded (imageId = " + ibeisImage.getId() + ")");
+                uploadedImage = ibeisImage;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public IbeisImage getUploadedImage() {
+            return uploadedImage;
+        }
+    }
+
+    private class UploadImageZipArchiveTest implements Test {
 
         private List<File> imagesToUpload;
         private List<IbeisImage> uploadedImages;
 
-        public UploadImagesTest(File file) {
+        public UploadImageZipArchiveTest(File file) {
             imagesToUpload = new ArrayList<>();
             imagesToUpload.add(file);
             uploadedImages = new ArrayList<>();
         }
 
-        public UploadImagesTest(List<File> files) {
+        public UploadImageZipArchiveTest(List<File> files) {
             imagesToUpload = new ArrayList<>(files);
             uploadedImages = new ArrayList<>();
         }
@@ -138,7 +176,6 @@ public class IbeisTestCollection implements TestCollection {
                 e.printStackTrace();
             }
         }
-
 
         public List<IbeisImage> getUploadedImages() {
             return uploadedImages;

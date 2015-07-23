@@ -1,8 +1,9 @@
 package edu.uic.ibeis_java_api.http;
 
-import edu.uic.ibeis_java_api.api.data.image.ImageZipArchive;
 import android.org.apache.http.NameValuePair;
 import android.org.apache.http.message.BasicNameValuePair;
+import edu.uic.ibeis_java_api.api.data.image.ImageFile;
+import edu.uic.ibeis_java_api.api.data.image.ImageZipArchive;
 
 import java.util.List;
 
@@ -35,6 +36,12 @@ public class Parameter {
         }
         this.value = valString.toString();
         isFile = false;
+    }
+
+    public Parameter(String name, ImageFile img) {
+        this.name = name;
+        this.value = img.getLocalPath();
+        isFile = true;
     }
 
     public Parameter(String name, ImageZipArchive imgZip) {

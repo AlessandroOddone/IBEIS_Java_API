@@ -15,7 +15,6 @@ public interface DatabaseInsertMethods {
 
     /**
      * Upload an image to the Ibeis server (Http POST).
-     * This method locally creates and destroys a zip archive in the same folder where the image is located (write permissions on the folder are needed).
      * @param image
      * @return id of the uploaded image
      * @throws UnsupportedImageFileTypeException
@@ -26,7 +25,8 @@ public interface DatabaseInsertMethods {
             UnsuccessfulHttpRequestException;
 
     /**
-     * Upload a collection of images to the Ibeis server (Http POST). Has better performances than looping over list and calling UploadImage.
+     * Upload a list of images to the Ibeis server (Http POST).
+     * Better performances than looping over a big list and calling UploadImage.
      * This method locally creates and destroys a zip archive in the same folder where the first image in the list is located (write permissions on the folder are needed).
      * @param images
      * @return list of id's of the uploaded images
@@ -38,19 +38,8 @@ public interface DatabaseInsertMethods {
             BadHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
-     * Upload an image to the Ibeis server (Http POST). This method locally creates and destroys a zip archive in the folder given in input (write permissions on the folder are needed).
-     * @param image
-     * @param pathToTemporaryZipFile folder in which the archive will be created (do not include filename in the path)
-     * @return id of the uploaded image
-     * @throws UnsupportedImageFileTypeException
-     * @throws IOException
-     * @throws UnsuccessfulHttpRequestException
-     */
-    IbeisImage uploadImage(File image, File pathToTemporaryZipFile) throws UnsupportedImageFileTypeException,
-            IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
-
-    /**
-     * Upload a collection of images to the Ibeis server (Http POST). Has better performances than looping over list and calling UploadImage.
+     * Upload a collection of images to the Ibeis server (Http POST).
+     * Better performances than looping over a big list and calling UploadImage.
      * This method locally creates and destroys a zip archive in the folder given in input (write permissions on the folder are needed).
      * @param images
      * @param pathToTemporaryZipFile folder in which the archive will be created (do not include filename in the path)

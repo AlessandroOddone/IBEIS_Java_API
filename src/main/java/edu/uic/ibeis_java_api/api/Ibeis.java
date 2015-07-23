@@ -1,6 +1,7 @@
 package edu.uic.ibeis_java_api.api;
 
 import com.google.gson.JsonElement;
+import edu.uic.ibeis_java_api.api.data.image.ImageFile;
 import edu.uic.ibeis_java_api.api.data.image.ImageZipArchive;
 import edu.uic.ibeis_java_api.api_interfaces.*;
 import edu.uic.ibeis_java_api.exceptions.*;
@@ -24,8 +25,30 @@ import java.util.*;
 public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, DetectionMethods, DatabaseQueryMethods, IbeisQueryMethods {
 
     @Override
-    public IbeisImage uploadImage(File image) throws UnsupportedImageFileTypeException, IOException,BadHttpRequestException, UnsuccessfulHttpRequestException {
-        return uploadImages(Arrays.asList(image)).get(0);
+    public IbeisImage uploadImage(File image) throws UnsupportedImageFileTypeException, IOException, UnsuccessfulHttpRequestException, BadHttpRequestException {
+        // check if the extension of the image file is supported by Ibeis database
+        checkFileTypeIsSupported(image);
+
+        try {
+            Response response = new Request(RequestMethod.POST, CallPath.IMAGE.getValue(), new ParametersList().addParameter
+                    (new Parameter(ParamName.IMAGE_FILE.getValue(), new ImageFile(image)))).execute();
+
+            // check if the request has been successful
+            if(response == null || !response.isSuccess()) {
+                throw new UnsuccessfulHttpRequestException();
+            }
+            return new IbeisImage(response.getContent().getAsInt());
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
     }
 
     @Override
@@ -34,13 +57,8 @@ public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, Dete
     }
 
     @Override
-    public IbeisImage uploadImage(File image, File pathToTemporaryZipFile) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
-        return uploadImages(Arrays.asList(image), pathToTemporaryZipFile).get(0);
-    }
-
-    @Override
     public List<IbeisImage> uploadImages(List<File> images, File pathToTemporaryZipFile) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
-        // check if extension of each image file in the collection is supported by Ibeis database
+        // check if the extension of each image file in the collection is supported by Ibeis database
         for(File image : images) {
             checkFileTypeIsSupported(image);
         }
@@ -113,7 +131,7 @@ public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, Dete
     private Response uploadAndDeleteImageZipArchive(File zipFilePath) throws BadHttpRequestException, UnsuccessfulHttpRequestException, IOException {
         // http POST request to upload the zip file
         try {
-            Response response = new Request(RequestMethod.POST, CallPath.IMAGE.getValue(), new ParametersList().addParameter
+            Response response = new Request(RequestMethod.POST, CallPath.IMAGE_ZIP.getValue(), new ParametersList().addParameter
                     (new Parameter(ParamName.IMAGE_ZIP_ARCHIVE.getValue(), new ImageZipArchive(zipFilePath)))).execute();
 
             // delete zip file

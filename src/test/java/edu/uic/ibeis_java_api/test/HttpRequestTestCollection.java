@@ -5,7 +5,6 @@ import edu.uic.ibeis_java_api.http.*;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,11 +17,18 @@ public class HttpRequestTestCollection implements TestCollection {
         testCollection = new ArrayList<>();
 
         /**
-         * IMAGE UPLOAD
+         * IMAGE UPLOAD (IMAGE FILE)
+         */
+        Parameter imageFile = new Parameter("image", getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile());
+        imageFile.setIsFile(true);
+        testCollection.add(new HttpPostTest("/image/").addParam(imageFile));
+
+        /**
+         * IMAGE UPLOAD (ZIP ARCHIVE)
          */
         //Parameter imgZipArchive = new Parameter("image_zip_archive", getClass().getClassLoader().getResource("images_archive_test_same_giraffe.zip").getFile());
         //imgZipArchive.setIsFile(true);
-        //testCollection.add(new HttpPostTest("/image/").addParam(imgZipArchive));
+        //testCollection.add(new HttpPostTest("/image/zip/").addParam(imgZipArchive));
 
         /**
          * NAME INSERT
@@ -44,7 +50,7 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * GETTERS (GET CALLS)
          */
-        testCollection.add(new HttpGetTest("/image/enctext/").addParam("gid_list", Arrays.asList(151, 152)));
+        //testCollection.add(new HttpGetTest("/image/enctext/").addParam("gid_list", Arrays.asList(151, 152)));
         /*
         testCollection.add(new HttpGetTest("/image/"));
         testCollection.add(new HttpGetTest("/image/151/"));
@@ -98,8 +104,8 @@ public class HttpRequestTestCollection implements TestCollection {
         testCollection.add(new HttpPutTest("/encounter/notes/").addParam("encounter_rowid_list", "34")
                 .addParam("encounter_note_list","encounter_note_test"));
         */
-        testCollection.add(new HttpPutTest("/image/enctext/").addParam("gid_list", "151")
-                .addParam("enctext_list","encounter_test"));
+        //testCollection.add(new HttpPutTest("/image/enctext/").addParam("gid_list", "151")
+        //        .addParam("enctext_list","encounter_test"));
 
         /**
          * DELETE CALLS
