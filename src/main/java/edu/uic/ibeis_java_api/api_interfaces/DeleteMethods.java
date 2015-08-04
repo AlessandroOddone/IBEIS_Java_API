@@ -7,7 +7,7 @@ import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
 import java.io.IOException;
 import java.util.List;
 
-public interface DatabaseDeleteMethods {
+public interface DeleteMethods {
 
     /**
      * Delete an image on Ibeis server

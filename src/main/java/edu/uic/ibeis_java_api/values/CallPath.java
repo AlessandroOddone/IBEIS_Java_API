@@ -27,7 +27,8 @@ public enum CallPath {
     INDIVIDUAL_IMAGES("/name/gids/"),
     INDIVIDUAL_NAME("/name/texts/"),
     INDIVIDUAL_NOTES("/name/notes/"),
-    INDIVIDUAL_SEX("/name/sex/");
+    INDIVIDUAL_SEX("/name/sex/"),
+    QUERY_CHIPS("/core/query_chips/");
 
     private String value;
 

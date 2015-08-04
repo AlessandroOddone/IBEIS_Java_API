@@ -18,7 +18,9 @@ public enum ParamName {
     NAME_TEXT_LIST("name_text_list"),
     ENCOUNTER_NOTES_LIST("encounter_note_list"),
     ENC_TEXT_LIST("enctext_list"),
-    ENCOUNTER_TEXT_LIST("encounter_text_list");
+    ENCOUNTER_TEXT_LIST("encounter_text_list"),
+    QAID_LIST("qaid_list"),
+    DAID_LIST("daid_list");
 
     private String value;
 

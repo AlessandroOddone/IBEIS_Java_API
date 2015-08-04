@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public interface DatabaseInsertMethods {
+public interface InsertMethods {
 
     /**
      * Upload an image to Ibeis database (Http POST).

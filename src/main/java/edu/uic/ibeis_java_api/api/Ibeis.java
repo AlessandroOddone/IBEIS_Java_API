@@ -1,6 +1,7 @@
 package edu.uic.ibeis_java_api.api;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import edu.uic.ibeis_java_api.api.data.image.ImageFile;
 import edu.uic.ibeis_java_api.api.data.image.ImageZipArchive;
 import edu.uic.ibeis_java_api.api_interfaces.*;
@@ -22,7 +23,7 @@ import java.util.*;
 /**
  * Controller class to interact with Ibeis
  */
-public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, DetectionMethods, DatabaseQueryMethods, IbeisQueryMethods {
+public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethods, GetMethods, IbeisQueryMethods {
 
     @Override
     public IbeisImage uploadImage(File image) throws UnsupportedImageFileTypeException, IOException, UnsuccessfulHttpRequestException, BadHttpRequestException {
@@ -312,6 +313,52 @@ public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, Dete
     }
 
     @Override
+    public IbeisQueryResult query(IbeisAnnotation queryAnnotation, List<IbeisAnnotation> annotationDb) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        return query(Arrays.asList(queryAnnotation), annotationDb).get(0);
+    }
+
+    @Override
+    public List<IbeisQueryResult> query(List<IbeisAnnotation> queryAnnotations, List<IbeisAnnotation> annotationDb) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            List<Number> queryAnnotationIds = new ArrayList<>();
+            for(IbeisAnnotation annotation : queryAnnotations) {
+                queryAnnotationIds.add(annotation.getId());
+            }
+
+            List<Number> dbAnnotationIds = new ArrayList<>();
+            for(IbeisAnnotation annotation : annotationDb) {
+                dbAnnotationIds.add(annotation.getId());
+            }
+
+            Response response = new Request(RequestMethod.PUT, CallPath.QUERY_CHIPS.getValue(), new ParametersList()
+                    .addParameter(new Parameter(ParamName.QAID_LIST.getValue(), queryAnnotationIds))
+                    .addParameter(new Parameter(ParamName.DAID_LIST.getValue(), dbAnnotationIds))).execute();
+
+            if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            JsonObject jsonObject = response.getContent().getAsJsonArray().get(0).getAsJsonObject();
+            JsonElement jsonElement = jsonObject.get("__PYTHON_OBJECT__");
+
+            System.out.println("\nPICKLE OBJECT: " + jsonElement.toString());
+
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+        return null;
+    }
+
+    @Override
     public List<IbeisImage> getAllImages() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             Response response = new Request(RequestMethod.GET, CallPath.IMAGE.getValue()).execute();
@@ -326,6 +373,33 @@ public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, Dete
                 ibeisImages.add(new IbeisImage(imageIdJson.getAsLong()));
             }
             return ibeisImages;
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    @Override
+    public IbeisImage getImageById(long id) throws InvalidImageIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.GET, CallPath.IMAGE.getValue()).execute();
+
+            if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            for (JsonElement imageIdJson : response.getContent().getAsJsonArray()) {
+                if(imageIdJson.getAsLong() == id) return new IbeisImage(id);
+            }
+            throw new InvalidImageIdException();
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
@@ -368,6 +442,34 @@ public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, Dete
     }
 
     @Override
+    public IbeisIndividual getIndividualById(long id) throws InvalidIndividualIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.GET, CallPath.INDIVIDUALS.getValue()).execute();
+
+            if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            for (JsonElement nameIdJson : response.getContent().getAsJsonArray()) {
+                if(nameIdJson.getAsLong() == id) return new IbeisIndividual(id);
+            }
+            throw new InvalidIndividualIdException();
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+
+    }
+
+    @Override
     public List<IbeisAnnotation> getAllAnnotations() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             Response response = new Request(RequestMethod.GET, CallPath.ANNOTATIONS.getValue()).execute();
@@ -396,6 +498,33 @@ public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, Dete
     }
 
     @Override
+    public IbeisAnnotation getAnnotationById(long id) throws InvalidAnnotationIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.GET, CallPath.ANNOTATIONS.getValue()).execute();
+
+            if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            for (JsonElement annotationIdJson : response.getContent().getAsJsonArray()) {
+                if(annotationIdJson.getAsLong() == id) return new IbeisAnnotation(id);
+            }
+            throw new InvalidAnnotationIdException();
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    @Override
     public List<IbeisEncounter> getAllEncounters() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             Response response = new Request(RequestMethod.GET, CallPath.ENCOUNTERS.getValue()).execute();
@@ -410,6 +539,33 @@ public class Ibeis implements DatabaseInsertMethods, DatabaseDeleteMethods, Dete
                 ibeisEncounters.add(new IbeisEncounter(encounterIdJson.getAsLong()));
             }
             return ibeisEncounters;
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    @Override
+    public IbeisEncounter getEncounterById(long id) throws InvalidEncounterIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.GET, CallPath.ENCOUNTERS.getValue()).execute();
+
+            if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            for (JsonElement encounterIdJson : response.getContent().getAsJsonArray()) {
+                if(encounterIdJson.getAsLong() == id) return new IbeisEncounter(id);
+            }
+            throw new InvalidEncounterIdException();
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();

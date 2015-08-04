@@ -6,20 +6,14 @@ import edu.uic.ibeis_java_api.api.data.encounter.EncounterNotes;
 import edu.uic.ibeis_java_api.api.data.image.ImageNotes;
 import edu.uic.ibeis_java_api.api.data.image.RawImage;
 import edu.uic.ibeis_java_api.api.data.individual.IndividualNotes;
-import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
-import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
 import edu.uic.ibeis_java_api.values.Sex;
 import edu.uic.ibeis_java_api.values.Species;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 public class IbeisTestCollection implements TestCollection {
 
@@ -29,6 +23,10 @@ public class IbeisTestCollection implements TestCollection {
     private List<IbeisAnnotation> annotationList;
     private List<IbeisIndividual> individualList;
     private List<IbeisEncounter> encounterList;
+    IbeisImage image;
+    IbeisAnnotation annotation;
+    IbeisIndividual individual;
+    IbeisEncounter encounter;
 
     public IbeisTestCollection() {
         System.out.println("***IBEIS TEST COLLECTION***\n");
@@ -41,11 +39,12 @@ public class IbeisTestCollection implements TestCollection {
             individualList = ibeis.getAllIndividuals();
             encounterList = ibeis.getAllEncounters();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (BadHttpRequestException e) {
-            e.printStackTrace();
-        } catch (UnsuccessfulHttpRequestException e) {
+            image = ibeis.getImageById(179);
+            annotation = ibeis.getAnnotationById(171);
+            individual = ibeis.getIndividualById(52);
+            encounter = ibeis.getEncounterById(148);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -73,7 +72,7 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * ADD ENCOUNTER TEST
          */
-        //testCollection.add(new AddEncounterTest("incontro2"));
+        //testCollection.add(new AddEncounterTest(new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss_SSS").format(new Date())));
 
         /**
          * DOWNLOAD IMAGE FILE TEST
@@ -84,6 +83,12 @@ public class IbeisTestCollection implements TestCollection {
          * ANIMAL DETECTION
          */
         //testCollection.add(new AnimalDetectionTest(imageList.get(imageList.size()-1), Species.GIRAFFE));
+
+        /**
+         * QUERY
+         */
+        //testCollection.add(new QueryTest(Arrays.asList(annotationList.get(0)),
+        //        Arrays.asList(annotationList.get(0))));
 
         /**
          * IMAGE GETTERS AND SETTERS
@@ -272,6 +277,39 @@ public class IbeisTestCollection implements TestCollection {
 
         public List<List<IbeisAnnotation>> getIbeisAnnotationList() {
             return ibeisAnnotationList;
+        }
+    }
+
+    private class QueryTest implements Test {
+
+        private List<IbeisAnnotation> queryAnnotations;
+        private List<IbeisAnnotation> dbAnnotations;
+        private List<IbeisQueryResult> ibeisQueryResults;
+
+        public QueryTest(IbeisAnnotation queryAnnot, List<IbeisAnnotation> dbAnnots) {
+            queryAnnotations = new ArrayList<>();
+            queryAnnotations.add(queryAnnot);
+            dbAnnotations = dbAnnots;
+        }
+
+        public QueryTest(List<IbeisAnnotation> queryAnnots, List<IbeisAnnotation> dbAnnots) {
+            queryAnnotations = new ArrayList<>(queryAnnots);
+            dbAnnotations = dbAnnots;
+        }
+
+        @Override
+        public String getTestType() {
+            return this.getClass().getSimpleName();
+        }
+
+        @Override
+        public void execute() {
+            printTest(this);
+            try {
+                ibeisQueryResults = ibeis.query(queryAnnotations, dbAnnotations);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

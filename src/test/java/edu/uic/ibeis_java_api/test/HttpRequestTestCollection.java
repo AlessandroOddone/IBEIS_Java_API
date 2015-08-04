@@ -5,6 +5,7 @@ import edu.uic.ibeis_java_api.http.*;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,9 +20,9 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * IMAGE UPLOAD (IMAGE FILE)
          */
-        //Parameter imageFile = new Parameter("image", getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile());
-        //imageFile.setIsFile(true);
-        //testCollection.add(new HttpPostTest("/image/").addParam(imageFile));
+        Parameter imageFile = new Parameter("image", getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile());
+        imageFile.setIsFile(true);
+        testCollection.add(new HttpPostTest("/image/").addParam(imageFile));
 
         /**
          * IMAGE UPLOAD (ZIP ARCHIVE)
@@ -38,7 +39,7 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * ENCOUNTER INSERT
          */
-        testCollection.add(new HttpPostTest("/encounter/").addParam("enctext_list", "incontro"));
+        //testCollection.add(new HttpPostTest("/encounter/").addParam("enctext_list", "incontro"));
 
         /**
          * DETECT RANDOM FOREST
@@ -49,8 +50,8 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * QUERY
          */
-        //testCollection.add(new HttpPutTest("/core/query_chips/").addParam("qaid_list", 151).addParam("daid_list", Arrays.asList(151, 152)));
-
+        //testCollection.add(new HttpGetTest("/core/query_chips/").addParam("qaid_list", Arrays.asList(151,152)).addParam("daid_list", Arrays.asList(151,152)));
+        testCollection.add(new HttpGetTest("/core/query_chips_simple_dict/").addParam("qaid_list", Arrays.asList(151,152)).addParam("daid_list", Arrays.asList(151,152)));
 
         /**
          * GETTERS (GET CALLS)

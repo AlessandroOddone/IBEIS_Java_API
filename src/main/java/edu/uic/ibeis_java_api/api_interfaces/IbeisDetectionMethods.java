@@ -9,7 +9,7 @@ import edu.uic.ibeis_java_api.values.Species;
 import java.io.IOException;
 import java.util.List;
 
-public interface DetectionMethods {
+public interface IbeisDetectionMethods {
 
     /**
      * Detect animals of the specified species in an image
