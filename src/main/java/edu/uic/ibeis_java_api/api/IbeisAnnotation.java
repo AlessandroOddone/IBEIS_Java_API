@@ -33,7 +33,7 @@ public class IbeisAnnotation {
     }
 
     /**
-     * Get the bounding box corresponding to the annotation (Http GET)
+     * Get the bounding box corresponding to the annotation
      * @return Bounding box
      * @throws IOException
      * @throws BadHttpRequestException
@@ -70,7 +70,7 @@ public class IbeisAnnotation {
     }
 
     /**
-     * Get the individual corresponding to the annotation (Http Get)
+     * Get the individual corresponding to the annotation
      * @return IbeisIndividual
      * @throws IOException
      * @throws BadHttpRequestException
@@ -101,7 +101,7 @@ public class IbeisAnnotation {
     }
 
     /**
-     * Get the annotations that have been found in the same image (Http Get)
+     * Get the annotations that have been found in the same image
      * @return List of IbeisAnnotation elements
      * @throws IOException
      * @throws BadHttpRequestException
@@ -136,7 +136,7 @@ public class IbeisAnnotation {
     }
 
     /**
-     * Set the individual associated to the annotation (Http PUT)
+     * Set the individual associated to the annotation
      * @param individual
      * @throws IOException
      * @throws BadHttpRequestException
@@ -166,7 +166,7 @@ public class IbeisAnnotation {
     }
 
     /**
-     * Returns true if the annotation is on Ibeis server, false otherwise (Http GET)
+     * Returns true if the annotation is in Ibeis database, false otherwise
      * @return
      * @throws IOException
      * @throws BadHttpRequestException

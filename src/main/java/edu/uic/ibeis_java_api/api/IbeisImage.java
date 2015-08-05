@@ -84,7 +84,7 @@ public class IbeisImage {
     }
 
     /**
-     * Get the GPS position (geographic coordinates) of the image (Http GET)
+     * Get the GPS position (geographic coordinates) of the image
      * @return (latitude,longitude) pair
      * @throws IOException
      * @throws BadHttpRequestException
@@ -116,7 +116,7 @@ public class IbeisImage {
     }
 
     /**
-     * Get the datetime associated to the image (Http GET)
+     * Get the datetime associated to the image
      * @return Datetime in which the image was created
      * @throws IOException
      * @throws BadHttpRequestException
@@ -319,7 +319,7 @@ public class IbeisImage {
     }
 
     /**
-     * Set the GPS position of the image (Http PUT)
+     * Set the GPS position of the image
      * @param location
      * @throws IOException
      * @throws BadHttpRequestException
@@ -350,7 +350,7 @@ public class IbeisImage {
     }
 
     /**
-     * Set the datetime of the image (Http PUT)
+     * Set the datetime of the image
      * @param datetime
      * @throws IOException
      * @throws BadHttpRequestException
@@ -380,7 +380,7 @@ public class IbeisImage {
     }
 
     /**
-     * Set an ImageNotes object associated to the image (Http PUT)
+     * Set an ImageNotes object associated to the image
      * @param imageNotes
      * @throws IOException
      * @throws BadHttpRequestException
@@ -409,6 +409,13 @@ public class IbeisImage {
         }
     }
 
+    /**
+     * Add the image to an Encounter
+     * @param encounter
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
     public void addToEncounter(IbeisEncounter encounter) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_EIDS.getValue(),
@@ -433,7 +440,7 @@ public class IbeisImage {
     }
 
     /**
-     * Returns true if the image is in Ibeis database, false otherwise (Http GET)
+     * Returns true if the image is in Ibeis database, false otherwise
      * @return
      * @throws IOException
      * @throws BadHttpRequestException

@@ -33,7 +33,7 @@ public class IbeisIndividual {
     }
 
     /**
-     * Get the name of the individual (Http GET)
+     * Get the name of the individual
      * @return Name
      * @throws IOException
      * @throws BadHttpRequestException
@@ -206,7 +206,7 @@ public class IbeisIndividual {
     }
 
     /**
-     * Set the name of the individual (Http PUT)
+     * Set the name of the individual
      * @param name
      * @throws IOException
      * @throws BadHttpRequestException
@@ -236,7 +236,7 @@ public class IbeisIndividual {
     }
 
     /**
-     * Set the sex of the individual (Http PUT)
+     * Set the sex of the individual
      * @param sex
      * @throws IOException
      * @throws BadHttpRequestException
@@ -266,7 +266,7 @@ public class IbeisIndividual {
     }
 
     /**
-     * Set an IndividualNotes object associated to the individual (Http PUT)
+     * Set an IndividualNotes object associated to the individual
      * @param individualNotes
      * @throws IOException
      * @throws BadHttpRequestException
@@ -296,7 +296,7 @@ public class IbeisIndividual {
     }
 
     /**
-     * Returns true if the individual is on Ibeis server, false otherwise (Http GET)
+     * Returns true if the individual is on Ibeis server, false otherwise
      * @return
      * @throws IOException
      * @throws BadHttpRequestException

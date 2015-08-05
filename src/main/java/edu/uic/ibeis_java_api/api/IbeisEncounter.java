@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An encounter is a collection of images (IbeisImage) on Ibeis server
+ * An encounter is a collection of images (IbeisImage) in Ibeis database
  */
 public class IbeisEncounter {
 
@@ -164,7 +164,7 @@ public class IbeisEncounter {
     }
 
     /**
-     * Set the name of the encounter (Http PUT)
+     * Set the name of the encounter
      * @param name
      * @throws IOException
      * @throws BadHttpRequestException
@@ -194,7 +194,7 @@ public class IbeisEncounter {
     }
 
     /**
-     * Set an EncounterNotes object associated to the encounter (Http PUT)
+     * Set an EncounterNotes object associated to the encounter
      * @param encounterNotes
      * @throws IOException
      * @throws BadHttpRequestException
