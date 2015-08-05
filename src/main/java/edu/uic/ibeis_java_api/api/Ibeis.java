@@ -351,7 +351,7 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
                 List<IbeisQueryScore> ibeisQueryScores = new ArrayList<>();
                 for(int j=0; j<daidList.size(); j++) {
                     ibeisQueryScores.add(new IbeisQueryScore(new IbeisAnnotation(daidList.get(j).getAsLong())
-                            , scoreList.get(j).isJsonNull() ? null : scoreList.get(j).getAsDouble()));
+                            , scoreList.get(j).isJsonNull() ? IbeisQueryScore.NULL_SCORE : scoreList.get(j).getAsDouble()));
                 }
                 ibeisQueryResults.add(new IbeisQueryResult(new IbeisAnnotation(jsonObject.get("qaid").getAsLong())
                         , ibeisQueryScores));
