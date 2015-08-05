@@ -24,7 +24,8 @@ public class IbeisTestCollection implements TestCollection {
     private List<IbeisIndividual> individualList;
     private List<IbeisEncounter> encounterList;
     IbeisImage image;
-    IbeisAnnotation annotation;
+    IbeisAnnotation annotation1;
+    IbeisAnnotation annotation2;
     IbeisIndividual individual;
     IbeisEncounter encounter;
 
@@ -40,7 +41,8 @@ public class IbeisTestCollection implements TestCollection {
             encounterList = ibeis.getAllEncounters();
 
             image = ibeis.getImageById(179);
-            annotation = ibeis.getAnnotationById(171);
+            annotation1 = ibeis.getAnnotationById(172);
+            annotation2 = ibeis.getAnnotationById(174);
             individual = ibeis.getIndividualById(52);
             encounter = ibeis.getEncounterById(148);
 
@@ -87,8 +89,8 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * QUERY
          */
-        //testCollection.add(new QueryTest(Arrays.asList(annotationList.get(0)),
-        //        Arrays.asList(annotationList.get(0))));
+        testCollection.add(new QueryTest(Arrays.asList(annotation1,annotation2),
+                Arrays.asList(annotation1,annotation2)));
 
         /**
          * IMAGE GETTERS AND SETTERS
@@ -307,6 +309,9 @@ public class IbeisTestCollection implements TestCollection {
             printTest(this);
             try {
                 ibeisQueryResults = ibeis.query(queryAnnotations, dbAnnotations);
+                for(int i=0; i<ibeisQueryResults.size(); i++) {
+                    System.out.println("QUERY " + i + ": " + ibeisQueryResults.get(i));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

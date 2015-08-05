@@ -1,5 +1,6 @@
 package edu.uic.ibeis_java_api.api;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import edu.uic.ibeis_java_api.api.data.image.ImageFile;
@@ -313,12 +314,12 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
     }
 
     @Override
-    public IbeisQueryResult query(IbeisAnnotation queryAnnotation, List<IbeisAnnotation> annotationDb) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
-        return query(Arrays.asList(queryAnnotation), annotationDb).get(0);
+    public IbeisQueryResult query(IbeisAnnotation queryAnnotation, List<IbeisAnnotation> dbAnnotations) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        return query(Arrays.asList(queryAnnotation), dbAnnotations).get(0);
     }
 
     @Override
-    public List<IbeisQueryResult> query(List<IbeisAnnotation> queryAnnotations, List<IbeisAnnotation> annotationDb) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<IbeisQueryResult> query(List<IbeisAnnotation> queryAnnotations, List<IbeisAnnotation> dbAnnotations) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         try {
             List<Number> queryAnnotationIds = new ArrayList<>();
             for(IbeisAnnotation annotation : queryAnnotations) {
@@ -326,11 +327,11 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
             }
 
             List<Number> dbAnnotationIds = new ArrayList<>();
-            for(IbeisAnnotation annotation : annotationDb) {
+            for(IbeisAnnotation annotation : dbAnnotations) {
                 dbAnnotationIds.add(annotation.getId());
             }
 
-            Response response = new Request(RequestMethod.PUT, CallPath.QUERY_CHIPS.getValue(), new ParametersList()
+            Response response = new Request(RequestMethod.GET, CallPath.QUERY_CHIPS_SIMPLE_DICT.getValue(), new ParametersList()
                     .addParameter(new Parameter(ParamName.QAID_LIST.getValue(), queryAnnotationIds))
                     .addParameter(new Parameter(ParamName.DAID_LIST.getValue(), dbAnnotationIds))).execute();
 
@@ -339,11 +340,23 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
                 throw new UnsuccessfulHttpRequestException();
             }
 
-            JsonObject jsonObject = response.getContent().getAsJsonArray().get(0).getAsJsonObject();
-            JsonElement jsonElement = jsonObject.get("__PYTHON_OBJECT__");
+            List<IbeisQueryResult> ibeisQueryResults = new ArrayList<>();
 
-            System.out.println("\nPICKLE OBJECT: " + jsonElement.toString());
+            JsonArray responseJsonArray = response.getContent().getAsJsonArray();
+            for(int i=0; i<responseJsonArray.size(); i++) {
+                JsonObject jsonObject = responseJsonArray.get(i).getAsJsonObject();
+                JsonArray daidList = jsonObject.get("daid_list").getAsJsonArray();
+                JsonArray scoreList = jsonObject.get("score_list").getAsJsonArray();
 
+                List<IbeisQueryScore> ibeisQueryScores = new ArrayList<>();
+                for(int j=0; j<daidList.size(); j++) {
+                    ibeisQueryScores.add(new IbeisQueryScore(new IbeisAnnotation(daidList.get(j).getAsLong())
+                            , scoreList.get(j).isJsonNull() ? null : scoreList.get(j).getAsDouble()));
+                }
+                ibeisQueryResults.add(new IbeisQueryResult(new IbeisAnnotation(jsonObject.get("qaid").getAsLong())
+                        , ibeisQueryScores));
+            }
+            return ibeisQueryResults;
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
@@ -355,7 +368,6 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
             e.printStackTrace();
             throw new BadHttpRequestException("invalid http method");
         }
-        return null;
     }
 
     @Override

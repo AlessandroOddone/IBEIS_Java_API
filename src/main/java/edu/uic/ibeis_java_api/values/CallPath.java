@@ -28,7 +28,7 @@ public enum CallPath {
     INDIVIDUAL_NAME("/name/texts/"),
     INDIVIDUAL_NOTES("/name/notes/"),
     INDIVIDUAL_SEX("/name/sex/"),
-    QUERY_CHIPS("/core/query_chips/");
+    QUERY_CHIPS_SIMPLE_DICT("/core/query_chips_simple_dict/");
 
     private String value;
 

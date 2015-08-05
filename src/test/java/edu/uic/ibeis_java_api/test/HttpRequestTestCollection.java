@@ -20,9 +20,9 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * IMAGE UPLOAD (IMAGE FILE)
          */
-        Parameter imageFile = new Parameter("image", getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile());
-        imageFile.setIsFile(true);
-        testCollection.add(new HttpPostTest("/image/").addParam(imageFile));
+        //Parameter imageFile = new Parameter("image", getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile());
+        //imageFile.setIsFile(true);
+        //testCollection.add(new HttpPostTest("/image/").addParam(imageFile));
 
         /**
          * IMAGE UPLOAD (ZIP ARCHIVE)
@@ -44,14 +44,14 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * DETECT RANDOM FOREST
          */
-        //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "148").addParam("species", Species.GIRAFFE.getValue()));
-        //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "151,152").addParam("species", Species.GIRAFFE.getValue()));
+        //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "180").addParam("species", Species.GIRAFFE.getValue()));
+        //testCollection.add(new HttpPutTest("/core/detect_random_forest/").addParam("gid_list", "180,181").addParam("species", Species.GIRAFFE.getValue()));
 
         /**
          * QUERY
          */
-        //testCollection.add(new HttpGetTest("/core/query_chips/").addParam("qaid_list", Arrays.asList(151,152)).addParam("daid_list", Arrays.asList(151,152)));
-        testCollection.add(new HttpGetTest("/core/query_chips_simple_dict/").addParam("qaid_list", Arrays.asList(151,152)).addParam("daid_list", Arrays.asList(151,152)));
+        //testCollection.add(new HttpGetTest("/core/query_chips/").addParam("qaid_list", Arrays.asList(151, 152)).addParam("daid_list", Arrays.asList(151,152)));
+        testCollection.add(new HttpGetTest("/core/query_chips_simple_dict/").addParam("qaid_list", Arrays.asList(172,174)).addParam("daid_list", Arrays.asList(172,173,174)));
 
         /**
          * GETTERS (GET CALLS)
