@@ -48,7 +48,6 @@ public class IbeisIndividual {
                 System.out.println("Unsuccessful Request");
                 throw new UnsuccessfulHttpRequestException();
             }
-
             return response.getContent().getAsJsonArray().get(0).getAsString();
 
         } catch (AuthorizationHeaderException e) {
@@ -119,7 +118,6 @@ public class IbeisIndividual {
                 System.out.println("Unsuccessful Request");
                 throw new UnsuccessfulHttpRequestException();
             }
-
             return IndividualNotes.fromJsonString(response.getContent().getAsJsonArray().get(0).getAsString());
 
         } catch (AuthorizationHeaderException e) {

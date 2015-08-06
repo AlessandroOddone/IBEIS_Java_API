@@ -2,10 +2,12 @@ package edu.uic.ibeis_java_api.api;
 
 public class IbeisQueryScore implements Comparable<IbeisQueryScore> {
 
-    private IbeisAnnotation dbAnnotation;
-    private Double score;
+    public final static double NULL_SCORE = -1;
 
-    public IbeisQueryScore(IbeisAnnotation dbAnnotation, Double score) {
+    private IbeisAnnotation dbAnnotation;
+    private double score;
+
+    public IbeisQueryScore(IbeisAnnotation dbAnnotation, double score) {
         this.dbAnnotation = dbAnnotation;
         this.score = score;
     }
@@ -14,13 +16,13 @@ public class IbeisQueryScore implements Comparable<IbeisQueryScore> {
         return dbAnnotation;
     }
 
-    public Double getScore() {
+    public double getScore() {
         return score;
     }
 
     @Override
     public int compareTo(IbeisQueryScore other) {
-        return score.compareTo(other.getScore());
+        return Double.valueOf(score).compareTo(other.getScore());
     }
 
     @Override

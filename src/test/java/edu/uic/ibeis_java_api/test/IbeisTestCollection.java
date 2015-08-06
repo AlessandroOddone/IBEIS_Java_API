@@ -79,6 +79,7 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * DOWNLOAD IMAGE FILE TEST
          */
+
         //testCollection.add(new DownloadImageFileTest(imageList.get(imageList.size() - 1)));
 
         /**
@@ -89,8 +90,8 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * QUERY
          */
-        testCollection.add(new QueryTest(Arrays.asList(annotation1,annotation2),
-                Arrays.asList(annotation1,annotation2)));
+        //testCollection.add(new QueryTest(Arrays.asList(annotation1,annotation2),
+        //        Arrays.asList(annotation1,annotation2)));
 
         /**
          * IMAGE GETTERS AND SETTERS

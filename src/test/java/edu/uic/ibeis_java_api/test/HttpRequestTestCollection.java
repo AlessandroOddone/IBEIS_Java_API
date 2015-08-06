@@ -56,13 +56,13 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * GETTERS (GET CALLS)
          */
-        /*
         testCollection.add(new HttpGetTest("/image/"));
-        testCollection.add(new HttpGetTest("/image/151/"));
+        //testCollection.add(new HttpGetTest("/image/151/"));
         testCollection.add(new HttpGetTest("/annot/"));
         testCollection.add(new HttpGetTest("/name/"));
         testCollection.add(new HttpGetTest("/encounter/"));
 
+        /*
         testCollection.add(new HttpGetTest("/image/aids/").addParam("gid_list", Arrays.asList(151, 152)));
         testCollection.add(new HttpGetTest("/image/aids_of_species/")
                 .addParam("gid_list", Arrays.asList(151,152))
@@ -115,7 +115,11 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * DELETE CALLS
          */
-        //testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", Arrays.asList(150)));
+        //testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", Arrays.asList(0)));
+        //testCollection.add(new HttpDeleteTest("/annot/").addParam("aid_list", Arrays.asList(0)));
+        //testCollection.add(new HttpDeleteTest("/encounter/").addParam("eid_list", Arrays.asList(99)));
+        //testCollection.add(new HttpDeleteTest("/name/").addParam("name_rowid_list", Arrays.asList(41,42,43,44,45)));
+
     }
 
     public void runTests() {
