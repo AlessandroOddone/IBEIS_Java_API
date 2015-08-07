@@ -5,7 +5,6 @@ import edu.uic.ibeis_java_api.http.*;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -51,18 +50,18 @@ public class HttpRequestTestCollection implements TestCollection {
          * QUERY
          */
         //testCollection.add(new HttpGetTest("/core/query_chips/").addParam("qaid_list", Arrays.asList(151, 152)).addParam("daid_list", Arrays.asList(151,152)));
-        testCollection.add(new HttpGetTest("/core/query_chips_simple_dict/").addParam("qaid_list", Arrays.asList(172,174)).addParam("daid_list", Arrays.asList(172,173,174)));
+        //testCollection.add(new HttpGetTest("/core/query_chips_simple_dict/").addParam("qaid_list", Arrays.asList(172, 174)).addParam("daid_list", Arrays.asList(172,173,174)));
 
         /**
          * GETTERS (GET CALLS)
          */
+        /*
         testCollection.add(new HttpGetTest("/image/"));
-        //testCollection.add(new HttpGetTest("/image/151/"));
+        testCollection.add(new HttpGetTest("/image/151/"));
         testCollection.add(new HttpGetTest("/annot/"));
         testCollection.add(new HttpGetTest("/name/"));
         testCollection.add(new HttpGetTest("/encounter/"));
 
-        /*
         testCollection.add(new HttpGetTest("/image/aids/").addParam("gid_list", Arrays.asList(151, 152)));
         testCollection.add(new HttpGetTest("/image/aids_of_species/")
                 .addParam("gid_list", Arrays.asList(151,152))

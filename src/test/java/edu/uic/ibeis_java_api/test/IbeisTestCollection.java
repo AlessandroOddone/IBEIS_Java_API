@@ -79,8 +79,11 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * DOWNLOAD IMAGE FILE TEST
          */
-
-        //testCollection.add(new DownloadImageFileTest(imageList.get(imageList.size() - 1)));
+        /*
+        for(IbeisImage image : imageList) {
+            testCollection.add(new DownloadImageFileTest(image));
+        }
+        */
 
         /**
          * ANIMAL DETECTION
@@ -90,8 +93,7 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * QUERY
          */
-        //testCollection.add(new QueryTest(Arrays.asList(annotation1,annotation2),
-        //        Arrays.asList(annotation1,annotation2)));
+        testCollection.add(new QueryTest(annotationList, annotationList));
 
         /**
          * IMAGE GETTERS AND SETTERS
@@ -371,7 +373,7 @@ public class IbeisTestCollection implements TestCollection {
 
     private class DownloadImageFileTest implements Test {
 
-        private static final String DOWNLOADED_IMAGE_PATH = "src/test/resources/download_test.jpeg";
+        private static final String DOWNLOADED_IMAGE_PATH_TO_FILE = "src/test/resources/";
 
         private IbeisImage ibeisImage;
 
@@ -388,10 +390,12 @@ public class IbeisTestCollection implements TestCollection {
         public void execute() {
             printTest(this);
             try {
+                String downloadedImagePath = DOWNLOADED_IMAGE_PATH_TO_FILE + "download_test_" + new SimpleDateFormat("HH:mm:ss_SSS").format(new Date()) + ".jpg";
+
                 RawImage rawImage = ibeisImage.getRawImage();
-                OutputStream outputStream = new FileOutputStream(DOWNLOADED_IMAGE_PATH);
+                OutputStream outputStream = new FileOutputStream(downloadedImagePath);
                 outputStream.write(rawImage.getBytes());
-                System.out.println("image successfully uploaded to " + DOWNLOADED_IMAGE_PATH + " (file type: " +
+                System.out.println("image successfully uploaded to " + downloadedImagePath + " (file type: " +
                         rawImage.getFileType() + ")");
             } catch (Exception e) {
                 e.printStackTrace();

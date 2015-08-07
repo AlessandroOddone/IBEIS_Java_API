@@ -2,6 +2,7 @@ package edu.uic.ibeis_java_api.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import edu.uic.ibeis_java_api.api.data.image.ImageFile;
 import edu.uic.ibeis_java_api.api.data.image.ImageZipArchive;
@@ -346,12 +347,18 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
             for(int i=0; i<responseJsonArray.size(); i++) {
                 JsonObject jsonObject = responseJsonArray.get(i).getAsJsonObject();
                 JsonArray daidList = jsonObject.get("daid_list").getAsJsonArray();
-                JsonArray scoreList = jsonObject.get("score_list").getAsJsonArray();
-
+                JsonArray scoreList = new JsonArray();
+                if (!jsonObject.get("score_list").isJsonNull()) {
+                    scoreList = jsonObject.get("score_list").getAsJsonArray();
+                } else {
+                    for(int j=0; j<daidList.size(); j++) {
+                        scoreList.add(JsonNull.INSTANCE);
+                    }
+                }
                 List<IbeisQueryScore> ibeisQueryScores = new ArrayList<>();
-                for(int j=0; j<daidList.size(); j++) {
-                    ibeisQueryScores.add(new IbeisQueryScore(new IbeisAnnotation(daidList.get(j).getAsLong())
-                            , scoreList.get(j).isJsonNull() ? IbeisQueryScore.NULL_SCORE : scoreList.get(j).getAsDouble()));
+                for(int k=0; k<daidList.size(); k++) {
+                    ibeisQueryScores.add(new IbeisQueryScore(new IbeisAnnotation(daidList.get(k).getAsLong())
+                            , scoreList.get(k).isJsonNull() ? IbeisQueryScore.NULL_SCORE : scoreList.get(k).getAsDouble()));
                 }
                 ibeisQueryResults.add(new IbeisQueryResult(new IbeisAnnotation(jsonObject.get("qaid").getAsLong())
                         , ibeisQueryScores));
