@@ -2,6 +2,7 @@ package edu.uic.ibeis_java_api.test;
 
 import edu.uic.ibeis_java_api.api.*;
 import edu.uic.ibeis_java_api.api.data.GeoCoordinates;
+import edu.uic.ibeis_java_api.api.data.annotation.BoundingBox;
 import edu.uic.ibeis_java_api.api.data.encounter.EncounterNotes;
 import edu.uic.ibeis_java_api.api.data.image.ImageNotes;
 import edu.uic.ibeis_java_api.api.data.image.RawImage;
@@ -23,11 +24,10 @@ public class IbeisTestCollection implements TestCollection {
     private List<IbeisAnnotation> annotationList;
     private List<IbeisIndividual> individualList;
     private List<IbeisEncounter> encounterList;
-    IbeisImage image;
-    IbeisAnnotation annotation1;
-    IbeisAnnotation annotation2;
-    IbeisIndividual individual;
-    IbeisEncounter encounter;
+    private IbeisIndividual individual;
+    private IbeisImage image;
+    private IbeisAnnotation annotation;
+    private IbeisEncounter encounter;
 
     public IbeisTestCollection() {
         System.out.println("***IBEIS TEST COLLECTION***\n");
@@ -40,11 +40,10 @@ public class IbeisTestCollection implements TestCollection {
             individualList = ibeis.getAllIndividuals();
             encounterList = ibeis.getAllEncounters();
 
-            image = ibeis.getImageById(179);
-            annotation1 = ibeis.getAnnotationById(172);
-            annotation2 = ibeis.getAnnotationById(174);
-            individual = ibeis.getIndividualById(52);
-            encounter = ibeis.getEncounterById(148);
+            //individual = ibeis.getIndividualById(0);
+            //image = ibeis.getImageById(0);
+            //annotation = ibeis.getAnnotationById(0);
+            //encounter = ibeis.getEncounterById(0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,6 +71,11 @@ public class IbeisTestCollection implements TestCollection {
         //testCollection.add(new AddIndividualTest(new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss_SSS").format(new Date())));
 
         /**
+         * ADD ANNOTATION TEST
+         */
+        //testCollection.add(new AddAnnotationTest(image, new BoundingBox(0,0,100,100)));
+
+        /**
          * ADD ENCOUNTER TEST
          */
         //testCollection.add(new AddEncounterTest(new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss_SSS").format(new Date())));
@@ -79,11 +83,10 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * DOWNLOAD IMAGE FILE TEST
          */
-        /*
         for(IbeisImage image : imageList) {
             testCollection.add(new DownloadImageFileTest(image));
         }
-        */
+        //testCollection.add(new DownloadImageFileTest(image));
 
         /**
          * ANIMAL DETECTION
@@ -93,27 +96,27 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * QUERY
          */
-        testCollection.add(new QueryTest(annotationList, annotationList));
+        //testCollection.add(new QueryTest(annotationList, annotationList));
 
         /**
          * IMAGE GETTERS AND SETTERS
          */
-        //testCollection.add(new ImageGettersAndSettersTest(imageList.get(imageList.size()-1)));
+        //testCollection.add(new ImageGettersAndSettersTest(image));
 
         /**
          * ANNOTATION GETTERS AND SETTERS
          */
-        //testCollection.add(new AnnotationGettersAndSettersTest(annotationList.get(annotationList.size()-1)));
+        //testCollection.add(new AnnotationGettersAndSettersTest(annotation));
 
         /**
          * INDIVIDUAL GETTERS AND SETTERS
          */
-        //testCollection.add(new IndividualGettersAndSettersTest(individualList.get(individualList.size()-1)));
+        //testCollection.add(new IndividualGettersAndSettersTest(individual));
 
         /**
          * ENCOUNTER GETTERS AND SETTERS
          */
-        //testCollection.add(new EncounterGettersAndSettersTest(encounterList.get(encounterList.size()-1)));
+        //testCollection.add(new EncounterGettersAndSettersTest(encounter));
 
     }
 
@@ -346,6 +349,34 @@ public class IbeisTestCollection implements TestCollection {
         }
     }
 
+    private class AddAnnotationTest implements Test {
+
+        private IbeisImage image;
+        private BoundingBox boundingBox;
+
+        public AddAnnotationTest(IbeisImage image, BoundingBox boundingBox) {
+            this.image = image;
+            this.boundingBox = boundingBox;
+        }
+
+        @Override
+        public String getTestType() {
+            return this.getClass().getSimpleName();
+        }
+
+        @Override
+        public void execute() {
+            try {
+                IbeisAnnotation testAnnotation = ibeis.addAnnotation(image, boundingBox);
+                System.out.println("annotation successfully added (id=" + testAnnotation.getId() + ")");
+                printIbeisAnnotationListElement(image.getAnnotations());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private class AddEncounterTest implements Test {
 
         private String encounterName;
@@ -390,7 +421,7 @@ public class IbeisTestCollection implements TestCollection {
         public void execute() {
             printTest(this);
             try {
-                String downloadedImagePath = DOWNLOADED_IMAGE_PATH_TO_FILE + "download_test_" + new SimpleDateFormat("HH:mm:ss_SSS").format(new Date()) + ".jpg";
+                String downloadedImagePath = DOWNLOADED_IMAGE_PATH_TO_FILE + "download_test_id_" + ibeisImage.getId() + "_" + new SimpleDateFormat("HH:mm:ss_SSS").format(new Date()) + ".jpg";
 
                 RawImage rawImage = ibeisImage.getRawImage();
                 OutputStream outputStream = new FileOutputStream(downloadedImagePath);

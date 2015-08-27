@@ -57,7 +57,7 @@ public class HttpRequestTestCollection implements TestCollection {
          */
         /*
         testCollection.add(new HttpGetTest("/image/"));
-        testCollection.add(new HttpGetTest("/image/151/"));
+        //testCollection.add(new HttpGetTest("/image/151/"));
         testCollection.add(new HttpGetTest("/annot/"));
         testCollection.add(new HttpGetTest("/name/"));
         testCollection.add(new HttpGetTest("/encounter/"));
@@ -116,8 +116,8 @@ public class HttpRequestTestCollection implements TestCollection {
          */
         //testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", Arrays.asList(0)));
         //testCollection.add(new HttpDeleteTest("/annot/").addParam("aid_list", Arrays.asList(0)));
-        //testCollection.add(new HttpDeleteTest("/encounter/").addParam("eid_list", Arrays.asList(99)));
-        //testCollection.add(new HttpDeleteTest("/name/").addParam("name_rowid_list", Arrays.asList(41,42,43,44,45)));
+        //testCollection.add(new HttpDeleteTest("/encounter/").addParam("eid_list", Arrays.asList(0)));
+        //testCollection.add(new HttpDeleteTest("/name/").addParam("name_rowid_list", Arrays.asList(0)));
 
     }
 

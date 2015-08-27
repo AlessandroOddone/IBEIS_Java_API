@@ -1,1 +1,0 @@
-- GET : /api/annot/species_rowids/ --> error if just one aid is passed as parameter

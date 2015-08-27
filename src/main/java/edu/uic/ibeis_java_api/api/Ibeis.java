@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import edu.uic.ibeis_java_api.api.data.annotation.BoundingBox;
 import edu.uic.ibeis_java_api.api.data.image.ImageFile;
 import edu.uic.ibeis_java_api.api.data.image.ImageZipArchive;
 import edu.uic.ibeis_java_api.api_interfaces.*;
@@ -201,6 +202,32 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
     }
 
     @Override
+    public IbeisAnnotation addAnnotation(IbeisImage image, BoundingBox boundingBox) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
+        try {
+            Response response = new Request(RequestMethod.POST, CallPath.ANNOTATIONS.getValue(), new ParametersList()
+                    .addParameter(new Parameter(ParamName.GID_LIST.getValue(), image.getId()))
+                    .addParameter(new Parameter(ParamName.BBOX_LIST.getValue(), "[" + boundingBox.toString() + "]"))).execute();
+
+            // check if the request has been successful
+            if(response == null || !response.isSuccess()) {
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            return new IbeisAnnotation(response.getContent().getAsJsonArray().get(0).getAsLong());
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    @Override
     public IbeisEncounter addEncounter(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException {
         try {
             checkEncounterNameNotExists(name);
@@ -250,6 +277,75 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
         try {
             Response response = new Request(RequestMethod.DELETE, CallPath.IMAGE.getValue(), new ParametersList().addParameter
                     (new Parameter(ParamName.GID_LIST.getValue(), imageIds))).execute();
+
+            // check if the request has been successful
+            if(response == null || !response.isSuccess()) {
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    @Override
+    public void deleteAnnotation(IbeisAnnotation annotation) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.DELETE, CallPath.ANNOTATIONS.getValue(), new ParametersList().addParameter
+                    (new Parameter(ParamName.AID_LIST.getValue(), annotation.getId()))).execute();
+
+            // check if the request has been successful
+            if(response == null || !response.isSuccess()) {
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    @Override
+    public void deleteIndividual(IbeisIndividual individual) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.DELETE, CallPath.INDIVIDUALS.getValue(), new ParametersList().addParameter
+                    (new Parameter(ParamName.NAME_ROWID_LIST.getValue(), individual.getId()))).execute();
+
+            // check if the request has been successful
+            if(response == null || !response.isSuccess()) {
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    @Override
+    public void deleteEncounter(IbeisEncounter encounter) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.DELETE, CallPath.ENCOUNTERS.getValue(), new ParametersList().addParameter
+                    (new Parameter(ParamName.EID_LIST.getValue(), encounter.getId()))).execute();
 
             // check if the request has been successful
             if(response == null || !response.isSuccess()) {

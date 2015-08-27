@@ -20,7 +20,8 @@ public enum ParamName {
     ENC_TEXT_LIST("enctext_list"),
     ENCOUNTER_TEXT_LIST("encounter_text_list"),
     QAID_LIST("qaid_list"),
-    DAID_LIST("daid_list");
+    DAID_LIST("daid_list"),
+    BBOX_LIST("bbox_list");
 
     private String value;
 

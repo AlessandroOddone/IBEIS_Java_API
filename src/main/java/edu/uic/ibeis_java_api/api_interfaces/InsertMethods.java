@@ -1,8 +1,10 @@
 package edu.uic.ibeis_java_api.api_interfaces;
 
+import edu.uic.ibeis_java_api.api.IbeisAnnotation;
 import edu.uic.ibeis_java_api.api.IbeisEncounter;
 import edu.uic.ibeis_java_api.api.IbeisImage;
 import edu.uic.ibeis_java_api.api.IbeisIndividual;
+import edu.uic.ibeis_java_api.api.data.annotation.BoundingBox;
 import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.IndividualNameAlreadyExistsException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
@@ -58,6 +60,15 @@ public interface InsertMethods {
      * @return IbeisIndividual object corresponding to the newly created individual
      */
     IbeisIndividual addIndividual(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException;
+
+    /**
+     * Add a new annotation to Ibeis database (Http POST)
+     * @param image image in which the annotation is defined
+     * @param boundingBox bounding box within the image
+     * @return IbeisAnnotation object corresponding to the newly created annotation
+     */
+    IbeisAnnotation addAnnotation(IbeisImage image, BoundingBox boundingBox) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException;
+
 
     /**
      * Add a new encounter to Ibeis database (Http POST)

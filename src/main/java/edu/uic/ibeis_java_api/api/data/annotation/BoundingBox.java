@@ -1,7 +1,7 @@
 package edu.uic.ibeis_java_api.api.data.annotation;
 
 /**
- * A bounding box defined within an image
+ * A rectangular bounding box defined within an image
  */
 public class BoundingBox {
 
@@ -10,7 +10,7 @@ public class BoundingBox {
     private int w;
     private int h;
 
-    public BoundingBox() {};
+    public BoundingBox() {}
 
     public BoundingBox(int x, int y, int w, int h) {
         this.x = x;
