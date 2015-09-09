@@ -80,10 +80,10 @@ public class IbeisIndividual {
             }
 
             String sexString = response.getContent().getAsJsonArray().get(0).getAsString();
-            if(sexString.equals(Sex.MALE.getValue())) {
+            if(sexString.equals(Integer.toString(Sex.MALE.getValue()))) {
                 return Sex.MALE;
             }
-            else if(sexString.equals(Sex.FEMALE.getValue())) {
+            else if(sexString.equals(Integer.toString(Sex.FEMALE.getValue()))) {
                 return Sex.FEMALE;
             }
             else {
