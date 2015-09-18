@@ -45,8 +45,19 @@ public class IbeisImage {
      * @throws UnsuccessfulHttpRequestException
      */
     public RawImage getRawImage() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, UnsupportedImageFileTypeException {
+        return getRawImage(false);
+    }
+
+    public RawImage getRawImage(boolean refreshCache) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, UnsupportedImageFileTypeException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.IMAGE.getValue() + id + "/").execute();
+            Response response;
+            if (refreshCache) {
+                response = new Request(RequestMethod.GET, CallPath.IMAGE.getValue() + id + "/",
+                        new ParametersList().addParameter(new Parameter(ParamName.FRESH.getValue(), true))).execute();
+            }
+            else {
+                response = new Request(RequestMethod.GET, CallPath.IMAGE.getValue() + id + "/").execute();
+            }
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");

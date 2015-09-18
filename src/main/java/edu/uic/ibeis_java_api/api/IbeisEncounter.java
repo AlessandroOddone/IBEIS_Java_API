@@ -222,4 +222,41 @@ public class IbeisEncounter {
             throw new BadHttpRequestException("invalid http method");
         }
     }
+
+    /**
+     * Returns true if the encounter is in Ibeis database, false otherwise
+     * @return
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public boolean isValiEncounter() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException
+    {
+        try {
+            Response response = new Request(RequestMethod.GET, CallPath.ENCOUNTERS.getValue()).execute();
+
+            if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            for (JsonElement encounterIdJson : response.getContent().getAsJsonArray()) {
+                if(this.id == encounterIdJson.getAsLong()) {
+                    return true;
+                }
+            }
+            return false;
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
 }

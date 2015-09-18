@@ -38,6 +38,12 @@ public class Parameter {
         isFile = false;
     }
 
+    public Parameter(String name, boolean value) {
+        this.name = name;
+        this.value = value ? "true" : "false";
+        isFile = false;
+    }
+
     public Parameter(String name, ImageFile img) {
         this.name = name;
         this.value = img.getLocalPath();

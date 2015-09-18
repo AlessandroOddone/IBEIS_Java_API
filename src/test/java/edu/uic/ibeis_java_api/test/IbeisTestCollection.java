@@ -426,7 +426,7 @@ public class IbeisTestCollection implements TestCollection {
                 RawImage rawImage = ibeisImage.getRawImage();
                 OutputStream outputStream = new FileOutputStream(downloadedImagePath);
                 outputStream.write(rawImage.getBytes());
-                System.out.println("image successfully uploaded to " + downloadedImagePath + " (file type: " +
+                System.out.println("image successfully uploaded (file type: " +
                         rawImage.getFileType() + ")");
             } catch (Exception e) {
                 e.printStackTrace();
