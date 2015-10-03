@@ -43,7 +43,7 @@ public class IbeisTestCollection implements TestCollection {
             //individual = ibeis.getIndividualById(0);
             //image = ibeis.getImageById(0);
             //annotation = ibeis.getAnnotationById(0);
-            //encounter = ibeis.getEncounterById(0);
+            encounter = ibeis.getEncounterById(1);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,8 +83,23 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * DOWNLOAD IMAGE FILE TEST
          */
-        for(IbeisImage image : imageList) {
-            testCollection.add(new DownloadImageFileTest(image));
+        try {
+            /*
+            for(IbeisImage image : ibeis.getEncounterById(1).getImages()) {
+                testCollection.add(new DownloadImageFileTest(image));
+            }
+            for(IbeisImage image : ibeis.getEncounterById(2).getImages()) {
+                testCollection.add(new DownloadImageFileTest(image));
+            }
+            for(IbeisImage image : ibeis.getEncounterById(3).getImages()) {
+                testCollection.add(new DownloadImageFileTest(image));
+            }
+            */
+            for(IbeisImage image : ibeis.getEncounterById(4).getImages()) {
+                testCollection.add(new DownloadImageFileTest(image));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         //testCollection.add(new DownloadImageFileTest(image));
 
@@ -423,11 +438,12 @@ public class IbeisTestCollection implements TestCollection {
             try {
                 String downloadedImagePath = DOWNLOADED_IMAGE_PATH_TO_FILE + "download_test_id_" + ibeisImage.getId() + "_" + new SimpleDateFormat("HH:mm:ss_SSS").format(new Date()) + ".jpg";
 
-                RawImage rawImage = ibeisImage.getRawImage();
+                RawImage rawImage = ibeisImage.getRawImage(true);
                 OutputStream outputStream = new FileOutputStream(downloadedImagePath);
                 outputStream.write(rawImage.getBytes());
-                System.out.println("image successfully uploaded (file type: " +
+                System.out.println("image successfully downloaded (file type: " +
                         rawImage.getFileType() + ")");
+                System.out.println("IMAGE ANNOTATIONS: " + printIbeisAnnotationListElement(ibeisImage.getAnnotations()));
             } catch (Exception e) {
                 e.printStackTrace();
             }

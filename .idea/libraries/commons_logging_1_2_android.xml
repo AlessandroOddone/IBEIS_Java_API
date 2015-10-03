@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="commons-logging-1.2-android">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/JarJar/commons-logging-1.2-android.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

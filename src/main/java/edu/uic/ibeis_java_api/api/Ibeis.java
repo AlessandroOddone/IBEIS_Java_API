@@ -411,6 +411,12 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
     }
 
     @Override
+    public IbeisQueryResult query(IbeisAnnotation queryAnnotation, IbeisAnnotation dbAnnotation) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        return query(Arrays.asList(queryAnnotation), Arrays.asList(dbAnnotation)).get(0);
+    }
+
+
+    @Override
     public IbeisQueryResult query(IbeisAnnotation queryAnnotation, List<IbeisAnnotation> dbAnnotations) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         return query(Arrays.asList(queryAnnotation), dbAnnotations).get(0);
     }

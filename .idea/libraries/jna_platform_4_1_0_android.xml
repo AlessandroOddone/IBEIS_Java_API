@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jna-platform-4.1.0-android">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/JarJar/jna-platform-4.1.0-android.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="httpcore-4.4.1-android">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/JarJar/httpcore-4.4.1-android.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

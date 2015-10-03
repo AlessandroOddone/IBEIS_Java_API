@@ -10,9 +10,12 @@ import java.util.List;
 
 public interface IbeisQueryMethods {
 
-    public IbeisQueryResult query(IbeisAnnotation queryAnnotation, List<IbeisAnnotation>annotationDatabase)
+    IbeisQueryResult query(IbeisAnnotation queryAnnotation, IbeisAnnotation dbAnnotation)
             throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
-    public List<IbeisQueryResult> query(List<IbeisAnnotation> queryAnnotations, List<IbeisAnnotation>annotationDatabase)
+    IbeisQueryResult query(IbeisAnnotation queryAnnotation, List<IbeisAnnotation>annotationDatabase)
+            throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+
+    List<IbeisQueryResult> query(List<IbeisAnnotation> queryAnnotations, List<IbeisAnnotation>annotationDatabase)
             throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 }

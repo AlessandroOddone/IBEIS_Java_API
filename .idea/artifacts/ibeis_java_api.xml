@@ -1,0 +1,22 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ibeis_java_api">
+    <output-path>$PROJECT_DIR$/out/artifacts/ibeis_java_api</output-path>
+    <root id="archive" name="ibeis_java_api.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="ibeis_java_api" />
+      <element id="extracted-dir" path="$USER_HOME$/JarJar/fluent-hc-4.4.1-android.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/JarJar/jna-4.1.0-android.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/JarJar/httpclient-win-4.4.1-android.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/JarJar/httpclient-cache-4.4.1-android.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/JarJar/httpclient-4.4.1-android.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/JarJar/httpmime-4.4.1-android.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/JarJar/httpcore-4.4.1-android.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/JarJar/jna-platform-4.1.0-android.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/JarJar/commons-codec-1.9-android.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/JarJar/commons-logging-1.2-android.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/gson-2.3.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -50,7 +50,7 @@ public class HttpRequestTestCollection implements TestCollection {
          * QUERY
          */
         //testCollection.add(new HttpGetTest("/core/query_chips/").addParam("qaid_list", Arrays.asList(151, 152)).addParam("daid_list", Arrays.asList(151,152)));
-        //testCollection.add(new HttpGetTest("/core/query_chips_simple_dict/").addParam("qaid_list", Arrays.asList(194)).addParam("daid_list", Arrays.asList(157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191)));
+        //testCollection.add(new HttpGetTest("/core/query_chips_simple_dict/").addParam("qaid_list", Arrays.asList(300)).addParam("daid_list", Arrays.asList(130)));
 
         /**
          * GETTERS (GET CALLS)
@@ -83,9 +83,11 @@ public class HttpRequestTestCollection implements TestCollection {
         testCollection.add(new HttpGetTest("/name/sex_text/").addParam("name_rowid_list", Arrays.asList(-166,-167,-168,-169,-170,-171)));
         testCollection.add(new HttpGetTest("/name/texts/").addParam("name_rowid_list", Arrays.asList(-166,-167,-168,-169,-170,-171)));
         testCollection.add(new HttpGetTest("/name/notes/").addParam("name_rowid_list", Arrays.asList(-166, -167, -168, -169, -170, -171)));
+        */
 
-        testCollection.add(new HttpGetTest("/encounter/gids/").addParam("eid_list", Arrays.asList(34, 35)));
-        testCollection.add(new HttpGetTest("/encounter/nids/").addParam("eid_list", Arrays.asList(34,35)));
+        /*
+        testCollection.add(new HttpGetTest("/encounter/aids/").addParam("eid_list", Arrays.asList(42)));
+        testCollection.add(new HttpGetTest("/encounter/nids/").addParam("eid_list", Arrays.asList(34, 35)));
         testCollection.add(new HttpGetTest("/encounter/note/").addParam("eid_list", Arrays.asList(34,35)));
         testCollection.add(new HttpGetTest("/encounter/text/").addParam("eid_list", Arrays.asList(34,35)));
         */
@@ -116,15 +118,34 @@ public class HttpRequestTestCollection implements TestCollection {
         /**
          * DELETE CALLS
          */
-        List<Integer> imagesToDeleteIndexes = new ArrayList<>();
-        for (int i = 156; i <= 190; i++) {
-            imagesToDeleteIndexes.add(i);
-        }
-        //testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", imagesToDeleteIndexes));
-        //testCollection.add(new HttpDeleteTest("/annot/").addParam("aid_list", Arrays.asList(270,271,272)));
-        //testCollection.add(new HttpDeleteTest("/encounter/").addParam("eid_list", Arrays.asList(38)));
-        //testCollection.add(new HttpDeleteTest("/name/").addParam("name_rowid_list", Arrays.asList(42, 43, 44, 45, 46)));
+        /*
+        List<Long> annotationsToDeleteIndexes = new ArrayList<>();
+        List<Long> imagesToDeleteIndexes = new ArrayList<>();
+        List<Long> encountersToDeleteIndexes = new ArrayList<>();
+        List<Long> individualsToDeleteIndexes = new ArrayList<>();
 
+        try {
+            for (IbeisAnnotation ibeisAnnotation : new Ibeis().getAllAnnotations()) {
+                annotationsToDeleteIndexes.add(ibeisAnnotation.getId());
+            }
+            for (IbeisImage ibeisImage : new Ibeis().getAllImages()) {
+                imagesToDeleteIndexes.add(ibeisImage.getId());
+            }
+            for (IbeisEncounter ibeisEncounter : new Ibeis().getAllEncounters()) {
+                encountersToDeleteIndexes.add(ibeisEncounter.getId());
+            }
+            for (IbeisIndividual ibeisIndividual : new Ibeis().getAllIndividuals()) {
+                individualsToDeleteIndexes.add(ibeisIndividual.getId());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        testCollection.add(new HttpDeleteTest("/annot/").addParam("aid_list", annotationsToDeleteIndexes));
+        testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", imagesToDeleteIndexes));
+        testCollection.add(new HttpDeleteTest("/encounter/").addParam("eid_list", encountersToDeleteIndexes));
+        testCollection.add(new HttpDeleteTest("/name/").addParam("name_rowid_list", individualsToDeleteIndexes));
+        */
     }
 
     public void runTests() {

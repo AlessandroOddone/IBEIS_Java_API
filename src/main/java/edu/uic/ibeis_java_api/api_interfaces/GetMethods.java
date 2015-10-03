@@ -18,7 +18,7 @@ public interface GetMethods {
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<IbeisImage> getAllImages() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+    List<IbeisImage> getAllImages() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
      * Get the image corresponding to the id passed as parameter
@@ -29,7 +29,7 @@ public interface GetMethods {
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public IbeisImage getImageById(long id) throws InvalidImageIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+    IbeisImage getImageById(long id) throws InvalidImageIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
      * Get all the individuals in Ibeis database
@@ -38,7 +38,7 @@ public interface GetMethods {
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<IbeisIndividual> getAllIndividuals() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+    List<IbeisIndividual> getAllIndividuals() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
      * Get the individual corresponding to the id passed as parameter
@@ -49,7 +49,7 @@ public interface GetMethods {
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public IbeisIndividual getIndividualById(long id) throws InvalidIndividualIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+    IbeisIndividual getIndividualById(long id) throws InvalidIndividualIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
      * Get all the annotations in Ibeis database
@@ -58,7 +58,7 @@ public interface GetMethods {
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<IbeisAnnotation> getAllAnnotations() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+    List<IbeisAnnotation> getAllAnnotations() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
      * Get the annotation corresponding to the id passed as parameter
@@ -69,7 +69,7 @@ public interface GetMethods {
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public IbeisAnnotation getAnnotationById(long id) throws InvalidAnnotationIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+    IbeisAnnotation getAnnotationById(long id) throws InvalidAnnotationIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
      * Get all the encounters in Ibeis database
@@ -78,7 +78,7 @@ public interface GetMethods {
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<IbeisEncounter> getAllEncounters() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+    List<IbeisEncounter> getAllEncounters() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
      * Get the encounter corresponding to the id passed as parameter
@@ -89,6 +89,6 @@ public interface GetMethods {
      * @throws BadHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public IbeisEncounter getEncounterById(long id) throws InvalidEncounterIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+    IbeisEncounter getEncounterById(long id) throws InvalidEncounterIdException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
 
 }
