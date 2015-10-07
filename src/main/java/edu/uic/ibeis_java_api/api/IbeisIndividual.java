@@ -328,4 +328,12 @@ public class IbeisIndividual {
             throw new BadHttpRequestException("invalid http method");
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof IbeisIndividual) {
+            if(((IbeisIndividual) obj).getId() == this.getId()) return true;
+        }
+        return false;
+    }
 }

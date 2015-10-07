@@ -200,4 +200,12 @@ public class IbeisAnnotation {
             throw new BadHttpRequestException("invalid http method");
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof IbeisAnnotation) {
+            if(((IbeisAnnotation) obj).getId() == this.getId()) return true;
+        }
+        return false;
+    }
 }

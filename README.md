@@ -1,2 +1,2 @@
 # IBEIS_Java_API
-Java API for IBEIS.
+IBEIS API for Java and Android developers.

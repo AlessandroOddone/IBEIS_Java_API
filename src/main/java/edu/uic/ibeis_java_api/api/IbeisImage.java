@@ -485,4 +485,12 @@ public class IbeisImage {
             throw new BadHttpRequestException("invalid http method");
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof IbeisImage) {
+            if(((IbeisImage) obj).getId() == this.getId()) return true;
+        }
+        return false;
+    }
 }

@@ -259,4 +259,11 @@ public class IbeisEncounter {
         }
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof IbeisEncounter) {
+            if(((IbeisEncounter) obj).getId() == this.getId()) return true;
+        }
+        return false;
+    }
 }

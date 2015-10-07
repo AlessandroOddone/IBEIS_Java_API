@@ -84,7 +84,6 @@ public class IbeisTestCollection implements TestCollection {
          * DOWNLOAD IMAGE FILE TEST
          */
         try {
-            /*
             for(IbeisImage image : ibeis.getEncounterById(1).getImages()) {
                 testCollection.add(new DownloadImageFileTest(image));
             }
@@ -94,7 +93,6 @@ public class IbeisTestCollection implements TestCollection {
             for(IbeisImage image : ibeis.getEncounterById(3).getImages()) {
                 testCollection.add(new DownloadImageFileTest(image));
             }
-            */
             for(IbeisImage image : ibeis.getEncounterById(4).getImages()) {
                 testCollection.add(new DownloadImageFileTest(image));
             }
