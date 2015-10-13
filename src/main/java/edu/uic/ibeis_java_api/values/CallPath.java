@@ -5,7 +5,7 @@ public enum CallPath {
     ANIMAL_DETECTION("/core/detect_random_forest/"),
     ANNOTATIONS("/annot/"),
     ANNOTATION_BOUNDING_BOX("/annot/bboxes/"),
-    ANNOTATION_IMAGE("annot/gids/"),
+    ANNOTATION_IMAGE("/annot/gids/"),
     ANNOTATION_INDIVIDUAL("/annot/name_rowids/"),
     ANNOTATION_NEIGHBORS("/annot/contact_aids/"),
     ANNOT_CHIP("/annot_chip/"),

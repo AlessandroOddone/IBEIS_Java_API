@@ -84,6 +84,7 @@ public class IbeisTestCollection implements TestCollection {
          * DOWNLOAD IMAGE FILE TEST
          */
         try {
+            /*
             for(IbeisImage image : ibeis.getEncounterById(1).getImages()) {
                 testCollection.add(new DownloadImageFileTest(image));
             }
@@ -96,10 +97,15 @@ public class IbeisTestCollection implements TestCollection {
             for(IbeisImage image : ibeis.getEncounterById(4).getImages()) {
                 testCollection.add(new DownloadImageFileTest(image));
             }
+            */
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //testCollection.add(new DownloadImageFileTest(image));
+        try {
+            testCollection.add(new DownloadImageFileTest(ibeis.getAnnotationById(198).getImage()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         /**
          * ANIMAL DETECTION
