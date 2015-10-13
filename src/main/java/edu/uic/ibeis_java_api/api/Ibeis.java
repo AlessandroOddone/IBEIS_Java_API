@@ -410,6 +410,73 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
         }
     }
 
+    public IbeisQueryResult queryNoCache(IbeisAnnotation queryAnnotation, IbeisAnnotation dbAnnotation) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        return queryNoCache(Arrays.asList(queryAnnotation), Arrays.asList(dbAnnotation)).get(0);
+    }
+
+    public IbeisQueryResult queryNoCache(IbeisAnnotation queryAnnotation, List<IbeisAnnotation> dbAnnotations) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        return queryNoCache(Arrays.asList(queryAnnotation), dbAnnotations).get(0);
+    }
+
+    public List<IbeisQueryResult> queryNoCache(List<IbeisAnnotation> queryAnnotations, List<IbeisAnnotation> dbAnnotations) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            List<Number> queryAnnotationIds = new ArrayList<>();
+            for(IbeisAnnotation annotation : queryAnnotations) {
+                queryAnnotationIds.add(annotation.getId());
+            }
+
+            List<Number> dbAnnotationIds = new ArrayList<>();
+            for(IbeisAnnotation annotation : dbAnnotations) {
+                dbAnnotationIds.add(annotation.getId());
+            }
+
+            Response response = new Request(RequestMethod.GET, CallPath.QUERY_CHIPS_SIMPLE_DICT.getValue(), new ParametersList()
+                    .addParameter(new Parameter(ParamName.QAID_LIST.getValue(), queryAnnotationIds))
+                    .addParameter(new Parameter(ParamName.DAID_LIST.getValue(), dbAnnotationIds))
+                    .addParameter(new Parameter("use_cache",false))
+                    .addParameter(new Parameter("use_bigcache",false))).execute();
+
+            if(response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            List<IbeisQueryResult> ibeisQueryResults = new ArrayList<>();
+
+            JsonArray responseJsonArray = response.getContent().getAsJsonArray();
+            for(int i=0; i<responseJsonArray.size(); i++) {
+                JsonObject jsonObject = responseJsonArray.get(i).getAsJsonObject();
+                JsonArray daidList = jsonObject.get("daid_list").getAsJsonArray();
+                JsonArray scoreList = new JsonArray();
+                if (!jsonObject.get("score_list").isJsonNull()) {
+                    scoreList = jsonObject.get("score_list").getAsJsonArray();
+                } else {
+                    for(int j=0; j<daidList.size(); j++) {
+                        scoreList.add(JsonNull.INSTANCE);
+                    }
+                }
+                List<IbeisQueryScore> ibeisQueryScores = new ArrayList<>();
+                for(int k=0; k<daidList.size(); k++) {
+                    ibeisQueryScores.add(new IbeisQueryScore(new IbeisAnnotation(daidList.get(k).getAsLong())
+                            , scoreList.get(k).isJsonNull() ? IbeisQueryScore.NULL_SCORE : scoreList.get(k).getAsDouble()));
+                }
+                ibeisQueryResults.add(new IbeisQueryResult(new IbeisAnnotation(jsonObject.get("qaid").getAsLong())
+                        , ibeisQueryScores));
+            }
+            return ibeisQueryResults;
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
     @Override
     public IbeisQueryResult query(IbeisAnnotation queryAnnotation, IbeisAnnotation dbAnnotation) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
         return query(Arrays.asList(queryAnnotation), Arrays.asList(dbAnnotation)).get(0);

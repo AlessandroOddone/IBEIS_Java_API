@@ -73,11 +73,14 @@ public class HttpRequestTestCollection implements TestCollection {
         testCollection.add(new HttpGetTest("/image/eids/").addParam("gid_list", Arrays.asList(151, 152)));
         */
 
+
         /*
         testCollection.add(new HttpGetTest("/annot/bboxes/").addParam("aid_list", Arrays.asList(2,3,4,5,7,8,10)));
         testCollection.add(new HttpGetTest("/annot/contact_aids/").addParam("aid_list", Arrays.asList(166,167,168,169,170,171)));
         testCollection.add(new HttpGetTest("/annot/name_rowids/").addParam("aid_list", Arrays.asList(166,167,168,169,170,171)));
+        */
 
+        /*
         testCollection.add(new HttpGetTest("/name/aids/").addParam("nid_list", Arrays.asList(-166,-167,-168,-169,-170,-171)));
         testCollection.add(new HttpGetTest("/name/gids/").addParam("nid_list", Arrays.asList(-166,-167,-168,-169,-170,-171)));
         testCollection.add(new HttpGetTest("/name/sex_text/").addParam("name_rowid_list", Arrays.asList(-166,-167,-168,-169,-170,-171)));

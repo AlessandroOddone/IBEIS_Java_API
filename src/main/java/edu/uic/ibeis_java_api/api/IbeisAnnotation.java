@@ -70,6 +70,37 @@ public class IbeisAnnotation {
     }
 
     /**
+     * Get the image corresponding to the annotation
+     * @return IbeisImage
+     * @throws IOException
+     * @throws BadHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     */
+    public IbeisImage getImage() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+        try {
+            Response response = new Request(RequestMethod.GET, CallPath.ANNOTATION_IMAGE.getValue(),
+                    new ParametersList().addParameter(new Parameter(ParamName.AID_LIST.getValue(), id))).execute();
+
+            if (response == null || !response.isSuccess()) {
+                System.out.println("Unsuccessful Request");
+                throw new UnsuccessfulHttpRequestException();
+            }
+
+            return new IbeisImage(response.getContent().getAsJsonArray().get(0).getAsLong());
+
+        } catch (AuthorizationHeaderException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("error in authorization header");
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid url");
+        } catch (InvalidHttpMethodException e) {
+            e.printStackTrace();
+            throw new BadHttpRequestException("invalid http method");
+        }
+    }
+
+    /**
      * Get the individual corresponding to the annotation
      * @return IbeisIndividual
      * @throws IOException
