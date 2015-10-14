@@ -458,7 +458,7 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
                 List<IbeisQueryScore> ibeisQueryScores = new ArrayList<>();
                 for(int k=0; k<daidList.size(); k++) {
                     ibeisQueryScores.add(new IbeisQueryScore(new IbeisAnnotation(daidList.get(k).getAsLong())
-                            , scoreList.get(k).isJsonNull() ? IbeisQueryScore.NULL_SCORE : scoreList.get(k).getAsDouble()));
+                            , scoreList.get(k).isJsonNull() ? 0 : scoreList.get(k).getAsDouble()));
                 }
                 ibeisQueryResults.add(new IbeisQueryResult(new IbeisAnnotation(jsonObject.get("qaid").getAsLong())
                         , ibeisQueryScores));
@@ -527,7 +527,7 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
                 List<IbeisQueryScore> ibeisQueryScores = new ArrayList<>();
                 for(int k=0; k<daidList.size(); k++) {
                     ibeisQueryScores.add(new IbeisQueryScore(new IbeisAnnotation(daidList.get(k).getAsLong())
-                            , scoreList.get(k).isJsonNull() ? IbeisQueryScore.NULL_SCORE : scoreList.get(k).getAsDouble()));
+                            , scoreList.get(k).isJsonNull() ? 0 : scoreList.get(k).getAsDouble()));
                 }
                 ibeisQueryResults.add(new IbeisQueryResult(new IbeisAnnotation(jsonObject.get("qaid").getAsLong())
                         , ibeisQueryScores));

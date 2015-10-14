@@ -91,18 +91,17 @@ public class IbeisTestCollection implements TestCollection {
             for(IbeisImage image : ibeis.getEncounterById(2).getImages()) {
                 testCollection.add(new DownloadImageFileTest(image));
             }
-            for(IbeisImage image : ibeis.getEncounterById(3).getImages()) {
-                testCollection.add(new DownloadImageFileTest(image));
-            }
             for(IbeisImage image : ibeis.getEncounterById(4).getImages()) {
                 testCollection.add(new DownloadImageFileTest(image));
             }
-            */
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            testCollection.add(new DownloadImageFileTest(ibeis.getAnnotationById(198).getImage()));
+            for(IbeisImage image : ibeis.getEncounterById(5).getImages()) {
+                testCollection.add(new DownloadImageFileTest(image));
+            }*/
+            for(IbeisImage image : ibeis.getAllImages()) {
+                if (image.getId() > 170) {
+                    testCollection.add(new DownloadImageFileTest(image));
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

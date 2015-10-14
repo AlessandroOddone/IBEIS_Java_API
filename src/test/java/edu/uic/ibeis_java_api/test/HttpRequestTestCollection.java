@@ -5,6 +5,7 @@ import edu.uic.ibeis_java_api.http.*;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -145,10 +146,10 @@ public class HttpRequestTestCollection implements TestCollection {
             e.printStackTrace();
         }
         testCollection.add(new HttpDeleteTest("/annot/").addParam("aid_list", annotationsToDeleteIndexes));
-        testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", imagesToDeleteIndexes));
-        testCollection.add(new HttpDeleteTest("/encounter/").addParam("eid_list", encountersToDeleteIndexes));
         testCollection.add(new HttpDeleteTest("/name/").addParam("name_rowid_list", individualsToDeleteIndexes));
         */
+        testCollection.add(new HttpDeleteTest("/encounter/").addParam("eid_list", 5));
+        testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", Arrays.asList(190,191,192,193,194,195,196,197,198)));
     }
 
     public void runTests() {
