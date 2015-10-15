@@ -1,12 +1,13 @@
 package edu.uic.ibeis_java_api.test;
 
 import edu.uic.ibeis_java_api.api.*;
-import edu.uic.ibeis_java_api.api.data.GeoCoordinates;
-import edu.uic.ibeis_java_api.api.data.annotation.BoundingBox;
-import edu.uic.ibeis_java_api.api.data.encounter.EncounterNotes;
-import edu.uic.ibeis_java_api.api.data.image.ImageNotes;
-import edu.uic.ibeis_java_api.api.data.image.RawImage;
-import edu.uic.ibeis_java_api.api.data.individual.IndividualNotes;
+import edu.uic.ibeis_java_api.api.IbeisAnnotation;
+import edu.uic.ibeis_java_api.api.location.GeoCoordinates;
+import edu.uic.ibeis_java_api.api.annotation.BoundingBox;
+import edu.uic.ibeis_java_api.api.encounter.EncounterNotes;
+import edu.uic.ibeis_java_api.api.image.ImageNotes;
+import edu.uic.ibeis_java_api.api.image.RawImage;
+import edu.uic.ibeis_java_api.api.individual.IndividualNotes;
 import edu.uic.ibeis_java_api.values.Sex;
 import edu.uic.ibeis_java_api.values.Species;
 

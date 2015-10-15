@@ -1,6 +1,6 @@
-package edu.uic.ibeis_java_api.api.data.image;
+package edu.uic.ibeis_java_api.api.image;
 
-import edu.uic.ibeis_java_api.api.data.Notes;
+import edu.uic.ibeis_java_api.api.additional_info.Notes;
 
 public class ImageNotes extends Notes {
 

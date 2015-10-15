@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.api.data.annotation;
+package edu.uic.ibeis_java_api.api.annotation;
 
 /**
  * A rectangular bounding box defined within an image

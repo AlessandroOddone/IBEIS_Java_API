@@ -1,6 +1,6 @@
 package edu.uic.ibeis_java_api.test;
 
-import edu.uic.ibeis_java_api.api.data.image.ImageZipArchive;
+import edu.uic.ibeis_java_api.api.image.ImageZipArchive;
 import edu.uic.ibeis_java_api.http.*;
 
 import java.text.DecimalFormat;

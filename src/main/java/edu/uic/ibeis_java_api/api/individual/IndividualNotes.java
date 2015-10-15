@@ -1,6 +1,6 @@
-package edu.uic.ibeis_java_api.api.data.individual;
+package edu.uic.ibeis_java_api.api.individual;
 
-import edu.uic.ibeis_java_api.api.data.Notes;
+import edu.uic.ibeis_java_api.api.additional_info.Notes;
 import edu.uic.ibeis_java_api.values.ConservationStatus;
 
 import java.util.Date;

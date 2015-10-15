@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.api.data.individual;
+package edu.uic.ibeis_java_api.api.individual;
 
 import edu.uic.ibeis_java_api.values.WeightUnitOfMeasure;
 

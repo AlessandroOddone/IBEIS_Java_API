@@ -2,8 +2,8 @@ package edu.uic.ibeis_java_api.http;
 
 import android.org.apache.http.NameValuePair;
 import android.org.apache.http.message.BasicNameValuePair;
-import edu.uic.ibeis_java_api.api.data.image.ImageFile;
-import edu.uic.ibeis_java_api.api.data.image.ImageZipArchive;
+import edu.uic.ibeis_java_api.api.image.ImageFile;
+import edu.uic.ibeis_java_api.api.image.ImageZipArchive;
 
 import java.util.List;
 

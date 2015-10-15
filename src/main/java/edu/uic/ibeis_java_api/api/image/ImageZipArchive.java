@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.api.data.image;
+package edu.uic.ibeis_java_api.api.image;
 
 import java.io.File;
 

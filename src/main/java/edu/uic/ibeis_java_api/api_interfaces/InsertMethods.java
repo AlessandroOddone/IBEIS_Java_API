@@ -4,7 +4,7 @@ import edu.uic.ibeis_java_api.api.IbeisAnnotation;
 import edu.uic.ibeis_java_api.api.IbeisEncounter;
 import edu.uic.ibeis_java_api.api.IbeisImage;
 import edu.uic.ibeis_java_api.api.IbeisIndividual;
-import edu.uic.ibeis_java_api.api.data.annotation.BoundingBox;
+import edu.uic.ibeis_java_api.api.annotation.BoundingBox;
 import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.IndividualNameAlreadyExistsException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
