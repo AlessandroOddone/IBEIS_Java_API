@@ -1,6 +1,6 @@
 package edu.uic.ibeis_java_api.api.encounter;
 
-import edu.uic.ibeis_java_api.api.additional_info.Notes;
+import edu.uic.ibeis_java_api.api.notes.Notes;
 
 public class EncounterNotes extends Notes {
 

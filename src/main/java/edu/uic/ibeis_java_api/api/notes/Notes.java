@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.api.additional_info;
+package edu.uic.ibeis_java_api.api.notes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
