@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import edu.uic.ibeis_java_api.api.annotation.BoundingBox;
 import edu.uic.ibeis_java_api.exceptions.AuthorizationHeaderException;
-import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
+import edu.uic.ibeis_java_api.exceptions.MalformedHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.InvalidHttpMethodException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
 import edu.uic.ibeis_java_api.http.*;
@@ -36,13 +36,13 @@ public class IbeisAnnotation {
      * Get the bounding box corresponding to the annotation
      * @return Bounding box
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public BoundingBox getBoundingBox() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public BoundingBox getBoundingBox() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.ANNOTATION_BOUNDING_BOX.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.AID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.ANNOTATION_BOUNDING_BOX.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.AID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -59,13 +59,13 @@ public class IbeisAnnotation {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -73,13 +73,13 @@ public class IbeisAnnotation {
      * Get the image corresponding to the annotation
      * @return IbeisImage
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public IbeisImage getImage() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public IbeisImage getImage() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.ANNOTATION_IMAGE.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.AID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.ANNOTATION_IMAGE.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.AID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -90,13 +90,13 @@ public class IbeisAnnotation {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -104,13 +104,13 @@ public class IbeisAnnotation {
      * Get the individual corresponding to the annotation
      * @return IbeisIndividual
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public IbeisIndividual getIndividual() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public IbeisIndividual getIndividual() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.ANNOTATION_INDIVIDUAL.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.AID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.ANNOTATION_INDIVIDUAL.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.AID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -121,13 +121,13 @@ public class IbeisAnnotation {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -135,13 +135,13 @@ public class IbeisAnnotation {
      * Get the annotations that have been found in the same image
      * @return List of IbeisAnnotation elements
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<IbeisAnnotation> getNeighborAnnotations() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<IbeisAnnotation> getNeighborAnnotations() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.ANNOTATION_NEIGHBORS.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.AID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.ANNOTATION_NEIGHBORS.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.AID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -156,13 +156,13 @@ public class IbeisAnnotation {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -170,14 +170,14 @@ public class IbeisAnnotation {
      * Set the individual associated to the annotation
      * @param individual
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public void setIndividual(IbeisIndividual individual) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public void setIndividual(IbeisIndividual individual) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.PUT, CallPath.ANNOTATION_INDIVIDUAL.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.AID_LIST.getValue(), id))
-                            .addParameter(new Parameter(ParamName.NAME_ROWID_LIST.getValue(), individual.getId()))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.PUT, CallPath.ANNOTATION_INDIVIDUAL.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.AID_LIST.getValue(), id))
+                            .addParameter(new HttpParameter(ParamName.NAME_ROWID_LIST.getValue(), individual.getId()))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -186,13 +186,13 @@ public class IbeisAnnotation {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -200,13 +200,13 @@ public class IbeisAnnotation {
      * Returns true if the annotation is in Ibeis database, false otherwise
      * @return
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public boolean isValidAnnotation() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException
+    public boolean isValidAnnotation() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException
     {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.ANNOTATIONS.getValue()).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.ANNOTATIONS.getValue()).execute();
 
             if(response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -222,13 +222,13 @@ public class IbeisAnnotation {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 

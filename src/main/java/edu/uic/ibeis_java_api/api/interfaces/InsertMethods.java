@@ -1,14 +1,11 @@
-package edu.uic.ibeis_java_api.api_interfaces;
+package edu.uic.ibeis_java_api.api.interfaces;
 
 import edu.uic.ibeis_java_api.api.IbeisAnnotation;
 import edu.uic.ibeis_java_api.api.IbeisEncounter;
 import edu.uic.ibeis_java_api.api.IbeisImage;
 import edu.uic.ibeis_java_api.api.IbeisIndividual;
 import edu.uic.ibeis_java_api.api.annotation.BoundingBox;
-import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
-import edu.uic.ibeis_java_api.exceptions.IndividualNameAlreadyExistsException;
-import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
-import edu.uic.ibeis_java_api.exceptions.UnsupportedImageFileTypeException;
+import edu.uic.ibeis_java_api.exceptions.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +21,7 @@ public interface InsertMethods {
      * @throws IOException
      * @throws UnsuccessfulHttpRequestException
      */
-    IbeisImage uploadImage(File image) throws UnsupportedImageFileTypeException, IOException, BadHttpRequestException,
+    IbeisImage uploadImage(File image) throws UnsupportedImageFileTypeException, IOException, MalformedHttpRequestException,
             UnsuccessfulHttpRequestException;
 
     /**
@@ -38,7 +35,7 @@ public interface InsertMethods {
      * @throws UnsuccessfulHttpRequestException
      */
     List<IbeisImage> uploadImages(List<File> images) throws UnsupportedImageFileTypeException, IOException,
-            BadHttpRequestException, UnsuccessfulHttpRequestException;
+            MalformedHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
      * Upload a collection of images to Ibeis database (Http POST).
@@ -52,14 +49,14 @@ public interface InsertMethods {
      * @throws UnsuccessfulHttpRequestException
      */
     List<IbeisImage> uploadImages(List<File> images, File pathToTemporaryZipFile) throws
-            UnsupportedImageFileTypeException, IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+            UnsupportedImageFileTypeException, IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
      * Add a new individual to Ibeis database (Http POST)
      * @param name name of the individual to add
      * @return IbeisIndividual object corresponding to the newly created individual
      */
-    IbeisIndividual addIndividual(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException;
+    IbeisIndividual addIndividual(String name) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException;
 
     /**
      * Add a new annotation to Ibeis database (Http POST)
@@ -67,7 +64,7 @@ public interface InsertMethods {
      * @param boundingBox bounding box within the image
      * @return IbeisAnnotation object corresponding to the newly created annotation
      */
-    IbeisAnnotation addAnnotation(IbeisImage image, BoundingBox boundingBox) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException;
+    IbeisAnnotation addAnnotation(IbeisImage image, BoundingBox boundingBox) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException;
 
 
     /**
@@ -75,5 +72,5 @@ public interface InsertMethods {
      * @param name name of the encounter to add
      * @return IbeisEncounter object corresponding to the newly created encounter
      */
-    IbeisEncounter addEncounter(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, IndividualNameAlreadyExistsException;
+    IbeisEncounter addEncounter(String name) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EncounterNameAlreadyExistsException;
 }

@@ -41,22 +41,22 @@ public class IbeisImage {
      * Get the raw image associated to the IbeisImage object
      * @return RawImage object, containing image bytes and file type information
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public RawImage getRawImage() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, UnsupportedImageFileTypeException {
+    public RawImage getRawImage() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, UnsupportedImageFileTypeException {
         return getRawImage(false);
     }
 
-    public RawImage getRawImage(boolean refreshCache) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException, UnsupportedImageFileTypeException {
+    public RawImage getRawImage(boolean refreshCache) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, UnsupportedImageFileTypeException {
         try {
-            Response response;
+            HttpResponse response;
             if (refreshCache) {
-                response = new Request(RequestMethod.GET, CallPath.IMAGE.getValue() + id + "/",
-                        new ParametersList().addParameter(new Parameter(ParamName.FRESH.getValue(), true))).execute();
+                response = new HttpRequest(HttpRequestMethod.GET, CallPath.IMAGE.getValue() + id + "/",
+                        new HttpParametersList().addParameter(new HttpParameter(ParamName.FRESH.getValue(), true))).execute();
             }
             else {
-                response = new Request(RequestMethod.GET, CallPath.IMAGE.getValue() + id + "/").execute();
+                response = new HttpRequest(HttpRequestMethod.GET, CallPath.IMAGE.getValue() + id + "/").execute();
             }
 
             if (response == null || !response.isSuccess()) {
@@ -84,13 +84,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -98,13 +98,13 @@ public class IbeisImage {
      * Get the GPS position (geographic coordinates) of the image
      * @return (latitude,longitude) pair
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public GeoCoordinates getGpsPosition() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public GeoCoordinates getGpsPosition() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.IMAGE_GPS.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.IMAGE_GPS.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.GID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess() || response.getContent().getAsJsonArray().get(0).isJsonNull()) {
                 System.out.println("Unsuccessful Request");
@@ -116,13 +116,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -130,13 +130,13 @@ public class IbeisImage {
      * Get the datetime associated to the image
      * @return Datetime in which the image was created
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public GregorianCalendar getDatetime() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public GregorianCalendar getDatetime() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.IMAGE_UNIXTIME.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.IMAGE_UNIXTIME.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.GID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess() || response.getContent().getAsJsonArray().get(0).isJsonNull()) {
                 System.out.println("Unsuccessful Request");
@@ -149,13 +149,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -163,13 +163,13 @@ public class IbeisImage {
      * Get the size of the image as its width and length
      * @return (width,length) pair
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public ImageSize getSize() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public ImageSize getSize() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.IMAGE_SIZE.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.IMAGE_SIZE.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.GID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess() || response.getContent().getAsJsonArray().get(0).isJsonNull()) {
                 System.out.println("Unsuccessful Request");
@@ -181,13 +181,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -195,13 +195,13 @@ public class IbeisImage {
      * Get notes associated to the image. Notes are additional information about the image.
      * @return ImageNotes object
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public ImageNotes getNotes() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public ImageNotes getNotes() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.IMAGE_NOTES.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.IMAGE_NOTES.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.GID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess() || response.getContent().getAsJsonArray().get(0).isJsonNull()) {
                 System.out.println("Unsuccessful Request");
@@ -212,13 +212,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -226,13 +226,13 @@ public class IbeisImage {
      * Get all the annotations in Ibeis database that are associated to the image
      * @return List of all the annotations associated to the image
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<IbeisAnnotation> getAnnotations() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<IbeisAnnotation> getAnnotations() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.IMAGE_ANNOTATIONS.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.IMAGE_ANNOTATIONS.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.GID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -247,13 +247,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -262,14 +262,14 @@ public class IbeisImage {
      * @param species
      * @return List of all the annotations, corresponding to the species passed as parameter, associated to the image
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<IbeisAnnotation> getAnnotationsOfSpecies(Species species) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<IbeisAnnotation> getAnnotationsOfSpecies(Species species) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.IMAGE_ANNOTATIONS_OF_SPECIES.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
-                                        .addParameter(new Parameter(ParamName.SPECIES.getValue(), species.getValue()))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.IMAGE_ANNOTATIONS_OF_SPECIES.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.GID_LIST.getValue(), id))
+                                        .addParameter(new HttpParameter(ParamName.SPECIES.getValue(), species.getValue()))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -284,13 +284,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -298,13 +298,13 @@ public class IbeisImage {
      * Get all the encounters the image is included in
      * @return List of all the encounters associated to the image
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<IbeisEncounter> getEncounters() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<IbeisEncounter> getEncounters() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.IMAGE_EIDS.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.IMAGE_EIDS.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.GID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -319,13 +319,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -333,15 +333,15 @@ public class IbeisImage {
      * Set the GPS position of the image
      * @param location
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public void setGpsPosition(GeoCoordinates location) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public void setGpsPosition(GeoCoordinates location) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_GPS.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
-                            .addParameter(new Parameter(ParamName.LAT_LIST.getValue(), location.getLatitude()))
-                            .addParameter(new Parameter(ParamName.LON_LIST.getValue(), location.getLongitude()))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.PUT, CallPath.IMAGE_GPS.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.GID_LIST.getValue(), id))
+                            .addParameter(new HttpParameter(ParamName.LAT_LIST.getValue(), location.getLatitude()))
+                            .addParameter(new HttpParameter(ParamName.LON_LIST.getValue(), location.getLongitude()))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -350,13 +350,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -364,14 +364,14 @@ public class IbeisImage {
      * Set the datetime of the image
      * @param datetime
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public void setDatetime(GregorianCalendar datetime) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public void setDatetime(GregorianCalendar datetime) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_UNIXTIME.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
-                            .addParameter(new Parameter(ParamName.UNIXTIME_LIST.getValue(), datetime.getTimeInMillis()  / 1000))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.PUT, CallPath.IMAGE_UNIXTIME.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.GID_LIST.getValue(), id))
+                            .addParameter(new HttpParameter(ParamName.UNIXTIME_LIST.getValue(), datetime.getTimeInMillis()  / 1000))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -380,13 +380,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -394,14 +394,14 @@ public class IbeisImage {
      * Set an ImageNotes object associated to the image
      * @param imageNotes
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public void setNotes(ImageNotes imageNotes) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public void setNotes(ImageNotes imageNotes) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_NOTES.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
-                            .addParameter(new Parameter(ParamName.NOTES_LIST.getValue(), imageNotes.toJsonString()))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.PUT, CallPath.IMAGE_NOTES.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.GID_LIST.getValue(), id))
+                            .addParameter(new HttpParameter(ParamName.NOTES_LIST.getValue(), imageNotes.toJsonString()))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -410,13 +410,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -424,14 +424,14 @@ public class IbeisImage {
      * Add the image to an Encounter
      * @param encounter
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public void addToEncounter(IbeisEncounter encounter) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public void addToEncounter(IbeisEncounter encounter) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.PUT, CallPath.IMAGE_EIDS.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.GID_LIST.getValue(), id))
-                            .addParameter(new Parameter(ParamName.EID_LIST.getValue(), encounter.getId()))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.PUT, CallPath.IMAGE_EIDS.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.GID_LIST.getValue(), id))
+                            .addParameter(new HttpParameter(ParamName.EID_LIST.getValue(), encounter.getId()))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -440,13 +440,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -454,13 +454,13 @@ public class IbeisImage {
      * Returns true if the image is in Ibeis database, false otherwise
      * @return
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public boolean isValidImage() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException
+    public boolean isValidImage() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException
     {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.IMAGE.getValue()).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.IMAGE.getValue()).execute();
 
             if(response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -476,13 +476,13 @@ public class IbeisImage {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 

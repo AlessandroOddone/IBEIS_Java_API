@@ -4,13 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class Response {
+public class HttpResponse {
     private boolean success;
     private JsonElement content;
 
-    public Response() {}
+    public HttpResponse() {}
 
-    public Response(String jsonResponse) {
+    public HttpResponse(String jsonResponse) {
         // debug: print response
         System.out.println("Http Response: " + jsonResponse);
 

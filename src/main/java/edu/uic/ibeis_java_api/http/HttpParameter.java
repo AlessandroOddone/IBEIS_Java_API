@@ -7,22 +7,22 @@ import edu.uic.ibeis_java_api.api.image.ImageZipArchive;
 
 import java.util.List;
 
-public class Parameter {
+public class HttpParameter {
     private String name;
     private String value;
     private boolean isFile;
 
-    public Parameter(String name, String value) {
+    public HttpParameter(String name, String value) {
         this.name = name;
         this.value = value;
         isFile = false;
     }
 
-    public Parameter(String name, Number value) {
+    public HttpParameter(String name, Number value) {
         this(name, String.valueOf(value));
     }
 
-    public Parameter(String name, List<?>values) {
+    public HttpParameter(String name, List<?> values) {
         this.name = name;
 
         StringBuilder valString = new StringBuilder();
@@ -38,19 +38,19 @@ public class Parameter {
         isFile = false;
     }
 
-    public Parameter(String name, boolean value) {
+    public HttpParameter(String name, boolean value) {
         this.name = name;
         this.value = value ? "true" : "false";
         isFile = false;
     }
 
-    public Parameter(String name, ImageFile img) {
+    public HttpParameter(String name, ImageFile img) {
         this.name = name;
         this.value = img.getLocalPath();
         isFile = true;
     }
 
-    public Parameter(String name, ImageZipArchive imgZip) {
+    public HttpParameter(String name, ImageZipArchive imgZip) {
         this.name = name;
         this.value = imgZip.getLocalPath();
         isFile = true;

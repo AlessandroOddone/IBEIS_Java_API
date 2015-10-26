@@ -3,7 +3,7 @@ package edu.uic.ibeis_java_api.api;
 import com.google.gson.JsonElement;
 import edu.uic.ibeis_java_api.api.encounter.EncounterNotes;
 import edu.uic.ibeis_java_api.exceptions.AuthorizationHeaderException;
-import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
+import edu.uic.ibeis_java_api.exceptions.MalformedHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.InvalidHttpMethodException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
 import edu.uic.ibeis_java_api.http.*;
@@ -35,13 +35,13 @@ public class IbeisEncounter {
      * Get the title of the collection (Encounter)
      * @return Encounter title
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public String getName() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public String getName() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.ENCOUNTER_NAME.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.EID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.ENCOUNTER_NAME.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.EID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess() || response.getContent().getAsJsonArray().get(0).isJsonNull()) {
                 System.out.println("Unsuccessful Request");
@@ -52,13 +52,13 @@ public class IbeisEncounter {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -66,13 +66,13 @@ public class IbeisEncounter {
      * Get notes associated to the encounter. Notes are additional information about the encounter.
      * @return EncounterNotes object
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public EncounterNotes getNotes() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public EncounterNotes getNotes() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.ENCOUNTER_NOTES.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.ENCOUNTER_ROWID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.ENCOUNTER_NOTES.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.ENCOUNTER_ROWID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess() || response.getContent().getAsJsonArray().get(0).isJsonNull()) {
                 System.out.println("Unsuccessful Request");
@@ -83,13 +83,13 @@ public class IbeisEncounter {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -97,13 +97,13 @@ public class IbeisEncounter {
      * Get all the images in the collection (Encounter)
      * @return List of IbeisImage elements
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<IbeisImage> getImages() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<IbeisImage> getImages() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.ENCOUNTER_IMAGES.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.EID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.ENCOUNTER_IMAGES.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.EID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -118,13 +118,13 @@ public class IbeisEncounter {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -132,13 +132,13 @@ public class IbeisEncounter {
      * Get all the individuals that appear in the images of the collection (Encounter)
      * @return List of IbeisIndividual elements
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public List<IbeisIndividual> getIndividuals() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<IbeisIndividual> getIndividuals() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.ENCOUNTER_INDIVIDUALS.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.EID_LIST.getValue(), id))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.ENCOUNTER_INDIVIDUALS.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.EID_LIST.getValue(), id))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -153,13 +153,13 @@ public class IbeisEncounter {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -167,14 +167,14 @@ public class IbeisEncounter {
      * Set the name of the encounter
      * @param name
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public void setName(String name) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public void setName(String name) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.PUT, CallPath.ENCOUNTER_NAME.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.EID_LIST.getValue(), id))
-                            .addParameter(new Parameter(ParamName.ENCOUNTER_TEXT_LIST.getValue(), name))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.PUT, CallPath.ENCOUNTER_NAME.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.EID_LIST.getValue(), id))
+                            .addParameter(new HttpParameter(ParamName.ENCOUNTER_TEXT_LIST.getValue(), name))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -183,13 +183,13 @@ public class IbeisEncounter {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -197,14 +197,14 @@ public class IbeisEncounter {
      * Set an EncounterNotes object associated to the encounter
      * @param encounterNotes
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public void setNotes(EncounterNotes encounterNotes) throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException {
+    public void setNotes(EncounterNotes encounterNotes) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
         try {
-            Response response = new Request(RequestMethod.PUT, CallPath.ENCOUNTER_NOTES.getValue(),
-                    new ParametersList().addParameter(new Parameter(ParamName.ENCOUNTER_ROWID_LIST.getValue(), id))
-                            .addParameter(new Parameter(ParamName.ENCOUNTER_NOTES_LIST.getValue(), encounterNotes.toJsonString()))).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.PUT, CallPath.ENCOUNTER_NOTES.getValue(),
+                    new HttpParametersList().addParameter(new HttpParameter(ParamName.ENCOUNTER_ROWID_LIST.getValue(), id))
+                            .addParameter(new HttpParameter(ParamName.ENCOUNTER_NOTES_LIST.getValue(), encounterNotes.toJsonString()))).execute();
 
             if (response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -213,13 +213,13 @@ public class IbeisEncounter {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 
@@ -227,13 +227,13 @@ public class IbeisEncounter {
      * Returns true if the encounter is in Ibeis database, false otherwise
      * @return
      * @throws IOException
-     * @throws BadHttpRequestException
+     * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    public boolean isValiEncounter() throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException
+    public boolean isValidEncounter() throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException
     {
         try {
-            Response response = new Request(RequestMethod.GET, CallPath.ENCOUNTERS.getValue()).execute();
+            HttpResponse response = new HttpRequest(HttpRequestMethod.GET, CallPath.ENCOUNTERS.getValue()).execute();
 
             if(response == null || !response.isSuccess()) {
                 System.out.println("Unsuccessful Request");
@@ -249,13 +249,13 @@ public class IbeisEncounter {
 
         } catch (AuthorizationHeaderException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("error in authorization header");
+            throw new MalformedHttpRequestException("error in authorization header");
         } catch (URISyntaxException | MalformedURLException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid url");
+            throw new MalformedHttpRequestException("invalid url");
         } catch (InvalidHttpMethodException e) {
             e.printStackTrace();
-            throw new BadHttpRequestException("invalid http method");
+            throw new MalformedHttpRequestException("invalid http method");
         }
     }
 

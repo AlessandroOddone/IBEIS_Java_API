@@ -147,9 +147,9 @@ public class HttpRequestTestCollection implements TestCollection {
         }
         testCollection.add(new HttpDeleteTest("/annot/").addParam("aid_list", annotationsToDeleteIndexes));
         testCollection.add(new HttpDeleteTest("/name/").addParam("name_rowid_list", individualsToDeleteIndexes));
-        */
         testCollection.add(new HttpDeleteTest("/encounter/").addParam("eid_list", 5));
-        testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", Arrays.asList(190,191,192,193,194,195,196,197,198)));
+        */
+        testCollection.add(new HttpDeleteTest("/image/").addParam("gid_list", Arrays.asList(200)));
     }
 
     public void runTests() {
@@ -166,7 +166,7 @@ public class HttpRequestTestCollection implements TestCollection {
         System.out.println("Params: " + formatParams(test.getParams()));
     }
 
-    private static String formatParams(List<Parameter> params) {
+    private static String formatParams(List<HttpParameter> params) {
         StringBuilder formattedParams = new StringBuilder("");
         for(int i=0; i<params.size(); i++) {
             formattedParams.append(params.get(i).getName() + "=" + params.get(i).getValue());
@@ -177,7 +177,7 @@ public class HttpRequestTestCollection implements TestCollection {
         return formattedParams.toString();
     }
 
-    private static void printResponse(Response response) {
+    private static void printResponse(HttpResponse response) {
         System.out.println("Response Success: " + response.isSuccess());
         System.out.println("Response Content: " + response.getContent().toString());
     }
@@ -185,7 +185,7 @@ public class HttpRequestTestCollection implements TestCollection {
     private class HttpGetTest implements HttpTest {
 
         private String callPath;
-        private List<Parameter> params;
+        private List<HttpParameter> params;
 
         public HttpGetTest(String callPath) {
             this.callPath = callPath;
@@ -196,7 +196,7 @@ public class HttpRequestTestCollection implements TestCollection {
             return callPath;
         }
 
-        public List<Parameter> getParams() {
+        public List<HttpParameter> getParams() {
             return params;
         }
 
@@ -205,22 +205,22 @@ public class HttpRequestTestCollection implements TestCollection {
         }
 
         public HttpGetTest addParam(String name, String value) {
-            params.add(new Parameter(name, value));
+            params.add(new HttpParameter(name, value));
             return this;
         }
 
         public HttpGetTest addParam(String name, Number value) {
-            params.add(new Parameter(name, value));
+            params.add(new HttpParameter(name, value));
             return this;
         }
 
         public HttpGetTest addParam(String name, List<? extends Number> values) {
-            params.add(new Parameter(name, values));
+            params.add(new HttpParameter(name, values));
             return this;
         }
 
         public HttpGetTest addParam(String name, ImageZipArchive imgZip) {
-            params.add(new Parameter(name, imgZip));
+            params.add(new HttpParameter(name, imgZip));
             return this;
         }
 
@@ -231,10 +231,10 @@ public class HttpRequestTestCollection implements TestCollection {
 
             try {
                 if (params.size() > 0) {
-                    printResponse(new Request(RequestMethod.GET, callPath, new ParametersList(params)).execute());
+                    printResponse(new HttpRequest(HttpRequestMethod.GET, callPath, new HttpParametersList(params)).execute());
                 }
                 else {
-                    printResponse(new Request(RequestMethod.GET, callPath).execute());
+                    printResponse(new HttpRequest(HttpRequestMethod.GET, callPath).execute());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -247,7 +247,7 @@ public class HttpRequestTestCollection implements TestCollection {
     private class HttpPostTest implements HttpTest {
 
         private String callPath;
-        private List<Parameter> params;
+        private List<HttpParameter> params;
 
         public HttpPostTest(String callPath) {
             this.callPath = callPath;
@@ -258,7 +258,7 @@ public class HttpRequestTestCollection implements TestCollection {
             return callPath;
         }
 
-        public List<Parameter> getParams() {
+        public List<HttpParameter> getParams() {
             return params;
         }
 
@@ -267,21 +267,21 @@ public class HttpRequestTestCollection implements TestCollection {
         }
 
         public HttpPostTest addParam(String name, String value) {
-            params.add(new Parameter(name, value));
+            params.add(new HttpParameter(name, value));
             return this;
         }
 
         public HttpPostTest addParam(String name, Number value) {
-            params.add(new Parameter(name, value));
+            params.add(new HttpParameter(name, value));
             return this;
         }
 
         public HttpPostTest addParam(String name, List<? extends Number> values) {
-            params.add(new Parameter(name, values));
+            params.add(new HttpParameter(name, values));
             return this;
         }
 
-        public HttpPostTest addParam(Parameter param) {
+        public HttpPostTest addParam(HttpParameter param) {
             params.add(param);
             return this;
         }
@@ -293,10 +293,10 @@ public class HttpRequestTestCollection implements TestCollection {
 
             try {
                 if (params.size() > 0) {
-                    printResponse(new Request(RequestMethod.POST, callPath, new ParametersList(params)).execute());
+                    printResponse(new HttpRequest(HttpRequestMethod.POST, callPath, new HttpParametersList(params)).execute());
                 }
                 else {
-                    printResponse(new Request(RequestMethod.POST, callPath).execute());
+                    printResponse(new HttpRequest(HttpRequestMethod.POST, callPath).execute());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -309,7 +309,7 @@ public class HttpRequestTestCollection implements TestCollection {
     private class HttpPutTest implements HttpTest {
 
         private String callPath;
-        private List<Parameter> params;
+        private List<HttpParameter> params;
 
         public HttpPutTest(String callPath) {
             this.callPath = callPath;
@@ -320,7 +320,7 @@ public class HttpRequestTestCollection implements TestCollection {
             return callPath;
         }
 
-        public List<Parameter> getParams() {
+        public List<HttpParameter> getParams() {
             return params;
         }
 
@@ -329,22 +329,22 @@ public class HttpRequestTestCollection implements TestCollection {
         }
 
         public HttpPutTest addParam(String name, String value) {
-            params.add(new Parameter(name, value));
+            params.add(new HttpParameter(name, value));
             return this;
         }
 
         public HttpPutTest addParam(String name, Number value) {
-            params.add(new Parameter(name, value));
+            params.add(new HttpParameter(name, value));
             return this;
         }
 
         public HttpPutTest addParam(String name, List<? extends Number> values) {
-            params.add(new Parameter(name, values));
+            params.add(new HttpParameter(name, values));
             return this;
         }
 
         public HttpPutTest addParam(String name, ImageZipArchive imgZip) {
-            params.add(new Parameter(name, imgZip));
+            params.add(new HttpParameter(name, imgZip));
             return this;
         }
 
@@ -355,10 +355,10 @@ public class HttpRequestTestCollection implements TestCollection {
 
             try {
                 if (params.size() > 0) {
-                    printResponse(new Request(RequestMethod.PUT, callPath, new ParametersList(params)).execute());
+                    printResponse(new HttpRequest(HttpRequestMethod.PUT, callPath, new HttpParametersList(params)).execute());
                 }
                 else {
-                    printResponse(new Request(RequestMethod.PUT, callPath).execute());
+                    printResponse(new HttpRequest(HttpRequestMethod.PUT, callPath).execute());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -371,7 +371,7 @@ public class HttpRequestTestCollection implements TestCollection {
     private class HttpDeleteTest implements HttpTest {
 
         private String callPath;
-        private List<Parameter> params;
+        private List<HttpParameter> params;
 
         public HttpDeleteTest(String callPath) {
             this.callPath = callPath;
@@ -382,7 +382,7 @@ public class HttpRequestTestCollection implements TestCollection {
             return callPath;
         }
 
-        public List<Parameter> getParams() {
+        public List<HttpParameter> getParams() {
             return params;
         }
 
@@ -391,22 +391,22 @@ public class HttpRequestTestCollection implements TestCollection {
         }
 
         public HttpDeleteTest addParam(String name, String value) {
-            params.add(new Parameter(name, value));
+            params.add(new HttpParameter(name, value));
             return this;
         }
 
         public HttpDeleteTest addParam(String name, Number value) {
-            params.add(new Parameter(name, value));
+            params.add(new HttpParameter(name, value));
             return this;
         }
 
         public HttpDeleteTest addParam(String name, List<? extends Number> values) {
-            params.add(new Parameter(name, values));
+            params.add(new HttpParameter(name, values));
             return this;
         }
 
         public HttpDeleteTest addParam(String name, ImageZipArchive imgZip) {
-            params.add(new Parameter(name, imgZip));
+            params.add(new HttpParameter(name, imgZip));
             return this;
         }
 
@@ -417,10 +417,10 @@ public class HttpRequestTestCollection implements TestCollection {
 
             try {
                 if (params.size() > 0) {
-                    printResponse(new Request(RequestMethod.DELETE, callPath, new ParametersList(params)).execute());
+                    printResponse(new HttpRequest(HttpRequestMethod.DELETE, callPath, new HttpParametersList(params)).execute());
                 }
                 else {
-                    printResponse(new Request(RequestMethod.DELETE, callPath).execute());
+                    printResponse(new HttpRequest(HttpRequestMethod.DELETE, callPath).execute());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

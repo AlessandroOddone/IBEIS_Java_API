@@ -9,7 +9,7 @@ import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class Auth {
+public class HttpAuth {
 
     private static final String TOKEN_NAME = "IBEIS";
     private static final String TOKEN_SECRET = "CB73808F-A6F6-094B-5FCD-385EBAFF8FC0";

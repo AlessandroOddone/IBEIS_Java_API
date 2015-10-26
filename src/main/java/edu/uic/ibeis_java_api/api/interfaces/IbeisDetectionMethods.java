@@ -1,8 +1,8 @@
-package edu.uic.ibeis_java_api.api_interfaces;
+package edu.uic.ibeis_java_api.api.interfaces;
 
 import edu.uic.ibeis_java_api.api.IbeisAnnotation;
 import edu.uic.ibeis_java_api.api.IbeisImage;
-import edu.uic.ibeis_java_api.exceptions.BadHttpRequestException;
+import edu.uic.ibeis_java_api.exceptions.MalformedHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
 import edu.uic.ibeis_java_api.values.Species;
 
@@ -20,7 +20,7 @@ public interface IbeisDetectionMethods {
      * @throws UnsuccessfulHttpRequestException
      */
     List<IbeisAnnotation> runAnimalDetection(IbeisImage ibeisImage, Species species)
-            throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+            throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException;
 
     /**
      * Detect animals of the specified species in multiple images
@@ -31,5 +31,5 @@ public interface IbeisDetectionMethods {
      * @throws UnsuccessfulHttpRequestException
      */
     List<List<IbeisAnnotation>> runAnimalDetection(List<IbeisImage> ibeisImageList, Species species)
-            throws IOException, BadHttpRequestException, UnsuccessfulHttpRequestException;
+            throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException;
 }

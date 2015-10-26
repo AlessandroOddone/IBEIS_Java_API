@@ -1,7 +1,6 @@
 package edu.uic.ibeis_java_api.http;
 
 import android.org.apache.http.HttpEntity;
-import android.org.apache.http.HttpResponse;
 import android.org.apache.http.NameValuePair;
 import android.org.apache.http.client.HttpClient;
 import android.org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -27,14 +26,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Request {
+public class HttpRequest {
     private static final String API_URL = "http://pachy.cs.uic.edu:5005/api";
 
     private URL url;
-    private RequestMethod httpRequestMethod;
-    private ParametersList parametersList;
+    private HttpRequestMethod httpRequestMethod;
+    private HttpParametersList parametersList;
 
-    public Request(RequestMethod httpRequestMethod, String callPath, ParametersList parametersList) throws MalformedURLException {
+    public HttpRequest(HttpRequestMethod httpRequestMethod, String callPath, HttpParametersList parametersList) throws MalformedURLException {
         this.httpRequestMethod = httpRequestMethod;
         this.url = new URL(API_URL + callPath);
         this.parametersList = parametersList;
@@ -43,23 +42,23 @@ public class Request {
         System.out.println(this.toString());
     }
 
-    public Request(RequestMethod httpRequestMethod, String callPath) throws MalformedURLException{
-        this(httpRequestMethod, callPath, new ParametersList());
+    public HttpRequest(HttpRequestMethod httpRequestMethod, String callPath) throws MalformedURLException{
+        this(httpRequestMethod, callPath, new HttpParametersList());
     }
 
-    public Response execute() throws AuthorizationHeaderException, URISyntaxException, IOException, InvalidHttpMethodException {
+    public HttpResponse execute() throws AuthorizationHeaderException, URISyntaxException, IOException, InvalidHttpMethodException {
         final HttpParams httpParams = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(httpParams, 5 * 1000);
         HttpConnectionParams.setSoTimeout(httpParams, 120 * 1000);
         HttpClient client = new DefaultHttpClient(httpParams);
-        HttpResponse response;
+        android.org.apache.http.HttpResponse response;
 
         switch (httpRequestMethod) {
             case GET: {
                 HttpGet request = new HttpGet();
 
                 // add parameters to url
-                List<Parameter> params = parametersList.getParameters();
+                List<HttpParameter> params = parametersList.getParameters();
                 StringBuilder urlParams = new StringBuilder("");
                 if (params.size() > 0) {
                     for (int i=0; i< params.size(); i++) {
@@ -75,7 +74,7 @@ public class Request {
 
                 URL urlWithParams = new URL(url.toString() + urlParams.toString());
                 request.setURI(urlWithParams.toURI());
-                request.setHeader("Authorization", Auth.getAuthorizationHeader(urlWithParams));
+                request.setHeader("Authorization", HttpAuth.getAuthorizationHeader(urlWithParams));
                 response = client.execute(request);
                 break;
             }
@@ -83,11 +82,11 @@ public class Request {
                 HttpPost request = new HttpPost();
 
                 // add parameters to POST request message
-                List<Parameter> params = parametersList.getParameters();
+                List<HttpParameter> params = parametersList.getParameters();
                 if(params.size() > 0) {
                     if(parametersList.containsFile()) {
                         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-                        for (Parameter p : params) {
+                        for (HttpParameter p : params) {
                             if(p.isFile()) {
                                 builder.addPart(p.getName(), new FileBody(new File(p.getValue())));
                             }
@@ -99,14 +98,14 @@ public class Request {
                     }
                     else {
                         List<NameValuePair> nameValuePairParams = new ArrayList<>();
-                        for(Parameter p : params) {
+                        for(HttpParameter p : params) {
                             nameValuePairParams.add(p.toNameValuePair());
                         }
                         request.setEntity(new UrlEncodedFormEntity(nameValuePairParams, "utf-8"));
                     }
                 }
                 request.setURI(url.toURI());
-                request.setHeader("Authorization", Auth.getAuthorizationHeader(url));
+                request.setHeader("Authorization", HttpAuth.getAuthorizationHeader(url));
                 response = client.execute(request);
                 break;
             }
@@ -114,16 +113,16 @@ public class Request {
                 HttpPut request = new HttpPut();
 
                 // add parameters to POST request message
-                List<Parameter> params = parametersList.getParameters();
+                List<HttpParameter> params = parametersList.getParameters();
                 if(params.size() > 0) {
                     List<NameValuePair> nameValuePairParams = new ArrayList<>();
-                    for(Parameter p : params) {
+                    for(HttpParameter p : params) {
                         nameValuePairParams.add(p.toNameValuePair());
                     }
                     request.setEntity(new UrlEncodedFormEntity(nameValuePairParams, "utf-8"));
                 }
                 request.setURI(url.toURI());
-                request.setHeader("Authorization", Auth.getAuthorizationHeader(url));
+                request.setHeader("Authorization", HttpAuth.getAuthorizationHeader(url));
                 response = client.execute(request);
                 break;
             }
@@ -131,7 +130,7 @@ public class Request {
                 HttpDelete request = new HttpDelete();
 
                 // add parameters to url
-                List<Parameter> params = parametersList.getParameters();
+                List<HttpParameter> params = parametersList.getParameters();
                 StringBuilder urlParams = new StringBuilder("");
                 if (params.size() > 0) {
                     for (int i=0; i< params.size(); i++) {
@@ -147,7 +146,7 @@ public class Request {
 
                 URL urlWithParams = new URL(url.toString() + urlParams.toString());
                 request.setURI(urlWithParams.toURI());
-                request.setHeader("Authorization", Auth.getAuthorizationHeader(urlWithParams));
+                request.setHeader("Authorization", HttpAuth.getAuthorizationHeader(urlWithParams));
                 response = client.execute(request);
                 request.releaseConnection();
                 break;
@@ -157,10 +156,10 @@ public class Request {
         }
         HttpEntity responseEntity = response.getEntity();
         if (responseEntity != null) {
-            return new Response(EntityUtils.toString(responseEntity));
+            return new HttpResponse(EntityUtils.toString(responseEntity));
         }
         else {// no response (treat as an unsuccessful response)
-            Response noResponse = new Response();
+            HttpResponse noResponse = new HttpResponse();
             noResponse.setSuccess(false);
             return noResponse;
         }

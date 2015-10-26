@@ -3,19 +3,19 @@ package edu.uic.ibeis_java_api.http;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParametersList {
+public class HttpParametersList {
 
-    private List<Parameter> parameters;
+    private List<HttpParameter> parameters;
     private boolean containsFile;
 
-    public ParametersList() {
+    public HttpParametersList() {
         parameters = new ArrayList<>();
         containsFile = false;
     }
 
-    public ParametersList(List<Parameter> parameters) {
+    public HttpParametersList(List<HttpParameter> parameters) {
         this.parameters = parameters;
-        for(Parameter p : parameters) {
+        for(HttpParameter p : parameters) {
             if (p.isFile()) {
                 containsFile = true;
                 break;
@@ -23,7 +23,7 @@ public class ParametersList {
         }
     }
 
-    public List<Parameter> getParameters() {
+    public List<HttpParameter> getParameters() {
         return parameters;
     }
 
@@ -31,7 +31,7 @@ public class ParametersList {
         return containsFile;
     }
 
-    public ParametersList addParameter(Parameter parameter) {
+    public HttpParametersList addParameter(HttpParameter parameter) {
         parameters.add(parameter);
         if(!containsFile && parameter.isFile()) {
             containsFile = true;
