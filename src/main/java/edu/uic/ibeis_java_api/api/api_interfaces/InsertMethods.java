@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.api.interfaces;
+package edu.uic.ibeis_java_api.api.api_interfaces;
 
 import edu.uic.ibeis_java_api.api.IbeisAnnotation;
 import edu.uic.ibeis_java_api.api.IbeisEncounter;

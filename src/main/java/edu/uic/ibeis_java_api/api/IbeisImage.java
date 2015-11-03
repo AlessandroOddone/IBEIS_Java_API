@@ -493,4 +493,9 @@ public class IbeisImage {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(id).hashCode();
+    }
 }

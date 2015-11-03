@@ -336,4 +336,9 @@ public class IbeisIndividual {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(id).hashCode();
+    }
 }
