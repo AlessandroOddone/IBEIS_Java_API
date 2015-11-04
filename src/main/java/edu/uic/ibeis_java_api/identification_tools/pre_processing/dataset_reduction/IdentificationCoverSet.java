@@ -1,26 +1,24 @@
-package edu.uic.ibeis_java_api.identification_tools.dataset_reduction;
+package edu.uic.ibeis_java_api.identification_tools.pre_processing.dataset_reduction;
 
 import edu.uic.ibeis_java_api.api.IbeisAnnotation;
-import edu.uic.ibeis_java_api.identification_tools.IbeisAnnotationInfo;
+import edu.uic.ibeis_java_api.identification_tools.pre_processing.IbeisDbAnnotationInfo;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-public class CoverSet implements Comparable<CoverSet> {
+public class IdentificationCoverSet implements Comparable<IdentificationCoverSet> {
 
-    private IbeisAnnotationInfo dbAnnotationInfo;
-    private List<IbeisAnnotation> coveredAnnotations = new ArrayList<>();
+    private IbeisDbAnnotationInfo dbAnnotationInfo;
+    private Set<IbeisAnnotation> coveredAnnotations = new HashSet<>();
 
-    public CoverSet(IbeisAnnotationInfo dbAnnotationInfo) {
+    public IdentificationCoverSet(IbeisDbAnnotationInfo dbAnnotationInfo) {
         this.dbAnnotationInfo = dbAnnotationInfo;
     }
 
-    public IbeisAnnotationInfo getDbAnnotationInfo() {
+    public IbeisDbAnnotationInfo getDbAnnotationInfo() {
         return dbAnnotationInfo;
     }
 
-    public List<IbeisAnnotation> getCoveredAnnotations() {
+    public Set<IbeisAnnotation> getCoveredAnnotations() {
         return coveredAnnotations;
     }
 
@@ -45,19 +43,13 @@ public class CoverSet implements Comparable<CoverSet> {
         coveredAnnotsStringBuilder.deleteCharAt(coveredAnnotsStringBuilder.lastIndexOf(","));
 
         return "[annotation_db_element:{aid:" + dbAnnotationInfo.getAnnotation().getId() +
-                ",is_giraffe_threshold:" + dbAnnotationInfo.getIsGiraffeThreshold() +
+                ",is_of_target_species_threshold:" + dbAnnotationInfo.getIsOfTargetSpeciesThreshold() +
                 ",rec_threshold:" + dbAnnotationInfo.getRecognitionThreshold() + "}" +
                 ",covered_aids: " + "[" + coveredAnnotsStringBuilder.toString() + "]";
     }
 
     @Override
-    public int compareTo(CoverSet o) {
-        if (this.coveredAnnotations.size() == 1 && o.getCoveredAnnotations().size() == 1) {
-            if (this.coveredAnnotations.get(0) == this.dbAnnotationInfo.getAnnotation() &&
-                    o.getCoveredAnnotations().get(0) != o.getDbAnnotationInfo().getAnnotation()) {
-                return -1;
-            }
-        }
+    public int compareTo(IdentificationCoverSet o) {
         return Integer.compare(this.coveredAnnotations.size(),o.getCoveredAnnotations().size());
     }
 }

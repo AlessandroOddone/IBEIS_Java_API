@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.database_upload_tools.hotspotter_database_model;
+package edu.uic.ibeis_java_api.database_upload_tools.hotspotter.hotspotter_database_model;
 
 import com.opencsv.CSVReader;
 
@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageTable {
+public class NameTable {
 
-    private List<ImageTableEntry> tableEntries = new ArrayList<>();
+    private List<NameTableEntry> tableEntries = new ArrayList<>();
 
-    public ImageTable(File file) {
+    public NameTable(File file) {
         tableEntries = loadTable(file);
     }
 
@@ -28,10 +28,10 @@ public class ImageTable {
             reader.readNext();
 
             while ((nextLine = reader.readNext()) != null) {
-                int id = Integer.parseInt(nextLine[0].replaceAll("\\s",""));
-                File filepath = new File(file.getParentFile().getParentFile().toString() + "/images/" + nextLine[1].replaceAll("\\s", ""));
+                int id = Integer.parseInt(nextLine[0].replaceAll("\\s", ""));
+                String name = nextLine[1].replaceAll("\\s", "");
 
-                tableEntries.add(new ImageTableEntry(id,filepath));
+                tableEntries.add(new NameTableEntry(id,name));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,7 +39,7 @@ public class ImageTable {
         return tableEntries;
     }
 
-    public List<ImageTableEntry> getTableEntries() {
+    public List<NameTableEntry> getTableEntries() {
         return tableEntries;
     }
 }

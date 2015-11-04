@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.database_upload_tools.hotspotter_database_model;
+package edu.uic.ibeis_java_api.database_upload_tools.hotspotter.hotspotter_database_model;
 
 
 import edu.uic.ibeis_java_api.api.annotation.BoundingBox;
