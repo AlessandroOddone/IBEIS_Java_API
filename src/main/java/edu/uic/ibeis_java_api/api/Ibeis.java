@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import edu.uic.ibeis_java_api.api.annotation.BoundingBox;
-import edu.uic.ibeis_java_api.api.api_interfaces.*;
 import edu.uic.ibeis_java_api.api.image.ImageFile;
 import edu.uic.ibeis_java_api.api.image.ImageZipArchive;
 import edu.uic.ibeis_java_api.exceptions.*;

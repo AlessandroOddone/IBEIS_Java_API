@@ -10,7 +10,8 @@ public enum LengthUnitOfMeasure {
         this.value = value;
     }
 
-    public String asString() {
-        return  value;
+    @Override
+    public String toString() {
+        return value;
     }
 }

@@ -1,10 +1,11 @@
 package edu.uic.ibeis_java_api.identification_tools.pre_processing.thresholds_computation;
 
 import edu.uic.ibeis_java_api.api.IbeisAnnotation;
+import edu.uic.ibeis_java_api.exceptions.HandlerNotExecutedException;
 import edu.uic.ibeis_java_api.exceptions.MalformedHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
-import edu.uic.ibeis_java_api.identification_tools.pre_processing.IbeisDbAnnotationInfo;
-import edu.uic.ibeis_java_api.identification_tools.pre_processing.IbeisDbAnnotationInfoMapWrapper;
+import edu.uic.ibeis_java_api.identification_tools.IbeisDbAnnotationInfo;
+import edu.uic.ibeis_java_api.identification_tools.IbeisDbAnnotationInfosWrapper;
 import edu.uic.ibeis_java_api.identification_tools.pre_processing.query_computation.QueryRecord;
 import edu.uic.ibeis_java_api.identification_tools.pre_processing.query_computation.QueryRecordsCollectionWrapper;
 import edu.uic.ibeis_java_api.identification_tools.pre_processing.query_computation.QueryType;
@@ -17,23 +18,23 @@ import java.util.HashSet;
 /**
  * Handler class to calculate thresholds for annotations to be considered as database annotations, given a collection of query results
  */
-public class IdentificationThresholdsCalculationHandler {
+public class IdentificationThresholdsComputationHandler {
 
     private QueryRecordsCollectionWrapper queryRecordsCollectionWrapper;
-    private IbeisDbAnnotationInfoMapWrapper ibeisDbAnnotationInfoMapWrapper;
+    private IbeisDbAnnotationInfosWrapper ibeisDbAnnotationInfosWrapper;
 
-    public IdentificationThresholdsCalculationHandler(QueryRecordsCollectionWrapper queryRecordsCollectionWrapper) {
+    public IdentificationThresholdsComputationHandler(QueryRecordsCollectionWrapper queryRecordsCollectionWrapper) {
         this.queryRecordsCollectionWrapper = queryRecordsCollectionWrapper;
         ThresholdType thresholdType = queryRecordsCollectionWrapper.getQueryType() == QueryType.ONE_VS_ONE ?
                 ThresholdType.ONE_VS_ONE : ThresholdType.WITHIN_DATASET;
-        this.ibeisDbAnnotationInfoMapWrapper = new IbeisDbAnnotationInfoMapWrapper(thresholdType, queryRecordsCollectionWrapper.getTargetSpecies());
+        this.ibeisDbAnnotationInfosWrapper = new IbeisDbAnnotationInfosWrapper(thresholdType, queryRecordsCollectionWrapper.getTargetSpecies());
     }
 
-    public IdentificationThresholdsCalculationHandler execute() throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException {
+    public IdentificationThresholdsComputationHandler execute() throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException {
         return execute(30, 0.01);
     }
 
-    public IdentificationThresholdsCalculationHandler execute(int maxThreshold, double step) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException {
+    public IdentificationThresholdsComputationHandler execute(int maxThreshold, double step) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException {
         Collection<IbeisAnnotation> dbAnnotations = new ArrayList<>();
         for (QueryRecord queryRecord : new HashSet<>(queryRecordsCollectionWrapper.getRecords())) {
             if (!queryRecord.isDbAnnotationOutsider()) {
@@ -42,7 +43,7 @@ public class IdentificationThresholdsCalculationHandler {
                 IbeisDbAnnotationInfo ibeisDbAnnotationInfo = new IbeisDbAnnotationInfo(queryRecord.getDbAnnotation());
                 ibeisDbAnnotationInfo.setOfTargetSpecies(queryRecord.isDbAnnotationOfTargetSpecies());
                 ibeisDbAnnotationInfo.setOutsider(true);
-                ibeisDbAnnotationInfoMapWrapper.add(ibeisDbAnnotationInfo);
+                ibeisDbAnnotationInfosWrapper.add(ibeisDbAnnotationInfo);
             }
         }
 
@@ -96,13 +97,14 @@ public class IdentificationThresholdsCalculationHandler {
                 ibeisDbAnnotationInfo.setRecognitionThreshold(recognitionThreshold);
                 ibeisDbAnnotationInfo.setOfTargetSpecies(true);
                 ibeisDbAnnotationInfo.setOutsider(false);
-                ibeisDbAnnotationInfoMapWrapper.add(ibeisDbAnnotationInfo);
+                ibeisDbAnnotationInfosWrapper.add(ibeisDbAnnotationInfo);
             }
         }
         return this;
     }
 
-    public IbeisDbAnnotationInfoMapWrapper getResult() {
-        return ibeisDbAnnotationInfoMapWrapper;
+    public IbeisDbAnnotationInfosWrapper getResult() throws HandlerNotExecutedException {
+        if (ibeisDbAnnotationInfosWrapper == null) throw new HandlerNotExecutedException();
+        return ibeisDbAnnotationInfosWrapper;
     }
 }

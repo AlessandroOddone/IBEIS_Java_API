@@ -1,4 +1,4 @@
-package edu.uic.ibeis_java_api.identification_tools.pre_processing;
+package edu.uic.ibeis_java_api.identification_tools;
 
 import edu.uic.ibeis_java_api.api.IbeisAnnotation;
 import edu.uic.ibeis_java_api.api.IbeisIndividual;

@@ -1,17 +1,18 @@
 package edu.uic.ibeis_java_api.identification_tools.pre_processing.dataset_reduction;
 
 import edu.uic.ibeis_java_api.api.IbeisAnnotation;
-import edu.uic.ibeis_java_api.identification_tools.pre_processing.IbeisDbAnnotationInfo;
+import edu.uic.ibeis_java_api.identification_tools.IbeisDbAnnotationInfo;
 
 import java.util.*;
 
 public class IdentificationCoverSet implements Comparable<IdentificationCoverSet> {
 
     private IbeisDbAnnotationInfo dbAnnotationInfo;
-    private Set<IbeisAnnotation> coveredAnnotations = new HashSet<>();
+    private Set<IbeisAnnotation> coveredAnnotations;
 
     public IdentificationCoverSet(IbeisDbAnnotationInfo dbAnnotationInfo) {
         this.dbAnnotationInfo = dbAnnotationInfo;
+        this.coveredAnnotations = new HashSet<>();
     }
 
     public IbeisDbAnnotationInfo getDbAnnotationInfo() {

@@ -15,4 +15,8 @@ public enum ConservationStatus {
         return  value;
     }
 
+    @Override
+    public String toString() {
+        return value;
+    }
 }

@@ -3,13 +3,24 @@ package edu.uic.ibeis_java_api.identification_tools.pre_processing.dataset_reduc
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.uic.ibeis_java_api.interfaces.JsonSerializable;
+import edu.uic.ibeis_java_api.values.Species;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class IdentificationCoverSetsCollectionWrapper implements JsonSerializable<IdentificationCoverSetsCollectionWrapper> {
 
-    private List<IdentificationCoverSet> coverSets = new ArrayList<>();
+    private Species targetSpecies;
+    private List<IdentificationCoverSet> coverSets;
+
+    public  IdentificationCoverSetsCollectionWrapper(Species targetSpecies) {
+        this.targetSpecies = targetSpecies;
+        this.coverSets = new ArrayList<>();
+    }
+
+    public Species getTargetSpecies() {
+        return targetSpecies;
+    }
 
     public List<IdentificationCoverSet> getCoverSets() {
         return coverSets;

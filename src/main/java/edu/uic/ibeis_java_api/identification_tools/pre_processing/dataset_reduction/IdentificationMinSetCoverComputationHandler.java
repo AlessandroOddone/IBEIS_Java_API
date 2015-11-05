@@ -1,30 +1,34 @@
 package edu.uic.ibeis_java_api.identification_tools.pre_processing.dataset_reduction;
 
 import edu.uic.ibeis_java_api.api.IbeisAnnotation;
-import edu.uic.ibeis_java_api.identification_tools.pre_processing.IbeisDbAnnotationInfo;
+import edu.uic.ibeis_java_api.exceptions.HandlerNotExecutedException;
+import edu.uic.ibeis_java_api.identification_tools.IbeisDbAnnotationInfo;
+import edu.uic.ibeis_java_api.identification_tools.IbeisDbAnnotationInfosWrapper;
+import edu.uic.ibeis_java_api.identification_tools.pre_processing.thresholds_computation.ThresholdType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public class IdentificationMinSetCoverCalculationHandler {
+public class IdentificationMinSetCoverComputationHandler {
 
     private IdentificationCoverSetsCollectionWrapper coverSetsCollectionWrapper;
-    private List<IbeisDbAnnotationInfo> reducedDatabase;
+
     private List<IdentificationCoverSet> remainingCoverSets;
     private Collection<IbeisAnnotation> coveredAnnotations;
     private int initialDatabaseSize;
 
-    public IdentificationMinSetCoverCalculationHandler(IdentificationCoverSetsCollectionWrapper coverSetsCollectionWrapper) {
+    private List<IbeisDbAnnotationInfo> reducedDatabase;
+
+    public IdentificationMinSetCoverComputationHandler(IdentificationCoverSetsCollectionWrapper coverSetsCollectionWrapper) {
         this.coverSetsCollectionWrapper = coverSetsCollectionWrapper;
-        this.reducedDatabase = new ArrayList<>();
-        this.remainingCoverSets = coverSetsCollectionWrapper.getCoverSets();
-        this.coveredAnnotations = new ArrayList<>();
-        this.initialDatabaseSize = remainingCoverSets.size();
+
+        remainingCoverSets = coverSetsCollectionWrapper.getCoverSets();
+        coveredAnnotations = new ArrayList<>();
+        initialDatabaseSize = remainingCoverSets.size();
+
+        reducedDatabase = new ArrayList<>();
     }
 
-    public IdentificationMinSetCoverCalculationHandler execute() {
+    public IdentificationMinSetCoverComputationHandler execute() {
         Collections.sort(remainingCoverSets, Collections.reverseOrder());
 
         while (coveredAnnotations.size() < initialDatabaseSize && remainingCoverSets.size() > 0 &&
@@ -43,8 +47,8 @@ public class IdentificationMinSetCoverCalculationHandler {
         return this;
     }
 
-    public List<IbeisDbAnnotationInfo> getResult() {
-        return reducedDatabase;
+    public IbeisDbAnnotationInfosWrapper getResult() throws HandlerNotExecutedException{
+        if (reducedDatabase == null) throw new HandlerNotExecutedException();
+        return new IbeisDbAnnotationInfosWrapper(ThresholdType.WITHIN_DATASET, coverSetsCollectionWrapper.getTargetSpecies(), reducedDatabase);
     }
-
 }
