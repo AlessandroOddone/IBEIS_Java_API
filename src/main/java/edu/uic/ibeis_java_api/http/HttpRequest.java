@@ -27,7 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HttpRequest {
-    private static final String API_URL = "http://pachy.cs.uic.edu:5005/api";
+    private static final String API_URL_AWS = "http://52.33.105.88:5000/api";
+    private static final String API_URL_PATCHY = "http://pachy.cs.uic.edu:5005/api";
 
     private URL url;
     private HttpRequestMethod httpRequestMethod;
@@ -35,7 +36,7 @@ public class HttpRequest {
 
     public HttpRequest(HttpRequestMethod httpRequestMethod, String callPath, HttpParametersList parametersList) throws MalformedURLException {
         this.httpRequestMethod = httpRequestMethod;
-        this.url = new URL(API_URL + callPath);
+        this.url = new URL(API_URL_AWS + callPath);
         this.parametersList = parametersList;
 
         //debug: print request

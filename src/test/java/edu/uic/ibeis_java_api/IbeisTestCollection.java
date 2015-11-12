@@ -115,7 +115,7 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * QUERY
          */
-        testCollection.add(new QueryTest(annotationList.get(0), annotationList));
+        //testCollection.add(new QueryTest(annotationList.get(0), annotationList));
 
         /**
          * IMAGE GETTERS AND SETTERS
