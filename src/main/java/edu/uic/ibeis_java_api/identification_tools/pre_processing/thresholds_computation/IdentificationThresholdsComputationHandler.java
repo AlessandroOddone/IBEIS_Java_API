@@ -65,7 +65,6 @@ public class IdentificationThresholdsComputationHandler {
                         //recognition threshold
                         if (queryRecord.getScore() >= threshold) {//positive
                             if (queryRecord.isSameIndividual()) {//true
-                                recTP++;
                             } else {//false
                                 recFP++;
                             }
