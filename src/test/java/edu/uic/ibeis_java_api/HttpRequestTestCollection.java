@@ -1,6 +1,7 @@
 package edu.uic.ibeis_java_api;
 
 import edu.uic.ibeis_java_api.api.image.ImageZipArchive;
+import edu.uic.ibeis_java_api.exceptions.EmptyListParameterException;
 import edu.uic.ibeis_java_api.http.*;
 
 import java.text.DecimalFormat;
@@ -213,7 +214,7 @@ public class HttpRequestTestCollection implements TestCollection {
             return this;
         }
 
-        public HttpGetTest addParam(String name, List<? extends Number> values) {
+        public HttpGetTest addParam(String name, List<? extends Number> values) throws EmptyListParameterException {
             params.add(new HttpParameter(name, values));
             return this;
         }
@@ -275,7 +276,7 @@ public class HttpRequestTestCollection implements TestCollection {
             return this;
         }
 
-        public HttpPostTest addParam(String name, List<? extends Number> values) {
+        public HttpPostTest addParam(String name, List<? extends Number> values) throws EmptyListParameterException {
             params.add(new HttpParameter(name, values));
             return this;
         }
@@ -337,7 +338,7 @@ public class HttpRequestTestCollection implements TestCollection {
             return this;
         }
 
-        public HttpPutTest addParam(String name, List<? extends Number> values) {
+        public HttpPutTest addParam(String name, List<? extends Number> values) throws EmptyListParameterException {
             params.add(new HttpParameter(name, values));
             return this;
         }
@@ -399,7 +400,7 @@ public class HttpRequestTestCollection implements TestCollection {
             return this;
         }
 
-        public HttpDeleteTest addParam(String name, List<? extends Number> values) {
+        public HttpDeleteTest addParam(String name, List<? extends Number> values) throws EmptyListParameterException {
             params.add(new HttpParameter(name, values));
             return this;
         }

@@ -25,7 +25,7 @@ import java.util.*;
 /**
  * Controller class to interact with Ibeis
  */
-public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethods, GetMethods, IbeisQueryMethods {
+public class Ibeis implements InsertMethodsInterface, DeleteMethodsInterface, IbeisDetectionMethods, GetMethodsInterface, IbeisQueryMethodsInterface {
 
     @Override
     public IbeisImage uploadImage(File image) throws UnsupportedImageFileTypeException, IOException, UnsuccessfulHttpRequestException, MalformedHttpRequestException {
@@ -262,12 +262,12 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
     }
 
     @Override
-    public void deleteImage(IbeisImage image) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public void deleteImage(IbeisImage image) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
         deleteImages(Arrays.asList(image));
     }
 
     @Override
-    public void deleteImages(List<IbeisImage> imageList) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public void deleteImages(List<IbeisImage> imageList) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
         List<Number> imageIds = new ArrayList<>();
         for(IbeisImage image : imageList) {
             imageIds.add(image.getId());
@@ -364,12 +364,12 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
     }
 
     @Override
-    public List<IbeisAnnotation> runAnimalDetection(IbeisImage ibeisImage, Species species) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<IbeisAnnotation> runAnimalDetection(IbeisImage ibeisImage, Species species) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
         return runAnimalDetection(Arrays.asList(ibeisImage), species).get(0);
     }
 
     @Override
-    public List<List<IbeisAnnotation>> runAnimalDetection(List<IbeisImage> ibeisImageList, Species species) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<List<IbeisAnnotation>> runAnimalDetection(List<IbeisImage> ibeisImageList, Species species) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
         List<Number> imageIds = new ArrayList<>();
         for(IbeisImage image : ibeisImageList) {
             imageIds.add(image.getId());
@@ -409,15 +409,15 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
         }
     }
 
-    public IbeisQueryResult queryNoCache(IbeisAnnotation queryAnnotation, IbeisAnnotation dbAnnotation) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public IbeisQueryResult queryNoCache(IbeisAnnotation queryAnnotation, IbeisAnnotation dbAnnotation) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
         return queryNoCache(Arrays.asList(queryAnnotation), Arrays.asList(dbAnnotation)).get(0);
     }
 
-    public IbeisQueryResult queryNoCache(IbeisAnnotation queryAnnotation, List<IbeisAnnotation> dbAnnotations) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public IbeisQueryResult queryNoCache(IbeisAnnotation queryAnnotation, List<IbeisAnnotation> dbAnnotations) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
         return queryNoCache(Arrays.asList(queryAnnotation), dbAnnotations).get(0);
     }
 
-    public List<IbeisQueryResult> queryNoCache(List<IbeisAnnotation> queryAnnotations, List<IbeisAnnotation> dbAnnotations) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<IbeisQueryResult> queryNoCache(List<IbeisAnnotation> queryAnnotations, List<IbeisAnnotation> dbAnnotations) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
         try {
             List<Number> queryAnnotationIds = new ArrayList<>();
             for(IbeisAnnotation annotation : queryAnnotations) {
@@ -477,18 +477,18 @@ public class Ibeis implements InsertMethods, DeleteMethods, IbeisDetectionMethod
     }
 
     @Override
-    public IbeisQueryResult query(IbeisAnnotation queryAnnotation, IbeisAnnotation dbAnnotation) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public IbeisQueryResult query(IbeisAnnotation queryAnnotation, IbeisAnnotation dbAnnotation) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
         return query(Arrays.asList(queryAnnotation), Arrays.asList(dbAnnotation)).get(0);
     }
 
 
     @Override
-    public IbeisQueryResult query(IbeisAnnotation queryAnnotation, List<IbeisAnnotation> dbAnnotations) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public IbeisQueryResult query(IbeisAnnotation queryAnnotation, List<IbeisAnnotation> dbAnnotations) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
         return query(Arrays.asList(queryAnnotation), dbAnnotations).get(0);
     }
 
     @Override
-    public List<IbeisQueryResult> query(List<IbeisAnnotation> queryAnnotations, List<IbeisAnnotation> dbAnnotations) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public List<IbeisQueryResult> query(List<IbeisAnnotation> queryAnnotations, List<IbeisAnnotation> dbAnnotations) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
         try {
             List<Number> queryAnnotationIds = new ArrayList<>();
             for(IbeisAnnotation annotation : queryAnnotations) {

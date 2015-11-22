@@ -4,6 +4,7 @@ import edu.uic.ibeis_java_api.api.Ibeis;
 import edu.uic.ibeis_java_api.api.IbeisAnnotation;
 import edu.uic.ibeis_java_api.api.IbeisQueryResult;
 import edu.uic.ibeis_java_api.api.IbeisQueryScore;
+import edu.uic.ibeis_java_api.exceptions.EmptyListParameterException;
 import edu.uic.ibeis_java_api.exceptions.InvalidThresholdTypeException;
 import edu.uic.ibeis_java_api.exceptions.MalformedHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
@@ -47,7 +48,7 @@ public class IdentificationAlgorithm {
         }
     }
 
-    public IdentificationAlgorithmResult execute(IbeisAnnotation queryAnnotation) throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException {
+    public IdentificationAlgorithmResult execute(IbeisAnnotation queryAnnotation) throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException, EmptyListParameterException {
         switch (algorithmType) {
             case BEST_SCORE:
                 if (testingMode) return executeBestScoreTestingMode(queryAnnotation);
@@ -62,18 +63,20 @@ public class IdentificationAlgorithm {
         return null;
     }
 
-    private IdentificationAlgorithmResult executeBestScoreTestingMode(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException {
+    private IdentificationAlgorithmResult executeBestScoreTestingMode(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
         long startTime = System.nanoTime();
 
         IbeisQueryResult queryResult = ibeis.queryNoCache(queryAnnotation, ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationList());
         List<IbeisQueryScore> queryScores = queryResult.getScores();
         //System.out.println("QUERY RESULT: " + queryResult);
 
-        //sort query scores from the highest to the lowest
-        Collections.sort(queryScores, Collections.reverseOrder());
-        //get the highest score
         IbeisQueryScore highestScore = queryScores.get(0);
-        //System.out.println("HIGHEST SCORE: " + highestScore);
+        for (int i=1; i<queryScores.size(); i++) {
+            IbeisQueryScore currentScore = queryScores.get(i);
+            if (currentScore.getScore() > highestScore.getScore()) {
+                highestScore = currentScore;
+            }
+        }
 
         IdentificationAlgorithmResult result = new IdentificationAlgorithmResult(highestScore.getDbAnnotation().getIndividual(),
                 ibeisDbAnnotationInfosWrapper.getTargetSpecies());
@@ -81,16 +84,18 @@ public class IdentificationAlgorithm {
         return result;
     }
 
-    private IdentificationAlgorithmResult executeBestScore(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException {
+    private IdentificationAlgorithmResult executeBestScore(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
         IbeisQueryResult queryResult = ibeis.query(queryAnnotation, ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationList());
         List<IbeisQueryScore> queryScores = queryResult.getScores();
         //System.out.println("QUERY RESULT: " + queryResult);
 
-        //sort query scores from the highest to the lowest
-        Collections.sort(queryScores, Collections.reverseOrder());
-        //get the highest score
         IbeisQueryScore highestScore = queryScores.get(0);
-        //System.out.println("HIGHEST SCORE: " + highestScore);
+        for (int i=1; i<queryScores.size(); i++) {
+            IbeisQueryScore currentScore = queryScores.get(i);
+            if (currentScore.getScore() > highestScore.getScore()) {
+                highestScore = currentScore;
+            }
+        }
 
         IdentificationAlgorithmResult result = new IdentificationAlgorithmResult(highestScore.getDbAnnotation().getIndividual(),
                 ibeisDbAnnotationInfosWrapper.getTargetSpecies());
@@ -98,7 +103,7 @@ public class IdentificationAlgorithm {
     }
 
 
-    private IdentificationAlgorithmResult executeThresholdsOneVsOneTestingMode(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException {
+    private IdentificationAlgorithmResult executeThresholdsOneVsOneTestingMode(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
         long startTime = System.nanoTime();
 
         IdentificationAlgorithmResult result;
@@ -133,7 +138,7 @@ public class IdentificationAlgorithm {
         return result;
     }
 
-    private IdentificationAlgorithmResult executeThresholdsOneVsOne(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException {
+    private IdentificationAlgorithmResult executeThresholdsOneVsOne(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
 
         boolean isOfTargetSpecies = false;
 
@@ -161,7 +166,7 @@ public class IdentificationAlgorithm {
         return new IdentificationAlgorithmResult();
     }
 
-    private IdentificationAlgorithmResult executeThresholdsOneVsAllTestingMode(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException {
+    private IdentificationAlgorithmResult executeThresholdsOneVsAllTestingMode(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
         long startTime = System.nanoTime();
 
         IdentificationAlgorithmResult result;
@@ -200,7 +205,7 @@ public class IdentificationAlgorithm {
         return result;
     }
 
-    private IdentificationAlgorithmResult executeThresholdsOneVsAll(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException {
+    private IdentificationAlgorithmResult executeThresholdsOneVsAll(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
         IbeisQueryResult queryResult = ibeis.query(queryAnnotation, ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationList());
         List<IbeisQueryScore> queryScores = queryResult.getScores();
         //System.out.println("QUERY RESULT: " + queryResult);

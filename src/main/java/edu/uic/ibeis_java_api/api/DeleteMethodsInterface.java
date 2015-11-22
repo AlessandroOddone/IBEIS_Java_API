@@ -1,16 +1,13 @@
 package edu.uic.ibeis_java_api.api;
 
-import edu.uic.ibeis_java_api.api.IbeisAnnotation;
-import edu.uic.ibeis_java_api.api.IbeisEncounter;
-import edu.uic.ibeis_java_api.api.IbeisImage;
-import edu.uic.ibeis_java_api.api.IbeisIndividual;
+import edu.uic.ibeis_java_api.exceptions.EmptyListParameterException;
 import edu.uic.ibeis_java_api.exceptions.MalformedHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
 
 import java.io.IOException;
 import java.util.List;
 
-public interface DeleteMethods {
+public interface DeleteMethodsInterface {
 
     /**
      * Delete an image from Ibeis database
@@ -19,7 +16,7 @@ public interface DeleteMethods {
      * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    void deleteImage(IbeisImage image) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException;
+    void deleteImage(IbeisImage image) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException;
 
     /**
      * Delete a list of images from Ibeis database
@@ -28,7 +25,7 @@ public interface DeleteMethods {
      * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
      */
-    void deleteImages(List<IbeisImage> imageList) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException;
+    void deleteImages(List<IbeisImage> imageList) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException;
 
     /**
      * Delete an annotation from Ibeis database

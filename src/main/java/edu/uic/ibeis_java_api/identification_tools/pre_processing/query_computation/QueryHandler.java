@@ -1,6 +1,7 @@
 package edu.uic.ibeis_java_api.identification_tools.pre_processing.query_computation;
 
 import edu.uic.ibeis_java_api.api.*;
+import edu.uic.ibeis_java_api.exceptions.EmptyListParameterException;
 import edu.uic.ibeis_java_api.exceptions.HandlerNotExecutedException;
 import edu.uic.ibeis_java_api.exceptions.MalformedHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
@@ -64,7 +65,7 @@ public class QueryHandler {
         this.differentSpeciesOutsiderNames = differentSpeciesOutsiderNames;
     }
 
-    public QueryHandler execute() throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException {
+    public QueryHandler execute() throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException, EmptyListParameterException {
         switch (queryType) {
             case ONE_VS_ALL:
                 return executeOneVsAll();
@@ -75,7 +76,7 @@ public class QueryHandler {
         return null;
     }
 
-    private QueryHandler executeOneVsAll() throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException {
+    private QueryHandler executeOneVsAll() throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException, EmptyListParameterException {
         try {
             List<IbeisQueryResult> ibeisQueryResultList = ibeis.query(queryAnnotations, dbAnnotations);
 

@@ -43,7 +43,7 @@ public class IbeisTestCollection implements TestCollection {
             //individual = ibeis.getIndividualById(0);
             //image = ibeis.getImageById(0);
             //annotation = ibeis.getAnnotationById(0);
-            encounter = ibeis.getEncounterById(1);
+            //encounter = ibeis.getEncounterById();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,7 +58,7 @@ public class IbeisTestCollection implements TestCollection {
          * UPLOAD IMAGE ZIP ARCHIVE TEST
          */
         //testCollection.add(new UploadImageZipArchiveTest(Arrays.asList(new File(getClass().getClassLoader().getResource("giraffe_api_upload_test.jpeg").getFile()),
-                //new File(getClass().getClassLoader().getResource("zebra_api_upload_test.jpeg").getFile()))));
+        //new File(getClass().getClassLoader().getResource("zebra_api_upload_test.jpeg").getFile()))));
 
         /**
          * DELETE IMAGE TEST
@@ -103,6 +103,12 @@ public class IbeisTestCollection implements TestCollection {
                 }
             }
             */
+            /*
+            for(IbeisImage image : ibeis.getEncounterById(38).getImages()) {
+                testCollection.add(new DownloadImageFileTest(image));
+            }
+            */
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,7 +121,7 @@ public class IbeisTestCollection implements TestCollection {
         /**
          * QUERY
          */
-        //testCollection.add(new QueryTest(annotationList.get(0), annotationList));
+        //testCollection.add(new QueryTest(annotationList.get(0), annotationList.subList(0,5)));
 
         /**
          * IMAGE GETTERS AND SETTERS

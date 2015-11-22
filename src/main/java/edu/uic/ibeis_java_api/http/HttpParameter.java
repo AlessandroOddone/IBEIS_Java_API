@@ -4,6 +4,7 @@ import android.org.apache.http.NameValuePair;
 import android.org.apache.http.message.BasicNameValuePair;
 import edu.uic.ibeis_java_api.api.image.ImageFile;
 import edu.uic.ibeis_java_api.api.image.ImageZipArchive;
+import edu.uic.ibeis_java_api.exceptions.EmptyListParameterException;
 
 import java.util.List;
 
@@ -22,7 +23,9 @@ public class HttpParameter {
         this(name, String.valueOf(value));
     }
 
-    public HttpParameter(String name, List<?> values) {
+    public HttpParameter(String name, List<?> values) throws EmptyListParameterException {
+        if (values.isEmpty()) throw new EmptyListParameterException();
+
         this.name = name;
 
         StringBuilder valString = new StringBuilder();

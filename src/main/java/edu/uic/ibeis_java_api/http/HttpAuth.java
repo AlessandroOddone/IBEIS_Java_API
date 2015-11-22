@@ -1,7 +1,7 @@
 package edu.uic.ibeis_java_api.http;
 
-import edu.uic.ibeis_java_api.exceptions.AuthorizationHeaderException;
 import android.org.apache.commons.codec.binary.Base64;
+import edu.uic.ibeis_java_api.exceptions.AuthorizationHeaderException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -38,7 +38,7 @@ public class HttpAuth {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      */
-    public static String getAuthorizationHeader(URL url) throws AuthorizationHeaderException{
+    public static String getAuthorizationHeader(URL url) throws AuthorizationHeaderException {
         try {
             byte[] messageToSendBytes = url.toString().getBytes();
             String secretKeySignature = getSignature(TOKEN_SECRET, messageToSendBytes);

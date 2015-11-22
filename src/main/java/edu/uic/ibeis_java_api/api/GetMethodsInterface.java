@@ -1,15 +1,11 @@
 package edu.uic.ibeis_java_api.api;
 
-import edu.uic.ibeis_java_api.api.IbeisAnnotation;
-import edu.uic.ibeis_java_api.api.IbeisEncounter;
-import edu.uic.ibeis_java_api.api.IbeisImage;
-import edu.uic.ibeis_java_api.api.IbeisIndividual;
 import edu.uic.ibeis_java_api.exceptions.*;
 
 import java.io.IOException;
 import java.util.List;
 
-public interface GetMethods {
+public interface GetMethodsInterface {
 
     /**
      * Get all the images in Ibeis database

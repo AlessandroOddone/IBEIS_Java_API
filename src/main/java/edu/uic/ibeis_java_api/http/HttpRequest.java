@@ -28,7 +28,7 @@ import java.util.List;
 
 public class HttpRequest {
     private static final String API_URL_AWS = "http://52.33.105.88:5000/api";
-    private static final String API_URL_PATCHY = "http://pachy.cs.uic.edu:5005/api";
+    private static final String API_URL_PACHY = "http://pachy.cs.uic.edu:5005/api";
 
     private URL url;
     private HttpRequestMethod httpRequestMethod;

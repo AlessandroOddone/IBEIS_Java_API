@@ -1,9 +1,5 @@
 package edu.uic.ibeis_java_api.api;
 
-import edu.uic.ibeis_java_api.api.IbeisAnnotation;
-import edu.uic.ibeis_java_api.api.IbeisEncounter;
-import edu.uic.ibeis_java_api.api.IbeisImage;
-import edu.uic.ibeis_java_api.api.IbeisIndividual;
 import edu.uic.ibeis_java_api.api.annotation.BoundingBox;
 import edu.uic.ibeis_java_api.exceptions.*;
 
@@ -11,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public interface InsertMethods {
+public interface InsertMethodsInterface {
 
     /**
      * Upload an image to Ibeis database (Http POST).
