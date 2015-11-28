@@ -12,6 +12,7 @@ import edu.uic.ibeis_java_api.identification_tools.IbeisDbAnnotationInfo;
 import edu.uic.ibeis_java_api.identification_tools.IbeisDbAnnotationInfosWrapper;
 import edu.uic.ibeis_java_api.identification_tools.identification_algorithm.result.IdentificationAlgorithmResult;
 import edu.uic.ibeis_java_api.identification_tools.pre_processing.thresholds_computation.ThresholdType;
+import edu.uic.ibeis_java_api.values.Species;
 
 import java.io.IOException;
 import java.util.List;
@@ -166,7 +167,7 @@ public class IdentificationAlgorithm {
         List<IbeisQueryScore> queryScores = queryResult.getScores();
 
         double bestScoreIdentifiedIndividual = 0;
-        IdentificationAlgorithmResult identificationAlgorithmResult = new IdentificationAlgorithmResult();
+        IdentificationAlgorithmResult identificationAlgorithmResult = new IdentificationAlgorithmResult(Species.UNKNOWN);
 
         boolean isOfTargetSpecies = false;
         for (IbeisQueryScore queryScore : queryScores) {

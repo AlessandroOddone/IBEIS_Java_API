@@ -446,7 +446,7 @@ public class IbeisTestCollection implements TestCollection {
 
         public DownloadImageFileTest(IbeisImage ibeisImage) {
             this.ibeisImage = ibeisImage;
-            this.imageName = "download_test_id_" + ibeisImage.getId() + "_" + new SimpleDateFormat("HH:mm:ss_SSS").format(new Date()) + ".jpg";
+            this.imageName = "download_test_image_id_" + ibeisImage.getId() + "_" + new SimpleDateFormat("HH:mm:ss_SSS").format(new Date()) + ".jpg";
         }
 
         public DownloadImageFileTest(IbeisImage ibeisImage, String imageName) {
@@ -469,7 +469,6 @@ public class IbeisTestCollection implements TestCollection {
                 outputStream.write(rawImage.getBytes());
                 System.out.println("image successfully downloaded (file type: " +
                         rawImage.getFileType() + ")");
-                System.out.println("IMAGE ANNOTATIONS: " + printIbeisAnnotationListElement(ibeisImage.getAnnotations()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
