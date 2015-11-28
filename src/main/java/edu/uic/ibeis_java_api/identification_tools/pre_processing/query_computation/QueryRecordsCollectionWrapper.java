@@ -6,7 +6,7 @@ import edu.uic.ibeis_java_api.interfaces.JsonSerializable;
 import edu.uic.ibeis_java_api.values.Species;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Wrapper class for a collection of QueryRecord objects. Includes attributes with common values for all the objects in the collection.
@@ -15,7 +15,7 @@ public class QueryRecordsCollectionWrapper implements JsonSerializable<QueryReco
 
     private QueryType queryType;
     private Species targetSpecies;
-    private Collection<QueryRecord> records;
+    private List<QueryRecord> records;
 
     public QueryRecordsCollectionWrapper(QueryType queryType, Species targetSpecies) {
         this.queryType = queryType;
@@ -31,7 +31,7 @@ public class QueryRecordsCollectionWrapper implements JsonSerializable<QueryReco
         return targetSpecies;
     }
 
-    public Collection<QueryRecord> getRecords() {
+    public List<QueryRecord> getRecords() {
         return records;
     }
 

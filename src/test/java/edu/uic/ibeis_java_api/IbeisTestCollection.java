@@ -103,12 +103,22 @@ public class IbeisTestCollection implements TestCollection {
                 }
             }
             */
+            List<IbeisAnnotation> annotations = new ArrayList<>();
+            for (Integer id : Arrays.asList(261,344,42,235,249,348,258,336,337,426,123,251,324,269,122,178,256,353,278,224,263,174)) {
+                annotations.add(ibeis.getAnnotationById(id));
+            }
+            for(IbeisAnnotation annotation : annotations) {
+                testCollection.add(new DownloadImageFileTest(annotation.getImage(), "download_test_annot_id_" +
+                        annotation.getId() +  "_name_" + annotation.getIndividual().getName() + ".jpg"));
+            }
             /*
-            for(IbeisImage image : ibeis.getEncounterById(38).getImages()) {
-                testCollection.add(new DownloadImageFileTest(image));
+            for(IbeisImage image : ibeis.getEncounterById(2).getImages()) {
+                for(IbeisAnnotation annotation : image.getAnnotations()) {
+                    testCollection.add(new DownloadImageFileTest(annotation.getImage(), "download_test_annot_id_" +
+                            annotation.getId() +  "_name_" + annotation.getIndividual().getName() + ".jpg"));
+                }
             }
             */
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -432,9 +442,16 @@ public class IbeisTestCollection implements TestCollection {
         private static final String DOWNLOADED_IMAGE_PATH_TO_FILE = "src/test/resources/";
 
         private IbeisImage ibeisImage;
+        private String imageName;
 
         public DownloadImageFileTest(IbeisImage ibeisImage) {
             this.ibeisImage = ibeisImage;
+            this.imageName = "download_test_id_" + ibeisImage.getId() + "_" + new SimpleDateFormat("HH:mm:ss_SSS").format(new Date()) + ".jpg";
+        }
+
+        public DownloadImageFileTest(IbeisImage ibeisImage, String imageName) {
+            this.ibeisImage = ibeisImage;
+            this.imageName = imageName;
         }
 
         @Override
@@ -446,8 +463,7 @@ public class IbeisTestCollection implements TestCollection {
         public void execute() {
             printTest(this);
             try {
-                String downloadedImagePath = DOWNLOADED_IMAGE_PATH_TO_FILE + "download_test_id_" + ibeisImage.getId() + "_" + new SimpleDateFormat("HH:mm:ss_SSS").format(new Date()) + ".jpg";
-
+                String downloadedImagePath = DOWNLOADED_IMAGE_PATH_TO_FILE + imageName;
                 RawImage rawImage = ibeisImage.getRawImage(true);
                 OutputStream outputStream = new FileOutputStream(downloadedImagePath);
                 outputStream.write(rawImage.getBytes());

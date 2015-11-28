@@ -11,6 +11,7 @@ import edu.uic.ibeis_java_api.identification_tools.pre_processing.query_computat
 import edu.uic.ibeis_java_api.identification_tools.pre_processing.thresholds_computation.IdentificationThresholdsComputationHandler;
 import edu.uic.ibeis_java_api.values.Species;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,7 +27,6 @@ public class IdentificationToolsTestCollection implements TestCollection {
     private QueryRecordsCollectionWrapper queryRecordsCollectionOneVsAllWrapper;
     private QueryRecordsCollectionWrapper queryRecordsCollectionOneVsOneWrapper;
     private IbeisDbAnnotationInfosWrapper ibeisDbAnnotationInfosWithinDatasetThresholdsWrapper;
-    private IbeisDbAnnotationInfosWrapper ibeisDbAnnotationInfosOneVsOneThresholdsWrapper;
 
 
     public IdentificationToolsTestCollection() {
@@ -43,8 +43,8 @@ public class IdentificationToolsTestCollection implements TestCollection {
             e.printStackTrace();
         }
 
-        testCollection.add(new QueryHandlerOneVsAllTest());
-        testCollection.add(new QueryHandlerOneVsOneTest());
+        testCollection.add(new QueryHandlerOneVsAllTest(new File(getClass().getClassLoader().getResource("query_resource_collection_one_vs_all_wrapper.json").getFile())));
+        testCollection.add(new QueryHandlerOneVsOneTest(new File(getClass().getClassLoader().getResource("query_resource_collection_one_vs_one_wrapper.json").getFile())));
         testCollection.add(new IdentificationThresholdsWithinDatasetComputationHandlerTest());
     }
 
@@ -60,6 +60,12 @@ public class IdentificationToolsTestCollection implements TestCollection {
 
     public class QueryHandlerOneVsAllTest implements Test {
 
+        private File queryRecordsCollectionWrapperFile;
+
+        public QueryHandlerOneVsAllTest(File queryRecordsCollectionWrapperFile) {
+            this.queryRecordsCollectionWrapperFile = queryRecordsCollectionWrapperFile;
+        }
+
         @Override
         public String getTestType() {
             return null;
@@ -68,7 +74,7 @@ public class IdentificationToolsTestCollection implements TestCollection {
         @Override
         public void execute() {
             try {
-                queryRecordsCollectionOneVsAllWrapper = new QueryHandler(annotations,annotations, Species.GIRAFFE, Arrays.asList("other"), Arrays.asList("zebra")).execute().getQueryRecordsCollectionWrapper();
+                queryRecordsCollectionOneVsAllWrapper = new QueryHandler(annotations,annotations, Species.GIRAFFE, null, Arrays.asList("NAG")).execute(queryRecordsCollectionWrapperFile).getQueryRecordsCollectionWrapper();
                 System.out.println("\nJSON OUTPUT: " + queryRecordsCollectionOneVsAllWrapper.toJson());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -78,6 +84,12 @@ public class IdentificationToolsTestCollection implements TestCollection {
 
     public class QueryHandlerOneVsOneTest implements Test {
 
+        private File queryRecordsCollectionWrapperFile;
+
+        public QueryHandlerOneVsOneTest(File queryRecordsCollectionWrapperFile) {
+            this.queryRecordsCollectionWrapperFile = queryRecordsCollectionWrapperFile;
+        }
+
         @Override
         public String getTestType() {
             return null;
@@ -86,7 +98,7 @@ public class IdentificationToolsTestCollection implements TestCollection {
         @Override
         public void execute() {
             try {
-                queryRecordsCollectionOneVsOneWrapper = new QueryHandler(annotations,annotations, Species.GIRAFFE, QueryType.ONE_VS_ONE, Arrays.asList("other"), Arrays.asList("zebra")).execute().getQueryRecordsCollectionWrapper();
+                queryRecordsCollectionOneVsOneWrapper = new QueryHandler(annotations,annotations,Species.GIRAFFE, QueryType.ONE_VS_ONE, null, Arrays.asList("NAG")).execute(queryRecordsCollectionWrapperFile).getQueryRecordsCollectionWrapper();
                 System.out.println("\nJSON OUTPUT: " + queryRecordsCollectionOneVsOneWrapper.toJson());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -104,7 +116,7 @@ public class IdentificationToolsTestCollection implements TestCollection {
         @Override
         public void execute() {
             try {
-                ibeisDbAnnotationInfosWithinDatasetThresholdsWrapper = new IdentificationThresholdsComputationHandler(queryRecordsCollectionOneVsAllWrapper).execute(30,1).getResult();
+                ibeisDbAnnotationInfosWithinDatasetThresholdsWrapper = new IdentificationThresholdsComputationHandler(queryRecordsCollectionOneVsAllWrapper).execute(new File("")).getResult();
                 System.out.println("\nJSON OUTPUT: " + ibeisDbAnnotationInfosWithinDatasetThresholdsWrapper.toJson());
             } catch (Exception e) {
                 e.printStackTrace();

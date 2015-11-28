@@ -15,6 +15,7 @@ public interface DeleteMethodsInterface {
      * @throws IOException
      * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
+     * @throws EmptyListParameterException
      */
     void deleteImage(IbeisImage image) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException;
 
@@ -24,6 +25,7 @@ public interface DeleteMethodsInterface {
      * @throws IOException
      * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
+     * @throws EmptyListParameterException
      */
     void deleteImages(List<IbeisImage> imageList) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException;
 
@@ -33,8 +35,19 @@ public interface DeleteMethodsInterface {
      * @throws IOException
      * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
+     * @throws EmptyListParameterException
      */
-    void deleteAnnotation(IbeisAnnotation annotation) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException;
+    void deleteAnnotation(IbeisAnnotation annotation) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException;
+
+    /**
+     * Delete a list of annotations from Ibeis database
+     * @param annotationList
+     * @throws IOException
+     * @throws MalformedHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     * @throws EmptyListParameterException
+     */
+    void deleteAnnotations(List<IbeisAnnotation> annotationList) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException;
 
     /**
      * Delete an individual from Ibeis database
@@ -42,8 +55,19 @@ public interface DeleteMethodsInterface {
      * @throws IOException
      * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
+     * @throws EmptyListParameterException
      */
-    void deleteIndividual(IbeisIndividual individual) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException;
+    void deleteIndividual(IbeisIndividual individual) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException;
+
+    /**
+     * Delete a list of individuals from Ibeis database
+     * @param individualList
+     * @throws IOException
+     * @throws MalformedHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     * @throws EmptyListParameterException
+     */
+    void deleteIndividuals(List<IbeisIndividual> individualList) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException;
 
     /**
      * Delete an encounter from Ibeis database
@@ -51,7 +75,18 @@ public interface DeleteMethodsInterface {
      * @throws IOException
      * @throws MalformedHttpRequestException
      * @throws UnsuccessfulHttpRequestException
+     * @throws EmptyListParameterException
      */
-    void deleteEncounter(IbeisEncounter encounter) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException;
+    void deleteEncounter(IbeisEncounter encounter) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException;
+
+    /**
+     * Delete a list of encounters from Ibeis database
+     * @param encounterList
+     * @throws IOException
+     * @throws MalformedHttpRequestException
+     * @throws UnsuccessfulHttpRequestException
+     * @throws EmptyListParameterException
+     */
+    void deleteEncounters(List<IbeisEncounter> encounterList) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException;
 
 }

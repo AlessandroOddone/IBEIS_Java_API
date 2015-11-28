@@ -11,28 +11,31 @@ import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
 import edu.uic.ibeis_java_api.identification_tools.IbeisDbAnnotationInfo;
 import edu.uic.ibeis_java_api.identification_tools.IbeisDbAnnotationInfosWrapper;
 import edu.uic.ibeis_java_api.identification_tools.identification_algorithm.result.IdentificationAlgorithmResult;
-import edu.uic.ibeis_java_api.identification_tools.identification_algorithm.result.TestingModeInfo;
 import edu.uic.ibeis_java_api.identification_tools.pre_processing.thresholds_computation.ThresholdType;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 public class IdentificationAlgorithm {
     private IbeisDbAnnotationInfosWrapper ibeisDbAnnotationInfosWrapper;
     private IdentificationAlgorithmType algorithmType;
-    private boolean testingMode;
+    private double minIndividualRecognitionThreshold;
+    private double minSpeciesRecognitionThreshold;
+    private boolean noCache;
 
     private Ibeis ibeis = new Ibeis();
 
     public IdentificationAlgorithm(IbeisDbAnnotationInfosWrapper ibeisDbAnnotationInfosWrapper, IdentificationAlgorithmType algorithmType) throws InvalidThresholdTypeException {
-        this(ibeisDbAnnotationInfosWrapper, algorithmType , false);
+        this(ibeisDbAnnotationInfosWrapper, algorithmType, 0, 0, false);
     }
 
-    public IdentificationAlgorithm(IbeisDbAnnotationInfosWrapper ibeisDbAnnotationInfosWrapper, IdentificationAlgorithmType algorithmType, boolean testingMode) throws InvalidThresholdTypeException {
+    public IdentificationAlgorithm(IbeisDbAnnotationInfosWrapper ibeisDbAnnotationInfosWrapper, IdentificationAlgorithmType algorithmType,
+                                       double minIndividualRecognitionThreshold, double minSpeciesRecognitionThreshold, boolean noCache) throws InvalidThresholdTypeException {
         this.ibeisDbAnnotationInfosWrapper = ibeisDbAnnotationInfosWrapper;
         this.algorithmType = algorithmType;
-        this.testingMode = testingMode;
+        this.minIndividualRecognitionThreshold = minIndividualRecognitionThreshold;
+        this.minSpeciesRecognitionThreshold = minSpeciesRecognitionThreshold;
+        this.noCache = noCache;
 
         ThresholdType thresholdType = ibeisDbAnnotationInfosWrapper.getThresholdType();
         switch (algorithmType) {
@@ -51,21 +54,19 @@ public class IdentificationAlgorithm {
     public IdentificationAlgorithmResult execute(IbeisAnnotation queryAnnotation) throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException, EmptyListParameterException {
         switch (algorithmType) {
             case BEST_SCORE:
-                if (testingMode) return executeBestScoreTestingMode(queryAnnotation);
+                if (noCache) return executeBestScoreNoCache(queryAnnotation);
                 return executeBestScore(queryAnnotation);
             case THRESHOLDS_ONE_VS_ONE:
-                if (testingMode) return executeBestScoreTestingMode(queryAnnotation);
+                if (noCache) return executeThresholdsOneVsOneNoCache(queryAnnotation);
                 return executeThresholdsOneVsOne(queryAnnotation);
             case THRESHOLDS_ONE_VS_ALL:
-                if (testingMode) executeThresholdsOneVsAllTestingMode(queryAnnotation);
+                if (noCache) return executeThresholdsOneVsAllNoCache(queryAnnotation);
                 return executeThresholdsOneVsAll(queryAnnotation);
         }
         return null;
     }
 
-    private IdentificationAlgorithmResult executeBestScoreTestingMode(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
-        long startTime = System.nanoTime();
-
+    private IdentificationAlgorithmResult executeBestScoreNoCache(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
         IbeisQueryResult queryResult = ibeis.queryNoCache(queryAnnotation, ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationList());
         List<IbeisQueryScore> queryScores = queryResult.getScores();
         //System.out.println("QUERY RESULT: " + queryResult);
@@ -80,7 +81,6 @@ public class IdentificationAlgorithm {
 
         IdentificationAlgorithmResult result = new IdentificationAlgorithmResult(highestScore.getDbAnnotation().getIndividual(),
                 ibeisDbAnnotationInfosWrapper.getTargetSpecies());
-        result.setTestingModeInfo(new TestingModeInfo(System.nanoTime() - startTime));
         return result;
     }
 
@@ -103,9 +103,7 @@ public class IdentificationAlgorithm {
     }
 
 
-    private IdentificationAlgorithmResult executeThresholdsOneVsOneTestingMode(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
-        long startTime = System.nanoTime();
-
+    private IdentificationAlgorithmResult executeThresholdsOneVsOneNoCache(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
         IdentificationAlgorithmResult result;
         boolean isOfTargetSpecies = false;
 
@@ -119,7 +117,6 @@ public class IdentificationAlgorithm {
 
             if (score >= recognitionThreshold) {
                 result = new IdentificationAlgorithmResult(dbAnnotation.getIndividual(), ibeisDbAnnotationInfosWrapper.getTargetSpecies());
-                result.setTestingModeInfo(new TestingModeInfo(System.nanoTime() - startTime));
                 return result;
             }
             if (!isOfTargetSpecies) {
@@ -130,11 +127,9 @@ public class IdentificationAlgorithm {
         }
         if (isOfTargetSpecies) {
             result = new IdentificationAlgorithmResult(ibeisDbAnnotationInfosWrapper.getTargetSpecies());
-            result.setTestingModeInfo(new TestingModeInfo(System.nanoTime() - startTime));
             return result;
         }
         result = new IdentificationAlgorithmResult();
-        result.setTestingModeInfo(new TestingModeInfo(System.nanoTime() - startTime));
         return result;
     }
 
@@ -166,72 +161,60 @@ public class IdentificationAlgorithm {
         return new IdentificationAlgorithmResult();
     }
 
-    private IdentificationAlgorithmResult executeThresholdsOneVsAllTestingMode(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
-        long startTime = System.nanoTime();
-
-        IdentificationAlgorithmResult result;
-
+    private IdentificationAlgorithmResult executeThresholdsOneVsAllNoCache(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
         IbeisQueryResult queryResult = ibeis.query(queryAnnotation, ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationList());
         List<IbeisQueryScore> queryScores = queryResult.getScores();
-        //System.out.println("QUERY RESULT: " + queryResult);
 
-        //sort query scores from the highest to the lowest
-        Collections.sort(queryScores, Collections.reverseOrder());
-        //get the highest score
+        double bestScoreIdentifiedIndividual = 0;
+        IdentificationAlgorithmResult identificationAlgorithmResult = new IdentificationAlgorithmResult();
 
         boolean isOfTargetSpecies = false;
         for (IbeisQueryScore queryScore : queryScores) {
             double score = queryScore.getScore();
-            if (score <= 0) break;
             IbeisDbAnnotationInfo ibeisDbAnnotationInfo = ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationInfosMap().get(queryScore.getDbAnnotation().getId());
-            if (score >= ibeisDbAnnotationInfo.getRecognitionThreshold()) {
-                result = new IdentificationAlgorithmResult(queryScore.getDbAnnotation().getIndividual(), ibeisDbAnnotationInfosWrapper.getTargetSpecies());
-                result.setTestingModeInfo(new TestingModeInfo(System.nanoTime() - startTime));
-                return result;
+            if (score > bestScoreIdentifiedIndividual && score >= ibeisDbAnnotationInfo.getRecognitionThreshold() &&
+                    ibeisDbAnnotationInfo.getRecognitionThreshold() >= minIndividualRecognitionThreshold) {
+                identificationAlgorithmResult.setIndividual(queryScore.getDbAnnotation().getIndividual());
+                identificationAlgorithmResult.setSpecies(ibeisDbAnnotationInfosWrapper.getTargetSpecies());
+                bestScoreIdentifiedIndividual = score;
+                isOfTargetSpecies = true;
             }
             if (!isOfTargetSpecies) {
-                if (score >= ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold()) {
+                if (score >= ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold() &&
+                        ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold() >= minSpeciesRecognitionThreshold) {
+                    identificationAlgorithmResult.setSpecies(ibeisDbAnnotationInfosWrapper.getTargetSpecies());
                     isOfTargetSpecies = true;
                 }
             }
         }
-        if (isOfTargetSpecies) {
-            result = new IdentificationAlgorithmResult(ibeisDbAnnotationInfosWrapper.getTargetSpecies());
-            result.setTestingModeInfo(new TestingModeInfo(System.nanoTime() - startTime));
-            return result;
-        }
-        result = new IdentificationAlgorithmResult();
-        result.setTestingModeInfo(new TestingModeInfo(System.nanoTime() - startTime));
-        return result;
+        return identificationAlgorithmResult;
     }
 
     private IdentificationAlgorithmResult executeThresholdsOneVsAll(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
         IbeisQueryResult queryResult = ibeis.query(queryAnnotation, ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationList());
         List<IbeisQueryScore> queryScores = queryResult.getScores();
-        //System.out.println("QUERY RESULT: " + queryResult);
 
-        //sort query scores from the highest to the lowest
-        Collections.sort(queryScores, Collections.reverseOrder());
-        //get the highest score
+        double bestScoreIdentifiedIndividual = 0;
+        IdentificationAlgorithmResult identificationAlgorithmResult = new IdentificationAlgorithmResult();
 
         boolean isOfTargetSpecies = false;
         for (IbeisQueryScore queryScore : queryScores) {
             double score = queryScore.getScore();
-            if (score <= 0) break;
             IbeisDbAnnotationInfo ibeisDbAnnotationInfo = ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationInfosMap().get(queryScore.getDbAnnotation().getId());
-            if (score >= ibeisDbAnnotationInfo.getRecognitionThreshold()) {
-                IdentificationAlgorithmResult result = new IdentificationAlgorithmResult(queryScore.getDbAnnotation().getIndividual(), ibeisDbAnnotationInfosWrapper.getTargetSpecies());
-                return result;
+            if (score >= bestScoreIdentifiedIndividual && score >= ibeisDbAnnotationInfo.getRecognitionThreshold() &&
+                    ibeisDbAnnotationInfo.getRecognitionThreshold() >= minIndividualRecognitionThreshold) {
+                identificationAlgorithmResult = new IdentificationAlgorithmResult(queryScore.getDbAnnotation().getIndividual(), ibeisDbAnnotationInfosWrapper.getTargetSpecies());
             }
             if (!isOfTargetSpecies) {
-                if (score >= ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold()) {
+                if (score >= ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold() &&
+                        ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold() >= minSpeciesRecognitionThreshold) {
                     isOfTargetSpecies = true;
                 }
             }
         }
         if (isOfTargetSpecies) {
-            return new IdentificationAlgorithmResult(ibeisDbAnnotationInfosWrapper.getTargetSpecies());
+            identificationAlgorithmResult = new IdentificationAlgorithmResult(ibeisDbAnnotationInfosWrapper.getTargetSpecies());
         }
-        return new IdentificationAlgorithmResult();
+        return identificationAlgorithmResult;
     }
 }

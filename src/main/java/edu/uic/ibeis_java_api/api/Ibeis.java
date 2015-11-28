@@ -295,10 +295,20 @@ public class Ibeis implements InsertMethodsInterface, DeleteMethodsInterface, Ib
     }
 
     @Override
-    public void deleteAnnotation(IbeisAnnotation annotation) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public void deleteAnnotation(IbeisAnnotation annotation) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
+        deleteAnnotations(Arrays.asList(annotation));
+    }
+
+    @Override
+    public void deleteAnnotations(List<IbeisAnnotation> annotationList) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
+        List<Number> annotationIds = new ArrayList<>();
+        for(IbeisAnnotation annotation : annotationList) {
+            annotationIds.add(annotation.getId());
+        }
+
         try {
             HttpResponse response = new HttpRequest(HttpRequestMethod.DELETE, CallPath.ANNOTATIONS.getValue(), new HttpParametersList().addParameter
-                    (new HttpParameter(ParamName.AID_LIST.getValue(), annotation.getId()))).execute();
+                    (new HttpParameter(ParamName.AID_LIST.getValue(), annotationIds))).execute();
 
             // check if the request has been successful
             if(response == null || !response.isSuccess()) {
@@ -318,10 +328,20 @@ public class Ibeis implements InsertMethodsInterface, DeleteMethodsInterface, Ib
     }
 
     @Override
-    public void deleteIndividual(IbeisIndividual individual) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public void deleteIndividual(IbeisIndividual individual) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
+        deleteIndividuals(Arrays.asList(individual));
+    }
+
+    @Override
+    public void deleteIndividuals(List<IbeisIndividual> individualList) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
+        List<Number> individualIds = new ArrayList<>();
+        for(IbeisIndividual individual : individualList) {
+            individualIds.add(individual.getId());
+        }
+
         try {
             HttpResponse response = new HttpRequest(HttpRequestMethod.DELETE, CallPath.INDIVIDUALS.getValue(), new HttpParametersList().addParameter
-                    (new HttpParameter(ParamName.NAME_ROWID_LIST.getValue(), individual.getId()))).execute();
+                    (new HttpParameter(ParamName.NAME_ROWID_LIST.getValue(), individualIds))).execute();
 
             // check if the request has been successful
             if(response == null || !response.isSuccess()) {
@@ -341,10 +361,20 @@ public class Ibeis implements InsertMethodsInterface, DeleteMethodsInterface, Ib
     }
 
     @Override
-    public void deleteEncounter(IbeisEncounter encounter) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException {
+    public void deleteEncounter(IbeisEncounter encounter) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException,EmptyListParameterException {
+        deleteEncounters(Arrays.asList(encounter));
+    }
+
+    @Override
+    public void deleteEncounters(List<IbeisEncounter> encounterList) throws IOException, MalformedHttpRequestException, UnsuccessfulHttpRequestException, EmptyListParameterException {
+        List<Number> encounterIds = new ArrayList<>();
+        for(IbeisEncounter encounter : encounterList) {
+            encounterIds.add(encounter.getId());
+        }
+
         try {
             HttpResponse response = new HttpRequest(HttpRequestMethod.DELETE, CallPath.ENCOUNTERS.getValue(), new HttpParametersList().addParameter
-                    (new HttpParameter(ParamName.EID_LIST.getValue(), encounter.getId()))).execute();
+                    (new HttpParameter(ParamName.EID_LIST.getValue(), encounterIds))).execute();
 
             // check if the request has been successful
             if(response == null || !response.isSuccess()) {

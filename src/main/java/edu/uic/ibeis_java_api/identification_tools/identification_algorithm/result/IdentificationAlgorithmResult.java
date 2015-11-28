@@ -7,11 +7,8 @@ public class IdentificationAlgorithmResult {
 
     private IbeisIndividual individual;
     private Species species;
-    private TestingModeInfo testingModeInfo;
 
-    public IdentificationAlgorithmResult() {
-
-    }
+    public IdentificationAlgorithmResult() {}
 
     public IdentificationAlgorithmResult(Species species) {
         this.species = species;
@@ -36,13 +33,5 @@ public class IdentificationAlgorithmResult {
 
     public void setSpecies(Species species) {
         this.species = species;
-    }
-
-    public TestingModeInfo getTestingModeInfo() {
-        return testingModeInfo;
-    }
-
-    public void setTestingModeInfo(TestingModeInfo testingModeInfo) {
-        this.testingModeInfo = testingModeInfo;
     }
 }

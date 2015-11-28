@@ -7,7 +7,8 @@ import edu.uic.ibeis_java_api.exceptions.MalformedHttpRequestException;
 import edu.uic.ibeis_java_api.exceptions.UnsuccessfulHttpRequestException;
 import edu.uic.ibeis_java_api.values.Species;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,8 +25,9 @@ public class QueryHandler {
     private List<String> differentSpeciesOutsiderNames;
     private QueryRecordsCollectionWrapper queryRecordsCollectionWrapper;
 
-    private int currentQueryIndex = 0;
-    private int currentDbIndex = 0;
+    private int currentQueryIndex;
+    private int currentDbIndex;
+    private int currentQueryResultIndex;
 
     /**
      *
@@ -41,8 +43,8 @@ public class QueryHandler {
         this.dbAnnotations = dbAnnotations;
         this.queryType = QueryType.ONE_VS_ALL;
         this.queryRecordsCollectionWrapper = new QueryRecordsCollectionWrapper(QueryType.ONE_VS_ALL, targetSpecies);
-        this.sameSpeciesOutsiderNames = sameSpeciesOutsiderNames;
-        this.differentSpeciesOutsiderNames = differentSpeciesOutsiderNames;
+        this.sameSpeciesOutsiderNames = sameSpeciesOutsiderNames != null ? sameSpeciesOutsiderNames : new ArrayList<String>();
+        this.differentSpeciesOutsiderNames = differentSpeciesOutsiderNames != null ? differentSpeciesOutsiderNames : new ArrayList<String>();
     }
 
     /**
@@ -54,7 +56,6 @@ public class QueryHandler {
      * @param sameSpeciesOutsiderNames Names of the individuals of species 'targetSpecies' that are not to be considered as part of the population of individuals that is being analysed
      * @param differentSpeciesOutsiderNames Names of the individuals of species different from 'targetSpecies' that are not to be considered as part of the population of individuals that is being analysed
      */
-    @Deprecated
     public QueryHandler(List<IbeisAnnotation> queryAnnotations, List<IbeisAnnotation> dbAnnotations, Species targetSpecies,
                         QueryType queryType, List<String> sameSpeciesOutsiderNames, List<String> differentSpeciesOutsiderNames) {
         this.queryAnnotations = queryAnnotations;
@@ -65,34 +66,53 @@ public class QueryHandler {
         this.differentSpeciesOutsiderNames = differentSpeciesOutsiderNames;
     }
 
-    public QueryHandler execute() throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException, EmptyListParameterException {
+    public QueryHandler execute(File queryRecordsCollectionWrapperFile) throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException, EmptyListParameterException {
         switch (queryType) {
             case ONE_VS_ALL:
-                return executeOneVsAll();
+                return executeOneVsAll(queryRecordsCollectionWrapperFile);
 
             case ONE_VS_ONE:
-                return executeOneVsOne();
+                return executeOneVsOne(queryRecordsCollectionWrapperFile);
         }
         return null;
     }
 
-    private QueryHandler executeOneVsAll() throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException, EmptyListParameterException {
+    private QueryHandler executeOneVsAll(File queryRecordsCollectionWrapperFile) throws MalformedHttpRequestException, UnsuccessfulHttpRequestException, IOException, EmptyListParameterException {
         try {
             List<IbeisQueryResult> ibeisQueryResultList = ibeis.query(queryAnnotations, dbAnnotations);
 
-            for (IbeisQueryResult result : ibeisQueryResultList) {
+            QueryRecordsCollectionWrapper temp = readRecordsCollectionWrapperFromFile(queryRecordsCollectionWrapperFile);
+            if (temp != null && !temp.getRecords().isEmpty()) {
+                queryRecordsCollectionWrapper = temp;
+            }
+            currentQueryResultIndex =  getCurrentQueryResultIndexIndex(ibeisQueryResultList, queryRecordsCollectionWrapper);
+
+            int QUERY_RESULT_INDEX = currentQueryResultIndex;
+            int NUM_QUERY_RESULTS = ibeisQueryResultList.size();
+
+            for (int i=0; i<ibeisQueryResultList.size(); i++) {
+                QUERY_RESULT_INDEX++;
+
+                IbeisQueryResult result = ibeisQueryResultList.get(i);
+
                 IbeisAnnotation queryAnnotation = result.getQueryAnnotation();
                 IbeisIndividual queryAnnotationIndividual = queryAnnotation.getIndividual();
                 List<IbeisQueryScore> ibeisQueryScoreList = result.getScores();
 
+                int QUERY_SCORE_INDEX = 0;
+                int NUM_QUERY_SCORES = ibeisQueryScoreList.size();
+
                 for (IbeisQueryScore score : ibeisQueryScoreList) {
+                    System.out.println("QUERY RESULT " + QUERY_RESULT_INDEX + "/" + NUM_QUERY_RESULTS + ": QUERY SCORE " +
+                            QUERY_SCORE_INDEX++ + "/" + NUM_QUERY_SCORES);
+
                     IbeisAnnotation dbAnnotation = score.getDbAnnotation();
                     IbeisIndividual dbAnnotationIndividual = dbAnnotation.getIndividual();
 
-                    boolean queryAnnotationSameSpeciesOutsider = sameSpeciesOutsiderNames.contains(queryAnnotationIndividual.getName());
-                    boolean queryAnnotationDifferentSpeciesOutsider = differentSpeciesOutsiderNames.contains(queryAnnotationIndividual.getName());
-                    boolean dbAnnotationSameSpeciesOutsider = sameSpeciesOutsiderNames.contains(dbAnnotationIndividual.getName());
-                    boolean dbAnnotationDifferentSpeciesOutsider = differentSpeciesOutsiderNames.contains(dbAnnotationIndividual.getName());
+                    boolean queryAnnotationSameSpeciesOutsider = sameSpeciesOutsiderNames != null ? sameSpeciesOutsiderNames.contains(queryAnnotationIndividual.getName()) : false;
+                    boolean queryAnnotationDifferentSpeciesOutsider = differentSpeciesOutsiderNames != null ? differentSpeciesOutsiderNames.contains(queryAnnotationIndividual.getName()) : false;
+                    boolean dbAnnotationSameSpeciesOutsider = sameSpeciesOutsiderNames != null ? sameSpeciesOutsiderNames.contains(dbAnnotationIndividual.getName()) : false;
+                    boolean dbAnnotationDifferentSpeciesOutsider = differentSpeciesOutsiderNames != null ? differentSpeciesOutsiderNames.contains(dbAnnotationIndividual.getName()) : false;
 
                     QueryRecord queryRecord = new QueryRecord();
                     queryRecord.setQueryAnnotation(queryAnnotation);
@@ -109,7 +129,9 @@ public class QueryHandler {
                     }
                     queryRecordsCollectionWrapper.add(queryRecord);
                 }
+                writeRecordsCollectionWrapperToFile(queryRecordsCollectionWrapperFile);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
             queryRecordsCollectionWrapper = null;
@@ -126,26 +148,63 @@ public class QueryHandler {
         return this;
     }
 
-    @Deprecated
-    private QueryHandler executeOneVsOne() {
+    private int getCurrentQueryResultIndexIndex(List<IbeisQueryResult> ibeisQueryResultList, QueryRecordsCollectionWrapper queryRecordsCollectionWrapper) {
+        if (queryRecordsCollectionWrapper != null && queryRecordsCollectionWrapper.getRecords().size()>0) {
+            IbeisAnnotation currentQueryAnnot = queryRecordsCollectionWrapper.getRecords().get(queryRecordsCollectionWrapper.getRecords().size() - 1).getQueryAnnotation();
+            for (int i=0; i<ibeisQueryResultList.size(); i++) {
+                if (currentQueryAnnot.getId() == ibeisQueryResultList.get(i).getQueryAnnotation().getId()) {
+                    return i;
+                }
+            }
+        }
+        return 0;
+    }
+
+    private QueryHandler executeOneVsOne(File queryRecordsCollectionWrapperFile) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
+
+        QueryRecordsCollectionWrapper temp = readRecordsCollectionWrapperFromFile(queryRecordsCollectionWrapperFile);
+        if (temp != null && !temp.getRecords().isEmpty()) {
+            queryRecordsCollectionWrapper = temp;
+            currentQueryIndex =  queryAnnotations.indexOf(queryRecordsCollectionWrapper.getRecords().get(queryRecordsCollectionWrapper.getRecords().size() - 1).getQueryAnnotation());
+            currentDbIndex = dbAnnotations.indexOf(queryRecordsCollectionWrapper.getRecords().get(queryRecordsCollectionWrapper.getRecords().size() - 1).getDbAnnotation()) + 1;
+            if (currentDbIndex >= dbAnnotations.size()) {
+                currentQueryIndex++;
+                currentDbIndex = 0;
+            }
+        } else {
+            currentQueryIndex = 0;
+            currentDbIndex = 0;
+        }
+
         IbeisAnnotation queryAnnotation;
         IbeisAnnotation dbAnnotation;
-
-        try {
-            queryAnnotation = queryAnnotations.get(currentQueryIndex);
-            IbeisIndividual queryAnnotationIndividual = queryAnnotation.getIndividual();
+        IbeisIndividual queryAnnotationIndividual;
+        for (int i=currentQueryIndex; i<queryAnnotations.size(); i++) {
+            queryAnnotation = queryAnnotations.get(i);
+            queryAnnotationIndividual = queryAnnotation.getIndividual();
             for (int j=currentDbIndex; j<dbAnnotations.size(); j++) {
                 dbAnnotation = dbAnnotations.get(j);
-                currentDbIndex = j;
                 IbeisIndividual dbAnnotationIndividual = dbAnnotation.getIndividual();
                 if(queryAnnotation.getId() != dbAnnotation.getId()) {
-                    IbeisQueryScore ibeisQueryScore = ibeis.query(queryAnnotation, dbAnnotation).getScores().get(0);
+                    IbeisQueryScore ibeisQueryScore;
+                    try {
+                        List<IbeisQueryScore> ibeisQueryScoreList = ibeis.query(queryAnnotation, dbAnnotation).getScores();
+                        if (!ibeisQueryScoreList.isEmpty()) {
+                            ibeisQueryScore = ibeisQueryScoreList.get(0);
+                        } else {
+                            continue;
+                        }
+
+                    } catch (UnsuccessfulHttpRequestException e) {
+                        e.printStackTrace();
+                        continue;
+                    }
                     double score = ibeisQueryScore.getScore();
 
-                    boolean queryAnnotationSameSpeciesOutsider = sameSpeciesOutsiderNames.contains(queryAnnotationIndividual.getName());
-                    boolean queryAnnotationDifferentSpeciesOutsider = differentSpeciesOutsiderNames.contains(queryAnnotationIndividual.getName());
-                    boolean dbAnnotationSameSpeciesOutsider = sameSpeciesOutsiderNames.contains(dbAnnotationIndividual.getName());
-                    boolean dbAnnotationDifferentSpeciesOutsider = differentSpeciesOutsiderNames.contains(dbAnnotationIndividual.getName());
+                    boolean queryAnnotationSameSpeciesOutsider = sameSpeciesOutsiderNames != null ? sameSpeciesOutsiderNames.contains(queryAnnotationIndividual.getName()) : false;
+                    boolean queryAnnotationDifferentSpeciesOutsider = differentSpeciesOutsiderNames != null ? differentSpeciesOutsiderNames.contains(queryAnnotationIndividual.getName()) : false;
+                    boolean dbAnnotationSameSpeciesOutsider = sameSpeciesOutsiderNames != null ? sameSpeciesOutsiderNames.contains(dbAnnotationIndividual.getName()) : false;
+                    boolean dbAnnotationDifferentSpeciesOutsider = differentSpeciesOutsiderNames != null ? differentSpeciesOutsiderNames.contains(dbAnnotationIndividual.getName()) : false;
 
                     QueryRecord queryRecord = new QueryRecord();
                     queryRecord.setQueryAnnotation(queryAnnotation);
@@ -161,54 +220,51 @@ public class QueryHandler {
                         queryRecord.setSameIndividual(true);
                     }
                     queryRecordsCollectionWrapper.add(queryRecord);
+                    writeRecordsCollectionWrapperToFile(queryRecordsCollectionWrapperFile);
                 }
             }
-            currentQueryIndex++;
-
-            for (int i=currentQueryIndex; i<queryAnnotations.size(); i++) {
-                queryAnnotation = queryAnnotations.get(i);
-                queryAnnotationIndividual = queryAnnotation.getIndividual();
-                currentQueryIndex = i;
-                for (int j=0; j<dbAnnotations.size(); j++) {
-                    dbAnnotation = dbAnnotations.get(j);
-                    currentDbIndex = j;
-                    IbeisIndividual dbAnnotationIndividual = dbAnnotation.getIndividual();
-                    if(queryAnnotation.getId() != dbAnnotation.getId()) {
-                        IbeisQueryScore ibeisQueryScore = ibeis.query(queryAnnotation, dbAnnotation).getScores().get(0);
-                        double score = ibeisQueryScore.getScore();
-
-                        boolean queryAnnotationSameSpeciesOutsider = sameSpeciesOutsiderNames.contains(queryAnnotationIndividual.getName());
-                        boolean queryAnnotationDifferentSpeciesOutsider = differentSpeciesOutsiderNames.contains(queryAnnotationIndividual.getName());
-                        boolean dbAnnotationSameSpeciesOutsider = sameSpeciesOutsiderNames.contains(dbAnnotationIndividual.getName());
-                        boolean dbAnnotationDifferentSpeciesOutsider = differentSpeciesOutsiderNames.contains(dbAnnotationIndividual.getName());
-
-                        QueryRecord queryRecord = new QueryRecord();
-                        queryRecord.setQueryAnnotation(queryAnnotation);
-                        queryRecord.setDbAnnotation(dbAnnotation);
-                        queryRecord.setScore(score);
-                        queryRecord.setQueryAnnotationOfTargetSpecies(!queryAnnotationDifferentSpeciesOutsider);
-                        queryRecord.setDbAnnotationOfTargetSpecies(!dbAnnotationDifferentSpeciesOutsider);
-                        queryRecord.setQueryAnnotationOutsider(queryAnnotationSameSpeciesOutsider || queryAnnotationDifferentSpeciesOutsider);
-                        queryRecord.setDbAnnotationOutsider(dbAnnotationSameSpeciesOutsider || dbAnnotationDifferentSpeciesOutsider);
-
-                        if (queryAnnotationIndividual.getId() == dbAnnotationIndividual.getId() && !queryAnnotationSameSpeciesOutsider &&
-                                !queryAnnotationDifferentSpeciesOutsider && !dbAnnotationSameSpeciesOutsider && !dbAnnotationDifferentSpeciesOutsider) {
-                            queryRecord.setSameIndividual(true);
-                        }
-                        queryRecordsCollectionWrapper.add(queryRecord);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            executeOneVsOne();
-            e.printStackTrace();
-        } finally {
-            return this;
+            currentDbIndex = 0;
         }
+        return this;
     }
 
     public QueryRecordsCollectionWrapper getQueryRecordsCollectionWrapper() throws HandlerNotExecutedException {
         if (queryRecordsCollectionWrapper == null) throw new HandlerNotExecutedException();
+        return queryRecordsCollectionWrapper;
+    }
+
+    private void writeRecordsCollectionWrapperToFile(File file) {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(file));
+            writer.write(queryRecordsCollectionWrapper.toJson());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if (writer != null) writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private QueryRecordsCollectionWrapper readRecordsCollectionWrapperFromFile(File file) {
+        BufferedReader reader = null;
+        QueryRecordsCollectionWrapper queryRecordsCollectionWrapper = null;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            queryRecordsCollectionWrapper = QueryRecordsCollectionWrapper.fromJson(reader.readLine());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return queryRecordsCollectionWrapper;
     }
 }

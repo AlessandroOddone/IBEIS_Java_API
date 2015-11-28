@@ -6,32 +6,31 @@ import edu.uic.ibeis_java_api.identification_tools.IbeisDbAnnotationInfo;
 import edu.uic.ibeis_java_api.identification_tools.IbeisDbAnnotationInfosWrapper;
 import edu.uic.ibeis_java_api.identification_tools.pre_processing.thresholds_computation.ThresholdType;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class IdentificationMinSetCoverComputationHandler {
 
     private IdentificationCoverSetsCollectionWrapper coverSetsCollectionWrapper;
-
     private List<IdentificationCoverSet> remainingCoverSets;
     private Collection<IbeisAnnotation> coveredAnnotations;
-    private int initialDatabaseSize;
-
     private List<IbeisDbAnnotationInfo> reducedDatabase;
 
     public IdentificationMinSetCoverComputationHandler(IdentificationCoverSetsCollectionWrapper coverSetsCollectionWrapper) {
         this.coverSetsCollectionWrapper = coverSetsCollectionWrapper;
-
-        remainingCoverSets = coverSetsCollectionWrapper.getCoverSets();
-        coveredAnnotations = new ArrayList<>();
-        initialDatabaseSize = remainingCoverSets.size();
-
-        reducedDatabase = new ArrayList<>();
+        this.remainingCoverSets = coverSetsCollectionWrapper.getCoverSets();
+        this.coveredAnnotations = new ArrayList<>();
+        this.reducedDatabase = new ArrayList<>();
     }
 
-    public IdentificationMinSetCoverComputationHandler execute() {
+    public IdentificationMinSetCoverComputationHandler execute(File minSetCoverIbeisDbAnnotationInfosWrapperFile) {
+        int initialAnnotationsToCover = getAnnotationsToCoverCount();
         Collections.sort(remainingCoverSets, Collections.reverseOrder());
 
-        while (coveredAnnotations.size() < initialDatabaseSize && remainingCoverSets.size() > 0 &&
+        while (coveredAnnotations.size() < initialAnnotationsToCover && remainingCoverSets.size() > 0 &&
                 remainingCoverSets.get(0).getCoveredAnnotations().size() > 0) {
             IdentificationCoverSet bestCoverSet = remainingCoverSets.get(0);
             reducedDatabase.add(bestCoverSet.getDbAnnotationInfo());
@@ -44,11 +43,37 @@ public class IdentificationMinSetCoverComputationHandler {
             }
             Collections.sort(remainingCoverSets, Collections.reverseOrder());
         }
+        writeMinSetCoverIbeisDbAnnotationInfosWrapperToFile(minSetCoverIbeisDbAnnotationInfosWrapperFile);
         return this;
     }
 
     public IbeisDbAnnotationInfosWrapper getResult() throws HandlerNotExecutedException{
         if (reducedDatabase == null) throw new HandlerNotExecutedException();
         return new IbeisDbAnnotationInfosWrapper(ThresholdType.WITHIN_DATASET, coverSetsCollectionWrapper.getTargetSpecies(), reducedDatabase);
+    }
+
+    private int getAnnotationsToCoverCount() {
+        HashSet hashSet = new HashSet();
+        for (IdentificationCoverSet identificationCoverSet : remainingCoverSets) {
+            hashSet.addAll(identificationCoverSet.getCoveredAnnotations());
+        }
+        return hashSet.size();
+    }
+
+    private void writeMinSetCoverIbeisDbAnnotationInfosWrapperToFile(File file) {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(file));
+            writer.write(new IbeisDbAnnotationInfosWrapper(ThresholdType.WITHIN_DATASET, coverSetsCollectionWrapper.getTargetSpecies(), reducedDatabase).toJson());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if (writer != null) writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
