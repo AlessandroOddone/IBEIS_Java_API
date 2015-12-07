@@ -1,5 +1,7 @@
 package edu.uic.ibeis_java_api.values;
 
+import edu.uic.ibeis_java_api.exceptions.InvalidSpeciesException;
+
 public enum  Species {
     CHEETAH("cheetah"),
     ELEPHANT_SAV("elephant_savanna"),
@@ -39,8 +41,18 @@ public enum  Species {
         return value;
     }
 
+    public static Species fromValue(String value) throws InvalidSpeciesException {
+        for (Species s : Species.values()) {
+            if (s.getValue().equals(value)) {
+                return s;
+            }
+        }
+        throw new InvalidSpeciesException();
+    }
+
     @Override
     public String toString() {
         return value;
     }
+
 }
