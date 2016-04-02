@@ -22,20 +22,25 @@ public class IdentificationAlgorithm {
     private IdentificationAlgorithmType algorithmType;
     private double minIndividualRecognitionThreshold;
     private double minSpeciesRecognitionThreshold;
+    private double individualIdentificationFactor;
+    private double speciesIdentificationFactor;
     private boolean noCache;
 
     private Ibeis ibeis = new Ibeis();
 
     public IdentificationAlgorithm(IbeisDbAnnotationInfosWrapper ibeisDbAnnotationInfosWrapper, IdentificationAlgorithmType algorithmType) throws InvalidThresholdTypeException {
-        this(ibeisDbAnnotationInfosWrapper, algorithmType, 0, 0, false);
+        this(ibeisDbAnnotationInfosWrapper, algorithmType, 0, 0, 1, 1, false);
     }
 
     public IdentificationAlgorithm(IbeisDbAnnotationInfosWrapper ibeisDbAnnotationInfosWrapper, IdentificationAlgorithmType algorithmType,
-                                       double minIndividualRecognitionThreshold, double minSpeciesRecognitionThreshold, boolean noCache) throws InvalidThresholdTypeException {
+                                       double minIndividualRecognitionThreshold, double minSpeciesRecognitionThreshold,
+                                       double individualIdentificationFactor, double speciesIdentificationFactor, boolean noCache) throws InvalidThresholdTypeException {
         this.ibeisDbAnnotationInfosWrapper = ibeisDbAnnotationInfosWrapper;
         this.algorithmType = algorithmType;
         this.minIndividualRecognitionThreshold = minIndividualRecognitionThreshold;
         this.minSpeciesRecognitionThreshold = minSpeciesRecognitionThreshold;
+        this.individualIdentificationFactor = individualIdentificationFactor;
+        this.speciesIdentificationFactor = speciesIdentificationFactor;
         this.noCache = noCache;
 
         ThresholdType thresholdType = ibeisDbAnnotationInfosWrapper.getThresholdType();
@@ -163,7 +168,7 @@ public class IdentificationAlgorithm {
     }
 
     private IdentificationAlgorithmResult executeThresholdsOneVsAllNoCache(IbeisAnnotation queryAnnotation) throws UnsuccessfulHttpRequestException, MalformedHttpRequestException, IOException, EmptyListParameterException {
-        IbeisQueryResult queryResult = ibeis.query(queryAnnotation, ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationList());
+        IbeisQueryResult queryResult = ibeis.queryNoCache(queryAnnotation, ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationList());
         List<IbeisQueryScore> queryScores = queryResult.getScores();
 
         double bestScoreIdentifiedIndividual = 0;
@@ -173,7 +178,7 @@ public class IdentificationAlgorithm {
         for (IbeisQueryScore queryScore : queryScores) {
             double score = queryScore.getScore();
             IbeisDbAnnotationInfo ibeisDbAnnotationInfo = ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationInfosMap().get(queryScore.getDbAnnotation().getId());
-            if (score > bestScoreIdentifiedIndividual && score >= ibeisDbAnnotationInfo.getRecognitionThreshold() &&
+            if (score > bestScoreIdentifiedIndividual && score >= individualIdentificationFactor * ibeisDbAnnotationInfo.getRecognitionThreshold() &&
                     ibeisDbAnnotationInfo.getRecognitionThreshold() >= minIndividualRecognitionThreshold) {
                 identificationAlgorithmResult.setIndividual(queryScore.getDbAnnotation().getIndividual());
                 identificationAlgorithmResult.setSpecies(ibeisDbAnnotationInfosWrapper.getTargetSpecies());
@@ -181,7 +186,7 @@ public class IdentificationAlgorithm {
                 isOfTargetSpecies = true;
             }
             if (!isOfTargetSpecies) {
-                if (score >= ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold() &&
+                if (score >= speciesIdentificationFactor * ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold() &&
                         ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold() >= minSpeciesRecognitionThreshold) {
                     identificationAlgorithmResult.setSpecies(ibeisDbAnnotationInfosWrapper.getTargetSpecies());
                     isOfTargetSpecies = true;
@@ -196,25 +201,26 @@ public class IdentificationAlgorithm {
         List<IbeisQueryScore> queryScores = queryResult.getScores();
 
         double bestScoreIdentifiedIndividual = 0;
-        IdentificationAlgorithmResult identificationAlgorithmResult = new IdentificationAlgorithmResult();
+        IdentificationAlgorithmResult identificationAlgorithmResult = new IdentificationAlgorithmResult(Species.UNKNOWN);
 
         boolean isOfTargetSpecies = false;
         for (IbeisQueryScore queryScore : queryScores) {
             double score = queryScore.getScore();
             IbeisDbAnnotationInfo ibeisDbAnnotationInfo = ibeisDbAnnotationInfosWrapper.getIbeisDbAnnotationInfosMap().get(queryScore.getDbAnnotation().getId());
-            if (score >= bestScoreIdentifiedIndividual && score >= ibeisDbAnnotationInfo.getRecognitionThreshold() &&
+            if (score > bestScoreIdentifiedIndividual && score >= individualIdentificationFactor * ibeisDbAnnotationInfo.getRecognitionThreshold() &&
                     ibeisDbAnnotationInfo.getRecognitionThreshold() >= minIndividualRecognitionThreshold) {
-                identificationAlgorithmResult = new IdentificationAlgorithmResult(queryScore.getDbAnnotation().getIndividual(), ibeisDbAnnotationInfosWrapper.getTargetSpecies());
+                identificationAlgorithmResult.setIndividual(queryScore.getDbAnnotation().getIndividual());
+                identificationAlgorithmResult.setSpecies(ibeisDbAnnotationInfosWrapper.getTargetSpecies());
+                bestScoreIdentifiedIndividual = score;
+                isOfTargetSpecies = true;
             }
             if (!isOfTargetSpecies) {
-                if (score >= ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold() &&
+                if (score >= speciesIdentificationFactor * ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold() &&
                         ibeisDbAnnotationInfo.getIsOfTargetSpeciesThreshold() >= minSpeciesRecognitionThreshold) {
+                    identificationAlgorithmResult.setSpecies(ibeisDbAnnotationInfosWrapper.getTargetSpecies());
                     isOfTargetSpecies = true;
                 }
             }
-        }
-        if (isOfTargetSpecies) {
-            identificationAlgorithmResult = new IdentificationAlgorithmResult(ibeisDbAnnotationInfosWrapper.getTargetSpecies());
         }
         return identificationAlgorithmResult;
     }

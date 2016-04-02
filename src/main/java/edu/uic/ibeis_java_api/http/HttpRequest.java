@@ -36,7 +36,7 @@ public class HttpRequest {
 
     public HttpRequest(HttpRequestMethod httpRequestMethod, String callPath, HttpParametersList parametersList) throws MalformedURLException {
         this.httpRequestMethod = httpRequestMethod;
-        this.url = new URL(API_URL_AWS + callPath);
+        this.url = new URL(API_URL_PACHY + callPath);
         this.parametersList = parametersList;
 
         //debug: print request

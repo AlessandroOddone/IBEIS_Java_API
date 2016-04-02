@@ -27,11 +27,11 @@ public enum Sex {
     @Override
     public String toString() {
         if (this.equals(MALE)) {
-            return "Male";
+            return "M";
         } else if (this.equals(FEMALE)) {
-            return "Female";
+            return "F";
         } else {
-            return "Unknown";
+            return "N/A";
         }
     }
 }

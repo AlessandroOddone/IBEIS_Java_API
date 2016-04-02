@@ -102,7 +102,6 @@ public class IbeisTestCollection implements TestCollection {
                     testCollection.add(new DownloadImageFileTest(image));
                 }
             }
-            */
             List<IbeisAnnotation> annotations = new ArrayList<>();
             for (Integer id : Arrays.asList(261,344,42,235,249,348,258,336,337,426,123,251,324,269,122,178,256,353,278,224,263,174)) {
                 annotations.add(ibeis.getAnnotationById(id));
@@ -111,14 +110,13 @@ public class IbeisTestCollection implements TestCollection {
                 testCollection.add(new DownloadImageFileTest(annotation.getImage(), "download_test_annot_id_" +
                         annotation.getId() +  "_name_" + annotation.getIndividual().getName() + ".jpg"));
             }
-            /*
+            */
             for(IbeisImage image : ibeis.getEncounterById(2).getImages()) {
                 for(IbeisAnnotation annotation : image.getAnnotations()) {
                     testCollection.add(new DownloadImageFileTest(annotation.getImage(), "download_test_annot_id_" +
                             annotation.getId() +  "_name_" + annotation.getIndividual().getName() + ".jpg"));
                 }
             }
-            */
         } catch (Exception e) {
             e.printStackTrace();
         }
